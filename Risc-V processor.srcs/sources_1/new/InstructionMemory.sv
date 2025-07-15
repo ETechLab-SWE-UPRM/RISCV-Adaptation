@@ -1,12 +1,8 @@
 
-// Instruction Format
-// Takes exactly 32 bits (a word) double words are 64 bits
-
-
 module InstructionMemory (
     input logic clk,
     input logic stall,
-    input logic [31:0] instruction_address, // program counter
+    input logic [31:0] instruction_address,
     output logic [31:0] instruction
 );
 
@@ -22,11 +18,11 @@ module InstructionMemory (
 
     Instruction_Memory im_inst(
         .clka(clk),
-        .ena(stall_memory), // Enable the memory
+        .ena(stall_memory),
         .addra(instruction_address[9:2]),
         .douta(instruction_reg)
     );
 
-    assign instruction = instruction_reg; // Fetch the instruction from memory
+    assign instruction = instruction_reg;
 
 endmodule

@@ -86,7 +86,7 @@ module RISCV_PIPELINED (
     ProgramCounter pc_i (
         .clk(clk),
         .reset(reset),
-        .pc_write(pc_write), // Control signal to write to PC
+        .pc_write(pc_write),
         .next_pc(next_pc), 
         .pc(pc)
     );
@@ -117,10 +117,9 @@ module RISCV_PIPELINED (
         .clk(clk), 
         .reset(reset), 
         .flush(ex_taken), 
-        .if_id_write(if_id_write), // Control signal to write to IF/ID register
+        .if_id_write(if_id_write),
         .pc(fetch_pc), 
         .instruction(instruction), 
-        // Outputs
         .pc_if_id(pc_if_id), 
         .instruction_if_id(instruction_if_id) 
     );
@@ -140,7 +139,6 @@ module RISCV_PIPELINED (
     assign funct3 = instruction_if_id[14:12]; 
     assign funct7 = instruction_if_id[31:25]; 
 
-    // Register file for reading data
     logic [31:0] data_read1, data_read2, data_read3;
     
     Registers regs (
@@ -164,7 +162,6 @@ module RISCV_PIPELINED (
         .immediate(big_immediate) 
     );
     
-    // Control signals
     logic branch, beq, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc;
     logic [1:0] alu_op;
     Control control_unit (
@@ -190,8 +187,8 @@ module RISCV_PIPELINED (
         .clk(clk),
         .if_id_rs1(reg1), 
         .if_id_rs2(reg2), 
-        .reg_dest_id_ex(reg_dest_id_ex), // From ID/EX stage
-        .id_ex_mem_read(id_ex_mem_read), // From ID/EX stage
+        .reg_dest_id_ex(reg_dest_id_ex),
+        .id_ex_mem_read(id_ex_mem_read),
         .stall(stall), 
         .pc_write(pc_write), 
         .if_id_write(if_id_write)
@@ -245,23 +242,14 @@ module RISCV_PIPELINED (
         .id_ex_jal(id_ex_jal),
         .id_ex_jalr(id_ex_jalr),
         .id_ex_alu_op(id_ex_alu_op),
-        
         .data_read1_id_ex(data_read1_id_ex),
         .data_read2_id_ex(data_read2_id_ex),
         .data_read3_id_ex(data_read3_id_ex),
-        
         .big_immediate_id_ex(big_immediate_id_ex),
-        
         .reg_dest_id_ex(reg_dest_id_ex),
-        
-        // For store instructions
         .reg1_id_ex(reg1_id_ex), 
         .reg2_id_ex(reg2_id_ex),
-
-        // For R-type instructions
         .funct3_id_ex(funct3_id_ex),
-        
-        // For R-type instructions
         .funct7_id_ex(funct7_id_ex)
     );
 
@@ -274,7 +262,6 @@ module RISCV_PIPELINED (
         .mem_wb_rd(mem_wb_reg_dest), 
         .ex_mem_reg_write(ex_mem_regwrite_dup), 
         .mem_wb_reg_write(mem_wb_regwrite),
-        // Outputs  
         .forward_a(forward_a), 
         .forward_b(forward_b),
         .forward_c(forward_c)
@@ -291,8 +278,8 @@ module RISCV_PIPELINED (
         .alu_op(id_ex_alu_op),
         .funct3(funct3_id_ex),
         .alu_src(id_ex_alu_src), 
-        .funct7(funct7_id_ex[5]), // For R-type instructions, bit 30
-        .funct7_mac(funct7_id_ex[0]), // For mac, bit 25
+        .funct7(funct7_id_ex[5]),
+        .funct7_mac(funct7_id_ex[0]),
         .is_mac(is_mac),
         .alu_control(alu_control)
     );
@@ -302,52 +289,48 @@ module RISCV_PIPELINED (
     // Forwarding logic for ALU inputs
     always_comb begin
         unique case (forward_a)
-            2'b00: alu_operand1 = data_read1_id_ex; // No forwarding
-            2'b01: alu_operand1 = mem_wb_write_data; // Forward from MEM/WB stage
-            2'b10: alu_operand1 = ex_mem_alu_result; // Forward from EX/MEM stage
-            default: alu_operand1 = data_read1_id_ex; // Default case
+            2'b00: alu_operand1 = data_read1_id_ex;
+            2'b01: alu_operand1 = mem_wb_write_data;
+            2'b10: alu_operand1 = ex_mem_alu_result;
+            default: alu_operand1 = data_read1_id_ex;
         endcase
 
         unique case (forward_b)
-            2'b00: alu_operand2 = data_read2_id_ex; // No forwarding
-            2'b01: alu_operand2 = mem_wb_write_data; // Forward from MEM/WB stage
-            2'b10: alu_operand2 = ex_mem_alu_result; // Forward from EX/MEM stage
-            default: alu_operand2 = data_read2_id_ex; // Default case
+            2'b00: alu_operand2 = data_read2_id_ex;
+            2'b01: alu_operand2 = mem_wb_write_data;
+            2'b10: alu_operand2 = ex_mem_alu_result;
+            default: alu_operand2 = data_read2_id_ex;
         endcase
 
         unique case (forward_c)
-            2'b00: alu_operand3 = data_read3_id_ex; // No forwarding
-            2'b01: alu_operand3 = mem_wb_write_data; // Forward from MEM/WB stage
-            2'b10: alu_operand3 = ex_mem_alu_result; // Forward from EX/MEM stage 
-            default: alu_operand3 = data_read3_id_ex; // Default case
+            2'b00: alu_operand3 = data_read3_id_ex;
+            2'b01: alu_operand3 = mem_wb_write_data;
+            2'b10: alu_operand3 = ex_mem_alu_result; 
+            default: alu_operand3 = data_read3_id_ex;
         endcase
     end
         
-    assign alu_input = id_ex_auipc ? pc_id_ex : alu_operand1; // Use PC if AUIPC is set
-    assign alu_input2 = id_ex_alu_src ? big_immediate_id_ex: alu_operand2; // Use immediate if alu_src is set
+    assign alu_input = id_ex_auipc ? pc_id_ex : alu_operand1;
+    assign alu_input2 = id_ex_alu_src ? big_immediate_id_ex: alu_operand2;
     
     logic [24:0] mac_input_a;
     logic [17:0] mac_input_b;
     logic [43:0] mac_result;
     logic [31:0] mac_input3, ex_result;
 
+    // Prepare inputs if MAC
     always_comb begin
         if (is_mac) begin 
-            // Prepare inputs if MAC
             mac_input_a = alu_operand1[24:0]; 
             mac_input_b = alu_operand2[17:0]; 
             mac_input3 = alu_operand3; 
         end else begin
-            // Not used in other operations
             mac_input_a = 25'b0;
             mac_input_b = 18'b0;
             mac_input3 = 32'b0;
         end
     end
 
-    // DSP operations
-    // This dsp module is for MAC (Multiply and accumulate) instructions
-    // A * B + C = P
     MAC_dsp mac_inst (
         .A(mac_input_a),
         .B(mac_input_b),
@@ -363,12 +346,12 @@ module RISCV_PIPELINED (
         .zero(zero) 
     );
 
-    assign ex_result = (is_mac) ? mac_result[31:0] : alu_result; // Use MAC result if MAC operation, otherwise use ALU result
+    assign ex_result = (is_mac) ? mac_result[31:0] : alu_result;
 
     logic [31:0] link_addr_ex1;
 
     assign led = alu_result[0];
-    assign link_addr_ex1 = pc_id_ex; // Link address for JALR, which is the next instruction address
+    assign link_addr_ex1 = pc_id_ex;
 
     branch branch_unit (
         .pc(pc_id_ex), 
@@ -398,13 +381,11 @@ module RISCV_PIPELINED (
         .id_ex_reg_write(id_ex_reg_write), 
         .id_ex_jal(id_ex_jal), 
         .id_ex_jalr(id_ex_jalr), 
-        .alu_result(ex_result), // ALU result or MAC result
+        .alu_result(ex_result),
         .data_read2_id_ex(alu_operand2), 
-        .reg_dest_id_ex(reg_dest_id_ex), // Destination register for write back
-        .ex_link_address(link_addr_ex1), // Link address for JALR
-        .funct3(funct3_id_ex), // For store or load instructions
-
-        // Outputs
+        .reg_dest_id_ex(reg_dest_id_ex),
+        .ex_link_address(link_addr_ex1),
+        .funct3(funct3_id_ex),
         .ex_mem_memread(ex_mem_memread),
         .ex_mem_memwrite(ex_mem_memwrite),
         .ex_mem_memtoreg(ex_mem_memtoreg),
@@ -414,10 +395,8 @@ module RISCV_PIPELINED (
         .ex_mem_alu_result(ex_mem_alu_result),
         .ex_mem_data_read2(ex_mem_data_read2),
         .ex_mem_reg_dest(ex_mem_reg_dest),
-        
-        // Link address for JALR
         .ex_mem_link_address_reg(ex_mem_link_address_reg),
-        .ex_mem_funct3(ex_mem_funct3) // Function code for memory operations
+        .ex_mem_funct3(ex_mem_funct3)
     );
 
     // ------MEMORY STAGE------
@@ -425,35 +404,35 @@ module RISCV_PIPELINED (
 
     Data_memory data_mem(
         .clk(clk),
-        .address(ex_mem_alu_result), // Address for data memory is the ALU result
-        .write_data(ex_mem_data_read2), // Data to write is from read data 2
+        .address(ex_mem_alu_result),
+        .write_data(ex_mem_data_read2),
         .funct3(ex_mem_funct3),
-        .mem_write(ex_mem_memwrite), // Memory write control signal
-        .mem_read(ex_mem_memread), // Memory read control signal
-        .read_data(memory_data_read) // Data to write back to registers
+        .mem_write(ex_mem_memwrite),
+        .mem_read(ex_mem_memread),
+        .read_data(memory_data_read)
     );
 
     MEM_WB_reg mem_wb_reg (
         .clk(clk),
         .reset(reset),
-        .ex_mem_memtoreg(ex_mem_memtoreg), // Memory to register control signal
-        .ex_mem_regwrite(ex_mem_regwrite), // Register write control signal
-        .ex_mem_jal(ex_mem_jal), // JAL control signal
-        .ex_mem_jalr(ex_mem_jalr), // JALR control signal
-        .ex_mem_alu_result(ex_mem_alu_result), // ALU result
-        .memory_data_read(memory_data_read), // Data read from memory
-        .ex_mem_reg_dest(ex_mem_reg_dest), // Destination register for write back
-        .ex_mem_link_address_reg(ex_mem_link_address_reg), // Link address for JALR
+        .ex_mem_memtoreg(ex_mem_memtoreg),
+        .ex_mem_regwrite(ex_mem_regwrite),
+        .ex_mem_jal(ex_mem_jal),
+        .ex_mem_jalr(ex_mem_jalr),
+        .ex_mem_alu_result(ex_mem_alu_result),
+        .memory_data_read(memory_data_read),
+        .ex_mem_reg_dest(ex_mem_reg_dest),
+        .ex_mem_link_address_reg(ex_mem_link_address_reg),
 
         //Outputs
-        .mem_wb_memtoreg(mem_wb_memtoreg), // Memory to register control signal
-        .mem_wb_regwrite(mem_wb_regwrite), // Register write control signal
-        .mem_wb_jal(mem_wb_jal), // JAL control signal
-        .mem_wb_jalr(mem_wb_jalr), // JALR control signal
-        .mem_wb_alu_result(mem_wb_alu_result), // ALU result
-        .mem_wb_memory_data_read(mem_wb_memory_data_read), // Data read from memory
-        .mem_wb_reg_dest(mem_wb_reg_dest), // Destination register for write back
-        .mem_wb_link_address(mem_wb_link_address), // Link address for JALR
-        .mem_wb_write_data(mem_wb_write_data) // Data to write back to registers
+        .mem_wb_memtoreg(mem_wb_memtoreg),
+        .mem_wb_regwrite(mem_wb_regwrite),
+        .mem_wb_jal(mem_wb_jal),
+        .mem_wb_jalr(mem_wb_jalr),
+        .mem_wb_alu_result(mem_wb_alu_result),
+        .mem_wb_memory_data_read(mem_wb_memory_data_read),
+        .mem_wb_reg_dest(mem_wb_reg_dest),
+        .mem_wb_link_address(mem_wb_link_address),
+        .mem_wb_write_data(mem_wb_write_data)
     );    
 endmodule

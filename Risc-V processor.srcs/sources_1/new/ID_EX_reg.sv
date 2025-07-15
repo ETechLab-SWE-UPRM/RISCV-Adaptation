@@ -130,15 +130,15 @@ module ID_EX_reg (
             id_ex_jalr <= jalr;
             id_ex_auipc <= auipc;
             id_ex_alu_op <= alu_op;
-            data_read1_id_ex <= data_read1; // Read data 1 from registers
-            data_read2_id_ex <= data_read2; // Read data 2 from registers
-            data_read3_id_ex <= data_read3; // Read data 3 from registers
-            big_immediate_id_ex <= big_immediate; // Immediate value
-            reg_dest_id_ex <= reg_dest; // Destination register
-            reg1_id_ex <= reg1; // First source register
-            reg2_id_ex <= reg2; // Second source register
-            funct3_id_ex <= funct3; // funct3 bits
-            funct7_id_ex <= funct7; // funct7 bits
+            data_read1_id_ex <= data_read1;
+            data_read2_id_ex <= data_read2;
+            data_read3_id_ex <= data_read3;
+            big_immediate_id_ex <= big_immediate;
+            reg_dest_id_ex <= reg_dest;
+            reg1_id_ex <= reg1;
+            reg2_id_ex <= reg2;
+            funct3_id_ex <= funct3;
+            funct7_id_ex <= funct7;
         end
     end
 endmodule

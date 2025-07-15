@@ -1,8 +1,7 @@
 
-
 module Control (
-    input logic [6:0] opcode, // 7-bit opcode, instruction bits 6:0
-    input logic [2:0] funct3, // 3-bit funct3, instruction bits 14:12
+    input logic [6:0] opcode,
+    input logic [2:0] funct3,
 
     output logic branch,
     output logic beq,
@@ -22,7 +21,6 @@ module Control (
 
     always_comb begin
 
-        // Default values
         branch = 1'b0;
         mem_read = 1'b0;
         memtoreg = 1'b0;
@@ -40,18 +38,18 @@ module Control (
 
 
         case (opcode)
-            7'b0110011 : begin // R-type
+            7'b0110011 : begin 
                 alu_op = 2'b10; 
                 reg_write = 1'b1;
             end
         
-            7'b0010011 : begin // I-types 
+            7'b0010011 : begin 
                 alu_op = 2'b10; 
                 alu_src = 1'b1; 
                 reg_write = 1'b1;
             end
 
-            7'b0000011 : begin // loads 
+            7'b0000011 : begin 
                 mem_read = 1'b1;
                 memtoreg = 1'b1;
                 alu_op = 2'b00; 
@@ -59,31 +57,31 @@ module Control (
                 reg_write = 1'b1;
             end
 
-            7'b0100011 : begin // S-types, store instructions
+            7'b0100011 : begin 
                 alu_op = 2'b00; 
                 mem_write = 1'b1; 
                 alu_src = 1'b1; 
             end
 
-            7'b1100011 : begin // branch
+            7'b1100011 : begin
                 branch = 1'b1;
                 alu_op = 2'b01; 
                 case (funct3) 
-                    3'b000 : beq = 1'b1; // beq
-                    3'b001 : bne = 1'b1; // bne
-                    3'b100 : blt = 1'b1; // blt
-                    3'b101 : bge = 1'b1; // bge
+                    3'b000 : beq = 1'b1;
+                    3'b001 : bne = 1'b1;
+                    3'b100 : blt = 1'b1;
+                    3'b101 : bge = 1'b1;
                 endcase
             end
 
-            7'b1101111 : begin // jal (add immediate to PC)
+            7'b1101111 : begin 
                 alu_op = 2'b00; 
                 alu_src = 1'b1; 
                 reg_write = 1'b1; 
                 jal = 1'b1;
             end
 
-            7'b1100111 : begin // jalr
+            7'b1100111 : begin 
                 alu_op = 2'b00; 
                 alu_src = 1'b1; 
                 reg_write = 1'b1; 
@@ -96,14 +94,14 @@ module Control (
                 reg_write = 1'b1;                 
             end
 
-            7'b0010111 : begin // AUIPC
+            7'b0010111 : begin
                 auipc = 1'b1;
                 alu_op = 2'b00; 
                 alu_src = 1'b1; 
                 reg_write = 1'b1;                 
             end
 
-            default: begin // 0 for undefined instructions or no instruction
+            default: begin
                 branch = 1'b0;
                 mem_read = 1'b0;
                 memtoreg = 1'b0;

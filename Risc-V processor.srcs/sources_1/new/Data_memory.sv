@@ -9,47 +9,33 @@ module Data_memory (
     output logic [31:0] read_data
 );
 
-    localparam data_base = 32'h1000_0000; // Base address for data memory
-    localparam data_words = 8360; // Number of 32-bit words in data memory
+    localparam data_base = 32'h1000_0000; 
+    localparam data_words = 8360;
     logic [31:0] byte_address;
-
-    // raw 32-bit word read from BRAM
     logic [31:0] bram_data;
-
-    // what we’ll actually write back into BRAM this cycle
     logic [31:0] write_word;
-    // lets me control which bytes of the word to write
     logic [3:0]  write_enable;
-
     logic [13:0] word_address;
     
-    // byte offset computation then divided by 4 to get word address
-    // This assumes address is always a multiple of 4, which is true for RISC-V
-    // instructions and data accesses.
     assign byte_address = address - data_base;
-    assign word_address = byte_address[15:2]; // 14 bits for 8360 words 
+    assign word_address = byte_address[15:2];
 
-    //----- BRAM instantiation -----
     blk_mem_gen_0 mem_inst (
         .clka   (clk),
-        .ena    (1'b1), // always enabled 
+        .ena    (1'b1), 
         .wea    (write_enable), 
         .addra  (word_address), 
-        .dina   (write_word), // This is the data write from CPU
-        .douta  (bram_data) // This is the data read from BRAM
+        .dina   (write_word), 
+        .douta  (bram_data) 
     );
 
-    //----- build write_word & write_enable -----
-    // Only prepares the next cycle's data
     always_comb begin
-        // defaults: hold old data, no writes
         write_word   = bram_data;
         write_enable = 4'b0000;
 
         if (mem_write) begin
             case (funct3)
                 3'b000: begin // SB
-                    // rotate the single byte into the right slot
                     unique case (address[1:0])
                         2'd0: begin write_word = { bram_data[31:8], write_data[7:0] };    write_enable = 4'b0001; end
                         2'd1: begin write_word = { bram_data[31:16], write_data[7:0], bram_data[7:0] }; write_enable = 4'b0010; end
@@ -60,11 +46,9 @@ module Data_memory (
 
                 3'b001: begin // SH
                     unique if (address[1:0] == 2'd0) begin
-                        // low half
                         write_word   = { bram_data[31:16], write_data[15:0] };
                         write_enable = 4'b0011;
                     end else if (address[1:0] == 2'b10) begin
-                        // high half (address[1:0]==2)
                         write_word   = { write_data[15:0], bram_data[15:0] };
                         write_enable = 4'b1100;
                     end
@@ -83,7 +67,6 @@ module Data_memory (
         end
     end
 
-    //----- load-side: sample bram_data and extend -----
     always_comb begin
         if (mem_read) begin
             unique case (funct3)
