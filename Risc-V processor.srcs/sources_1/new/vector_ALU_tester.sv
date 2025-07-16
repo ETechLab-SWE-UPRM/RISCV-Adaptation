@@ -63,6 +63,9 @@ module v_ALU_tester ();
         alu_control = 4'b1010; 
         #10;
 
+        alu_control = 4'b1011; 
+        #10;
+
         $finish;
     end
 

@@ -26,6 +26,8 @@ module RISCV_PIPELINED (
     input logic reset, 
     output logic led
 );
+    localparam vector_length = 2;
+
     // IF/ID pipeline registers
     logic [31:0] instruction_if_id;
     logic [31:0] pc_if_id;
@@ -336,20 +338,6 @@ module RISCV_PIPELINED (
         .B(scalar_mac_input_b),
         .C(scalar_mac_input_c),
         .P(scalar_mac_result)
-    );
-
-    MAC_dsp vector_dsp_0 (
-        .A(),
-        .B(),
-        .C(),
-        .P()
-    );
-
-    MAC_dsp vector_dsp_1 (
-        .A(),
-        .B(),
-        .C(),
-        .P()
     );
 
     ALU alu (

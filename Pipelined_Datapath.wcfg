@@ -3,75 +3,55 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="vreg_tester_behav.wdb" id="1">
+      <db_ref path="v_ALU_tester_behav.wdb" id="1">
          <top_modules>
             <top_module name="glbl" />
-            <top_module name="vreg_tester" />
+            <top_module name="v_ALU_tester" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="110.082 ns"></ZoomEndTime>
-      <Cursor1Time time="170.000 ns"></Cursor1Time>
+      <ZoomEndTime time="182.201 ns"></ZoomEndTime>
+      <Cursor1Time time="120.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="199"></NameColumnWidth>
+      <NameColumnWidth column_width="193"></NameColumnWidth>
       <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="12" />
+   <WVObjectSize size="7" />
    <wave_markers>
       <marker time="92325000" label="" />
       <marker time="92345000" label="" />
       <marker time="245000" label="" />
       <marker time="562375000" label="" />
    </wave_markers>
-   <wvobject fp_name="/vreg_tester/clk" type="logic">
+   <wvobject fp_name="/v_ALU_tester/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/vreg_tester/reset" type="logic">
+   <wvobject fp_name="/v_ALU_tester/reset" type="logic">
       <obj_property name="ElementShortName">reset</obj_property>
       <obj_property name="ObjectShortName">reset</obj_property>
    </wvobject>
-   <wvobject fp_name="/vreg_tester/read_reg1" type="array">
-      <obj_property name="ElementShortName">read_reg1[4:0]</obj_property>
-      <obj_property name="ObjectShortName">read_reg1[4:0]</obj_property>
+   <wvobject fp_name="/v_ALU_tester/a" type="array">
+      <obj_property name="ElementShortName">a[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">a[0:1][31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/vreg_tester/read_reg2" type="array">
-      <obj_property name="ElementShortName">read_reg2[4:0]</obj_property>
-      <obj_property name="ObjectShortName">read_reg2[4:0]</obj_property>
+   <wvobject fp_name="/v_ALU_tester/b" type="array">
+      <obj_property name="ElementShortName">b[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">b[0:1][31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/vreg_tester/read_reg3" type="array">
-      <obj_property name="ElementShortName">read_reg3[4:0]</obj_property>
-      <obj_property name="ObjectShortName">read_reg3[4:0]</obj_property>
+   <wvobject fp_name="/v_ALU_tester/c" type="array">
+      <obj_property name="ElementShortName">c[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">c[0:1][31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/vreg_tester/write_reg" type="array">
-      <obj_property name="ElementShortName">write_reg[4:0]</obj_property>
-      <obj_property name="ObjectShortName">write_reg[4:0]</obj_property>
+   <wvobject fp_name="/v_ALU_tester/alu_control" type="array">
+      <obj_property name="ElementShortName">alu_control[3:0]</obj_property>
+      <obj_property name="ObjectShortName">alu_control[3:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/vreg_tester/write_data" type="array">
-      <obj_property name="ElementShortName">write_data[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">write_data[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/vreg_tester/reg_write_enable" type="logic">
-      <obj_property name="ElementShortName">reg_write_enable</obj_property>
-      <obj_property name="ObjectShortName">reg_write_enable</obj_property>
-   </wvobject>
-   <wvobject fp_name="/vreg_tester/read_data1" type="array">
-      <obj_property name="ElementShortName">read_data1[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">read_data1[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/vreg_tester/read_data2" type="array">
-      <obj_property name="ElementShortName">read_data2[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">read_data2[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/vreg_tester/read_data3" type="array">
-      <obj_property name="ElementShortName">read_data3[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">read_data3[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/vreg_tester/v_test/v_regs" type="array">
-      <obj_property name="ElementShortName">v_regs[0:31][0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">v_regs[0:31][0:1][31:0]</obj_property>
+   <wvobject fp_name="/v_ALU_tester/result" type="array">
+      <obj_property name="ElementShortName">result[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">result[0:1][31:0]</obj_property>
    </wvobject>
 </wave_config>
