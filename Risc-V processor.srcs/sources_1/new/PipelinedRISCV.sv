@@ -3,7 +3,7 @@
 // Engineer: Fernando L. Pizarro Diaz
 // 
 // Create Date: 05/27/2025 10:22:03 AM
-// Design Name: Name 
+// Design Name: Eutanio 
 // Module Name: RISCV_PIPELINED
 // Project Name: RISC-V Processor
 // Target Devices: Basys3
@@ -162,11 +162,12 @@ module RISCV_PIPELINED (
         .immediate(big_immediate) 
     );
     
-    logic branch, beq, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc;
+    logic vec_op, branch, beq, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc;
     logic [1:0] alu_op;
     Control control_unit (
         .opcode(opcode),
         .funct3(funct3),
+        .vec_op(vec_op),
         .branch(branch),
         .beq(beq),
         .bne(bne),
@@ -286,7 +287,6 @@ module RISCV_PIPELINED (
 
     logic [31:0] alu_operand1, alu_operand2, alu_operand3;
 
-    // Forwarding logic for ALU inputs
     always_comb begin
         unique case (forward_a)
             2'b00: alu_operand1 = data_read1_id_ex;
@@ -313,29 +313,43 @@ module RISCV_PIPELINED (
     assign alu_input = id_ex_auipc ? pc_id_ex : alu_operand1;
     assign alu_input2 = id_ex_alu_src ? big_immediate_id_ex: alu_operand2;
     
-    logic [24:0] mac_input_a;
-    logic [17:0] mac_input_b;
-    logic [43:0] mac_result;
-    logic [31:0] mac_input3, ex_result;
+    logic [24:0] scalar_mac_input_a;
+    logic [17:0] scalar_mac_input_b;
+    logic [43:0] scalar_mac_result;
+    logic [31:0] scalar_mac_input_c, ex_result;
 
     // Prepare inputs if MAC
     always_comb begin
         if (is_mac) begin 
-            mac_input_a = alu_operand1[24:0]; 
-            mac_input_b = alu_operand2[17:0]; 
-            mac_input3 = alu_operand3; 
+            scalar_mac_input_a = alu_operand1[24:0]; 
+            scalar_mac_input_b = alu_operand2[17:0]; 
+            scalar_mac_input_c = alu_operand3; 
         end else begin
-            mac_input_a = 25'b0;
-            mac_input_b = 18'b0;
-            mac_input3 = 32'b0;
+            scalar_mac_input_a = 25'b0;
+            scalar_mac_input_b = 18'b0;
+            scalar_mac_input_c = 32'b0;
         end
     end
 
-    MAC_dsp mac_inst (
-        .A(mac_input_a),
-        .B(mac_input_b),
-        .C(mac_input3),
-        .P(mac_result)
+    MAC_dsp scalar_dsp (
+        .A(scalar_mac_input_a),
+        .B(scalar_mac_input_b),
+        .C(scalar_mac_input_c),
+        .P(scalar_mac_result)
+    );
+
+    MAC_dsp vector_dsp_0 (
+        .A(),
+        .B(),
+        .C(),
+        .P()
+    );
+
+    MAC_dsp vector_dsp_1 (
+        .A(),
+        .B(),
+        .C(),
+        .P()
     );
 
     ALU alu (
@@ -346,7 +360,7 @@ module RISCV_PIPELINED (
         .zero(zero) 
     );
 
-    assign ex_result = (is_mac) ? mac_result[31:0] : alu_result;
+    assign ex_result = (is_mac) ? scalar_mac_result[31:0] : alu_result;
 
     logic [31:0] link_addr_ex1;
 
@@ -424,7 +438,6 @@ module RISCV_PIPELINED (
         .ex_mem_reg_dest(ex_mem_reg_dest),
         .ex_mem_link_address_reg(ex_mem_link_address_reg),
 
-        //Outputs
         .mem_wb_memtoreg(mem_wb_memtoreg),
         .mem_wb_regwrite(mem_wb_regwrite),
         .mem_wb_jal(mem_wb_jal),

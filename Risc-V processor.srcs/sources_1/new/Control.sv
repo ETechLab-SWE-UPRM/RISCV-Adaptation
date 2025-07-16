@@ -3,6 +3,7 @@ module Control (
     input logic [6:0] opcode,
     input logic [2:0] funct3,
 
+    output logic vec_op,
     output logic branch,
     output logic beq,
     output logic bne,
@@ -21,6 +22,7 @@ module Control (
 
     always_comb begin
 
+        vec_op = 1'b0;
         branch = 1'b0;
         mem_read = 1'b0;
         memtoreg = 1'b0;
@@ -39,6 +41,12 @@ module Control (
 
         case (opcode)
             7'b0110011 : begin 
+                alu_op = 2'b10; 
+                reg_write = 1'b1;
+            end
+
+            7'b1001100 : begin 
+                vec_op = 1'b1; 
                 alu_op = 2'b10; 
                 reg_write = 1'b1;
             end
@@ -102,6 +110,7 @@ module Control (
             end
 
             default: begin
+                vec_op = 1'b0;
                 branch = 1'b0;
                 mem_read = 1'b0;
                 memtoreg = 1'b0;
