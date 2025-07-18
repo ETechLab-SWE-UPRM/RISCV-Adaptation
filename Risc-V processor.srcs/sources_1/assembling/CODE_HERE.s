@@ -1,3 +1,23 @@
+.macro mac rd, rs1, rs2
+    .insn r OP, 0x00, 0x01, \rd, \rs1, \rs2
+.endm
+
+.macro vmac rd, rs1, rs2
+    .insn r 0x4c, 0x00, 0x7f, \rd, \rs1, \rs2
+.endm
+
+.macro vadd rd, rs1, rs2
+    .insn r 0x4c, 0x00, 0x7f, \rd, \rs1, \rs2
+.endm
+
+.macro lv rd, rs1, offset
+    .insn i , 0x7c, 0x02, 0x7f, \rd, \rs1, \offset
+.endm
+
+.macro sv rs1, rs2, offset
+    .insn s 0x5c, 0x02, 0x7f, \rs1, \rs2, \offset
+.endm
+
 .data 
     signal: .zero 4096 #1024 * 4
     kernel: .word 1,1,1 # {1,1,1}
@@ -48,7 +68,7 @@ inner_loop:
     lw s5, 0(s4) # s5 = kernel[j]
     
     # MAC
-    mul t4, s5, s3
+    mac t4, s5, s3
 
     addi t5, t5, 1
     blt t5, s7, inner_loop 
