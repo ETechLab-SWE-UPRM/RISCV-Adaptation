@@ -6,26 +6,10 @@ verilog blk_mem_gen_v8_4_9  \
 
 verilog xil_defaultlib  \
 "../../../Risc-V processor.gen/sources_1/ip/blk_mem_gen_0_1/sim/blk_mem_gen_0.v" \
-"../../../Risc-V processor.gen/sources_1/ip/Instruction_Memory/sim/Instruction_Memory.v" \
 
 sv xil_defaultlib  \
-"../../../Risc-V processor.srcs/sources_1/new/ALU.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/ALU_Control.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/Control.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Data_memory.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/EX_MEM_reg.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/ID_EX_reg.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/IF_ID_reg.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/Imm_gen.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/InstructionMemory.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/MEM_WB_reg.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/PipelinedRISCV.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/ProgramCounter.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/Registers.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/branch.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/forwarding_unit.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/hazard_detection.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/PipelineTester.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/data_memory_tester.sv" \
 
 verilog xil_defaultlib "glbl.v"
 

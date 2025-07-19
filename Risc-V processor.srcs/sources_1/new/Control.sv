@@ -4,6 +4,7 @@ module Control (
     input logic [2:0] funct3,
 
     output logic vec_op,
+    output logic vec_reg_write,
     output logic branch,
     output logic beq,
     output logic bne,
@@ -23,6 +24,7 @@ module Control (
     always_comb begin
 
         vec_op = 1'b0;
+        vec_reg_write = 1'b0;
         branch = 1'b0;
         mem_read = 1'b0;
         memtoreg = 1'b0;
@@ -48,7 +50,7 @@ module Control (
             7'b1001100 : begin 
                 vec_op = 1'b1; 
                 alu_op = 2'b10; 
-                reg_write = 1'b1;
+                vec_reg_write = 1'b1;
             end
         
             7'b0010011 : begin 
@@ -65,7 +67,23 @@ module Control (
                 reg_write = 1'b1;
             end
 
+            7'b1111100 : begin 
+                vec_op = 1'b1; 
+                mem_read = 1'b1;
+                memtoreg = 1'b1;            
+                alu_op = 2'b00; 
+                alu_src = 1'b1;
+                vec_reg_write = 1'b1;
+            end
+
             7'b0100011 : begin 
+                alu_op = 2'b00; 
+                mem_write = 1'b1; 
+                alu_src = 1'b1; 
+            end
+
+            7'b1011100 : begin
+                vec_op = 1'b1; 
                 alu_op = 2'b00; 
                 mem_write = 1'b1; 
                 alu_src = 1'b1; 
@@ -111,6 +129,7 @@ module Control (
 
             default: begin
                 vec_op = 1'b0;
+                vec_reg_write = 1'b0;
                 branch = 1'b0;
                 mem_read = 1'b0;
                 memtoreg = 1'b0;
@@ -120,6 +139,7 @@ module Control (
                 reg_write = 1'b0;
                 jal = 1'b0;
                 jalr = 1'b0;
+                beq = 1'b0;
                 bne = 1'b0;
                 blt = 1'b0;
                 bge = 1'b0;
