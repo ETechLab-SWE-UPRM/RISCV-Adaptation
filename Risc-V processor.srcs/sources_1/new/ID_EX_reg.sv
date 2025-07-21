@@ -1,8 +1,12 @@
 
-module ID_EX_reg (
+module ID_EX_reg #(
+    parameter vec_length = 2
+) (
     input logic clk, 
     input logic reset, 
     input logic flush,
+    input logic vec_op,
+    input logic vec_reg_write,
     input logic branch,
     input logic beq,
     input logic bne,
@@ -25,12 +29,17 @@ module ID_EX_reg (
     input logic [4:0] reg_dest,
     input logic [2:0] funct3,
     input logic [6:0] funct7,
-    input logic [31:0] data_read1,
-    input logic [31:0] data_read2,
-    input logic [31:0] data_read3,
+    input logic [31:0] scalar_data_read1,
+    input logic [31:0] scalar_data_read2,
+    input logic [31:0] scalar_data_read3,
+    input logic [31:0] vector_data_read1 [0:vec_length-1],
+    input logic [31:0] vector_data_read2 [0:vec_length-1],
+    input logic [31:0] vector_data_read3 [0:vec_length-1],
 
     output logic [31:0] pc_id_ex,
     output logic [31:0] instruction_id_ex,
+    output logic vec_op_id_ex,
+    output logic vec_reg_write_id_ex,
     output logic id_ex_branch,
     output logic id_ex_beq,
     output logic id_ex_bne,
@@ -45,9 +54,12 @@ module ID_EX_reg (
     output logic id_ex_jalr,
     output logic id_ex_auipc,
     output logic [1:0] id_ex_alu_op,
-    output logic [31:0] data_read1_id_ex,
-    output logic [31:0] data_read2_id_ex,
-    output logic [31:0] data_read3_id_ex,
+    output logic [31:0] scalar_data_read1_id_ex,
+    output logic [31:0] scalar_data_read2_id_ex,
+    output logic [31:0] scalar_data_read3_id_ex,
+    output logic [31:0] vector_data_read1_id_ex [0:vec_length-1],
+    output logic [31:0] vector_data_read2_id_ex [0:vec_length-1],
+    output logic [31:0] vector_data_read3_id_ex [0:vec_length-1],
     output logic [31:0] big_immediate_id_ex,
     output logic [4:0] reg_dest_id_ex,
     output logic [4:0] reg2_id_ex,
@@ -61,6 +73,8 @@ module ID_EX_reg (
         if (reset) begin
             pc_id_ex <= 32'b0;
             instruction_id_ex <= 32'b0;
+            vec_op_id_ex <= 1'b0;
+            vec_reg_write_id_ex <= 1'b0;
             id_ex_branch <= 1'b0;
             id_ex_beq <= 1'b0;
             id_ex_bne <= 1'b0;
@@ -75,9 +89,12 @@ module ID_EX_reg (
             id_ex_jalr <= 1'b0;
             id_ex_auipc <= 1'b0;
             id_ex_alu_op <= 2'b0;
-            data_read1_id_ex <= 32'b0;
-            data_read2_id_ex <= 32'b0;
-            data_read3_id_ex <= 32'b0; 
+            scalar_data_read1_id_ex <= 32'b0;
+            scalar_data_read2_id_ex <= 32'b0;
+            scalar_data_read3_id_ex <= 32'b0; 
+            vector_data_read1_id_ex <= '{default: 32'b0};
+            vector_data_read2_id_ex <= '{default: 32'b0};
+            vector_data_read3_id_ex <= '{default: 32'b0};
             big_immediate_id_ex <= 32'b0;
             reg_dest_id_ex <= 5'b0;
             reg2_id_ex <= 5'b0;
@@ -102,9 +119,12 @@ module ID_EX_reg (
             id_ex_jalr <= 1'b0;
             id_ex_auipc <= 1'b0;
             id_ex_alu_op <= 2'b0;
-            data_read1_id_ex <= 32'b0;
-            data_read2_id_ex <= 32'b0;
-            data_read3_id_ex <= 32'b0; 
+            scalar_data_read1_id_ex <= 32'b0;
+            scalar_data_read2_id_ex <= 32'b0;
+            scalar_data_read3_id_ex <= 32'b0; 
+            vector_data_read1_id_ex <= '{default: 32'b0};
+            vector_data_read2_id_ex <= '{default: 32'b0};
+            vector_data_read3_id_ex <= '{default: 32'b0};
             big_immediate_id_ex <= 32'b0;
             reg_dest_id_ex <= 5'b0;
             reg2_id_ex <= 5'b0;
@@ -130,9 +150,12 @@ module ID_EX_reg (
             id_ex_jalr <= jalr;
             id_ex_auipc <= auipc;
             id_ex_alu_op <= alu_op;
-            data_read1_id_ex <= data_read1;
-            data_read2_id_ex <= data_read2;
-            data_read3_id_ex <= data_read3;
+            scalar_data_read1_id_ex <= scalar_data_read1;
+            scalar_data_read2_id_ex <= scalar_data_read2;
+            scalar_data_read3_id_ex <= scalar_data_read3;
+            vector_data_read1_id_ex <= vector_data_read1;
+            vector_data_read2_id_ex <= vector_data_read2;
+            vector_data_read3_id_ex <= vector_data_read3;
             big_immediate_id_ex <= big_immediate;
             reg_dest_id_ex <= reg_dest;
             reg1_id_ex <= reg1;

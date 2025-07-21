@@ -19,7 +19,7 @@ module Data_memory #(
     logic [31:0] write_word [0:1];
     logic [3:0]  write_enable [0:1];
     logic [13:0] word_address;
-    logic [31:0] next_address;
+    logic [13:0] next_address;
     
     assign byte_address = address - data_base;
     assign word_address = byte_address[15:2];

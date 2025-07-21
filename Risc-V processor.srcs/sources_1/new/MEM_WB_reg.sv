@@ -1,23 +1,29 @@
 
 
-module MEM_WB_reg (
+module MEM_WB_reg #(
+    parameter vec_length = 2
+) (
     input logic clk,
     input logic reset,
+    input logic ex_mem_vec_op,
+    input logic ex_mem_vec_reg_write,
     input logic ex_mem_memtoreg,
     input logic ex_mem_regwrite,
     input logic ex_mem_jal,
     input logic ex_mem_jalr,
-    input logic [31:0] ex_mem_alu_result,
-    input logic [31:0] memory_data_read,
+    input logic [31:0] ex_mem_alu_result [0:vec_length-1],
+    input logic [31:0] memory_data_read [0:vec_length-1],
     input logic [4:0] ex_mem_reg_dest,
     input logic [31:0] ex_mem_link_address_reg,
 
+    output logic mem_wb_vec_op,
+    output logic mem_wb_vec_reg_write,
     output logic mem_wb_memtoreg,
     output logic mem_wb_regwrite,
     output logic mem_wb_jal,
     output logic mem_wb_jalr,
-    output logic [31:0] mem_wb_alu_result,
-    output logic [31:0] mem_wb_memory_data_read,
+    output logic [31:0] mem_wb_alu_result [0:vec_length-1],
+    output logic [31:0] mem_wb_memory_data_read [0:vec_length-1],
     output logic [4:0] mem_wb_reg_dest,
     output logic [31:0] mem_wb_link_address,
     output logic [31:0] mem_wb_write_data
@@ -29,8 +35,8 @@ module MEM_WB_reg (
             mem_wb_regwrite <= 1'b0;
             mem_wb_jal <= 1'b0;
             mem_wb_jalr <= 1'b0;
-            mem_wb_alu_result <= 32'b0;
-            mem_wb_memory_data_read <= 32'b0;
+            mem_wb_alu_result <= '{default: 32'b0};
+            mem_wb_memory_data_read <= '{default: 32'b0};
             mem_wb_reg_dest <= 5'b0;
             mem_wb_link_address <= 32'b0;
 
