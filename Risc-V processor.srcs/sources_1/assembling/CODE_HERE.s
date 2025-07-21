@@ -3,7 +3,7 @@
 .endm
 
 .macro vmac rd, rs1, rs2
-    .insn r 0x4c, 0x00, 0x7f, \rd, \rs1, \rs2
+    .insn r 0x4c, 0x00, 0x01, \rd, \rs1, \rs2
 .endm
 
 .macro vadd rd, rs1, rs2

@@ -164,12 +164,13 @@ module RISCV_PIPELINED (
         .immediate(big_immediate) 
     );
     
-    logic vec_op, branch, beq, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc;
+    logic vec_op, vec_reg_write, branch, beq, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc;
     logic [1:0] alu_op;
     Control control_unit (
         .opcode(opcode),
         .funct3(funct3),
         .vec_op(vec_op),
+        .vec_reg_write(vec_reg_write),
         .branch(branch),
         .beq(beq),
         .bne(bne),
