@@ -21,7 +21,7 @@ module PipelineTester;
          $display("Dumping data memory to memory_dump.hex");
         $writememh(
              "C:/Users/pizar/RISCV-Adaptation/Risc-V processor.srcs/sources_1/memory_dump.hex",
-             processor.data_mem.mem_inst.inst.native_mem_module.blk_mem_gen_v8_4_9_inst.memory
+             processor.data_mem.memory_block[0].mem_inst.inst.native_mem_module.blk_mem_gen_v8_4_9_inst.memory
          );
         $finish;
     end

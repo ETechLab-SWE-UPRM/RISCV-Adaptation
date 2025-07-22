@@ -350,7 +350,7 @@ module RISCV_PIPELINED (
                 2'b00: va_operand2 = vector_data_read2_id_ex;
                 2'b01: va_operand2 = mem_wb_write_data;
                 2'b10: va_operand2 = ex_mem_alu_result;
-            default: va_operand2 = vector_data_read2_id_ex;
+                default: va_operand2 = vector_data_read2_id_ex;
             endcase
 
             unique case (forward_c)
@@ -360,11 +360,11 @@ module RISCV_PIPELINED (
                 default: va_operand3 = vector_data_read3_id_ex;
             endcase
         end else begin
-             unique case (forward_a)
-            2'b00: alu_operand1 = data_read1_id_ex;
-            2'b01: alu_operand1 = mem_wb_write_data[0];
-            2'b10: alu_operand1 = ex_mem_alu_result[0];
-            default: alu_operand1 = data_read1_id_ex;
+            unique case (forward_a)
+                2'b00: alu_operand1 = data_read1_id_ex;
+                2'b01: alu_operand1 = mem_wb_write_data[0];
+                2'b10: alu_operand1 = ex_mem_alu_result[0];
+                default: alu_operand1 = data_read1_id_ex;
             endcase
 
             unique case (forward_b)
