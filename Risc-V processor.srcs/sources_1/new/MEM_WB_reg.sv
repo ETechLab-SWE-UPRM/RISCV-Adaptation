@@ -60,6 +60,9 @@ module MEM_WB_reg #(
     always_comb begin 
         if (mem_wb_jal || mem_wb_jalr) begin
             mem_wb_write_data[0] = mem_wb_link_address;
+            for (int i = 1; i < vec_length; i++) begin
+                mem_wb_write_data[i] = 32'b0; // Other vector elements are not used in JAL/JALR
+            end
         end else if(mem_wb_memtoreg) begin
             mem_wb_write_data = mem_wb_memory_data_read; 
         end else begin

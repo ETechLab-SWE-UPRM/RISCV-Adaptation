@@ -175,7 +175,7 @@ module RISCV_PIPELINED (
         .read_reg2(reg2),
         .read_reg3(reg_dest),
         .write_reg(mem_wb_reg_dest), 
-        .write_data(mem_wb_write_data [0:vector_length-1]),
+        .write_data(mem_wb_write_data),
         .reg_write_enable(mem_wb_vec_reg_write),
         .read_data1(vector_data_read1),
         .read_data2(vector_data_read2),
@@ -342,7 +342,6 @@ module RISCV_PIPELINED (
                 2'b00: va_operand1 = vector_data_read1_id_ex;
                 2'b01: va_operand1 = mem_wb_write_data;
                 2'b10: va_operand1 = ex_mem_alu_result;
-
                 default: va_operand1 = vector_data_read1_id_ex;
             endcase
 
@@ -442,17 +441,18 @@ module RISCV_PIPELINED (
 
     always_comb begin
         if(vec_op_id_ex) begin
-            for(int i = 0; i < vector_length; i++) begin
-                complete_alu_result[i] = v_alu_result[i];
-            end
+            complete_alu_result = v_alu_result;
         end else begin
             complete_alu_result[0] = ex_result;
+            for(int i = 1; i < vector_length; i++) begin
+                complete_alu_result[i] = 32'b0;
+            end
         end
     end
 
     logic [31:0] link_addr_ex1;
 
-    assign led = alu_result[0];
+    assign led = complete_alu_result[0][0];
     assign link_addr_ex1 = pc_id_ex;
 
     branch branch_unit (
@@ -516,11 +516,12 @@ module RISCV_PIPELINED (
 
     always_comb begin
         if(ex_mem_vec_op) begin
-            for(int i = 0; i < vector_length; i++) begin
-                write_data[i] = vec_ex_mem_data_read2[i];
-            end
+            write_data = vec_ex_mem_data_read2;
         end else begin
             write_data[0] = ex_mem_data_read2;
+            for(int i = 1; i < vector_length; i++) begin
+                write_data[i] = 32'b0;
+            end
         end
     end
 

@@ -47,7 +47,8 @@ module EX_MEM_reg #(
             ex_mem_jal <= 1'b0;
             ex_mem_jalr <= 1'b0;
             ex_mem_alu_result <= '{default: 32'b0};
-            ex_mem_data_read2 <= '{default: 32'b0};
+            ex_mem_data_read2 <= 32'b0;
+            vec_ex_mem_data_read2 <= '{default: 32'b0};
             ex_mem_reg_dest <= 5'b0;
             ex_mem_link_address_reg <= 32'b0;
             ex_mem_funct3 <= 3'b0; 
@@ -55,6 +56,7 @@ module EX_MEM_reg #(
         end else begin
             ex_mem_vec_op <= vec_op; 
             ex_mem_vec_reg_write <= vec_reg_write;
+            vec_ex_mem_data_read2 <= vec_data_read2_id_ex;
             ex_mem_memread <= id_ex_mem_read; 
             ex_mem_memwrite <= id_ex_mem_write; 
             ex_mem_memtoreg <= id_ex_memtoreg; 

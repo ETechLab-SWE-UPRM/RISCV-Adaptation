@@ -42,7 +42,6 @@ main:
     vaddi t1, zero, 2
     vslli t2, t1, 2
     vstore t0, t2, 0
-    
-    
+    sw t0, 0(t2)    
 forever:
     jal forever
