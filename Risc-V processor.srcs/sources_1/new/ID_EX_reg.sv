@@ -105,6 +105,8 @@ module ID_EX_reg #(
         end else if (flush) begin
             pc_id_ex <= 32'b0;
             instruction_id_ex <= 32'h13;
+            vec_op_id_ex <= 1'b0;
+            vec_reg_write_id_ex <= 1'b0;
             id_ex_branch <= 1'b0;
             id_ex_beq <= 1'b0;
             id_ex_bne <= 1'b0;
@@ -136,6 +138,8 @@ module ID_EX_reg #(
 
             pc_id_ex <= pc_if_id; 
             instruction_id_ex <= instruction_if_id;
+            vec_op_id_ex <= vec_op;
+            vec_reg_write_id_ex <= vec_reg_write;
             id_ex_branch <= branch;
             id_ex_beq <= beq;
             id_ex_bne <= bne;

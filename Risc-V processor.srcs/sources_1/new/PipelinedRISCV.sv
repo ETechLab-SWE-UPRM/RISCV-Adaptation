@@ -40,9 +40,13 @@ module RISCV_PIPELINED (
     
     // ID/EX pipeline registers
     logic [31:0] pc_id_ex, instruction_id_ex;
+    logic vec_op_id_ex, vec_reg_write_id_ex;
     logic id_ex_branch, id_ex_beq, id_ex_bne, id_ex_blt, id_ex_bge, id_ex_mem_read, id_ex_memtoreg, id_ex_mem_write, id_ex_auipc, id_ex_alu_src, id_ex_reg_write, id_ex_jal, id_ex_jalr;
     logic [1:0] id_ex_alu_op;
     logic [31:0] data_read1_id_ex, data_read2_id_ex, data_read3_id_ex;
+    logic [31:0] vector_data_read1_id_ex [0:vector_length-1];
+    logic [31:0] vector_data_read2_id_ex [0:vector_length-1];
+    logic [31:0] vector_data_read3_id_ex [0:vector_length-1];
     logic [31:0] big_immediate_id_ex;
     logic [4:0] reg_dest_id_ex, reg1_id_ex, reg2_id_ex;
     logic [2:0] funct3_id_ex;
@@ -54,8 +58,10 @@ module RISCV_PIPELINED (
     logic [31:0] ex_next_pc;
 
     // EX/MEM pipeline registers
+    logic ex_mem_vec_op, ex_mem_vec_reg_write;
     logic ex_mem_memread, ex_mem_memwrite, ex_mem_memtoreg, ex_mem_regwrite, ex_mem_jal, ex_mem_jalr;
-    logic [31:0] ex_mem_alu_result, ex_mem_data_read2;
+    logic [31:0] ex_mem_alu_result [0:vector_length-1], ex_mem_data_read2;
+    logic [31:0] vec_ex_mem_data_read2 [0:vector_length-1];
     logic [4:0] ex_mem_reg_dest;
     logic [2:0] ex_mem_funct3;
     logic [31:0] ex_mem_link_address_reg;
@@ -67,10 +73,10 @@ module RISCV_PIPELINED (
     (* DONT_TOUCH = "true" *) wire       ex_mem_regwrite_dup = ex_mem_regwrite;
     
     // MEM/WB pipeline registers
-    logic mem_wb_memtoreg, mem_wb_regwrite, mem_wb_jal, mem_wb_jalr;
-    logic [31:0] mem_wb_alu_result, mem_wb_memory_data_read, mem_wb_link_address;
+    logic mem_wb_memtoreg, mem_wb_regwrite, mem_wb_jal, mem_wb_jalr, mem_wb_memtovreg, mem_wb_vec_op, mem_wb_vec_reg_write;
+    logic [31:0] mem_wb_alu_result [0:vector_length-1], mem_wb_memory_data_read [0:vector_length-1], mem_wb_link_address;
     logic [4:0] mem_wb_reg_dest;
-    logic [31:0] mem_wb_write_data;
+    logic [31:0] mem_wb_write_data [0:vector_length-1];
 
     // -- INSTRUCTION FETCH STAGE --
     logic [31:0] pc ;
@@ -142,6 +148,9 @@ module RISCV_PIPELINED (
     assign funct7 = instruction_if_id[31:25]; 
 
     logic [31:0] data_read1, data_read2, data_read3;
+    logic [31:0] vector_data_read1 [0:vector_length-1];
+    logic [31:0] vector_data_read2 [0:vector_length-1];
+    logic [31:0] vector_data_read3 [0:vector_length-1];
     
     Registers regs (
         .clk(clk),
@@ -150,13 +159,29 @@ module RISCV_PIPELINED (
         .read_reg2(reg2),
         .read_reg3(reg_dest),
         .write_reg(mem_wb_reg_dest), 
-        .write_data(mem_wb_write_data),
+        .write_data(mem_wb_write_data[0]),
         .reg_write_enable(mem_wb_regwrite),
         .read_data1(data_read1),
         .read_data2(data_read2),
         .read_data3(data_read3)
     );
-    
+
+    vector_registers #(
+        .vec_length(vector_length)
+    ) v_regs (
+        .clk(clk),
+        .reset(reset),
+        .read_reg1(reg1),
+        .read_reg2(reg2),
+        .read_reg3(reg_dest),
+        .write_reg(mem_wb_reg_dest), 
+        .write_data(mem_wb_write_data [0:vector_length-1]),
+        .reg_write_enable(mem_wb_vec_reg_write),
+        .read_data1(vector_data_read1),
+        .read_data2(vector_data_read2),
+        .read_data3(vector_data_read3)
+    );
+
     logic [31:0] big_immediate;
 
     Immediate_generator imm_gen (
@@ -188,7 +213,8 @@ module RISCV_PIPELINED (
     );
 
     Hazard_Detection hazard_detection_unit (
-        .clk(clk),
+        .if_id_vec_op(vec_op),
+        .id_ex_vec_op(vec_op_id_ex),
         .if_id_rs1(reg1), 
         .if_id_rs2(reg2), 
         .reg_dest_id_ex(reg_dest_id_ex),
@@ -200,10 +226,14 @@ module RISCV_PIPELINED (
 
     // ------INSTRUCTION DECODE / EXECUTE STAGE------    
 
-    ID_EX_reg id_ex_reg (
+    ID_EX_reg #(
+        .vec_length(vector_length)
+    ) id_ex_reg (
         .clk(clk), 
         .reset(reset), 
         .flush(id_ex_flush),
+        .vec_op(vec_op),
+        .vec_reg_write(vec_reg_write),
         .branch(branch), 
         .beq(beq),
         .bne(bne),
@@ -226,12 +256,17 @@ module RISCV_PIPELINED (
         .reg_dest(reg_dest), 
         .funct3(funct3), 
         .funct7(funct7),
-        .data_read1(data_read1),
-        .data_read2(data_read2),
-        .data_read3(data_read3),
-        
+        .scalar_data_read1(data_read1),
+        .scalar_data_read2(data_read2),
+        .scalar_data_read3(data_read3),
+        .vector_data_read1(vector_data_read1),
+        .vector_data_read2(vector_data_read2),
+        .vector_data_read3(vector_data_read3),
+
         .pc_id_ex(pc_id_ex),
         .instruction_id_ex(instruction_id_ex),
+        .vec_op_id_ex(vec_op_id_ex),
+        .vec_reg_write_id_ex(vec_reg_write_id_ex),
         .id_ex_branch(id_ex_branch),
         .id_ex_beq(id_ex_beq),
         .id_ex_bne(id_ex_bne),
@@ -246,9 +281,12 @@ module RISCV_PIPELINED (
         .id_ex_jal(id_ex_jal),
         .id_ex_jalr(id_ex_jalr),
         .id_ex_alu_op(id_ex_alu_op),
-        .data_read1_id_ex(data_read1_id_ex),
-        .data_read2_id_ex(data_read2_id_ex),
-        .data_read3_id_ex(data_read3_id_ex),
+        .scalar_data_read1_id_ex(data_read1_id_ex),
+        .scalar_data_read2_id_ex(data_read2_id_ex),
+        .scalar_data_read3_id_ex(data_read3_id_ex),
+        .vector_data_read1_id_ex(vector_data_read1_id_ex),
+        .vector_data_read2_id_ex(vector_data_read2_id_ex),
+        .vector_data_read3_id_ex(vector_data_read3_id_ex),
         .big_immediate_id_ex(big_immediate_id_ex),
         .reg_dest_id_ex(reg_dest_id_ex),
         .reg1_id_ex(reg1_id_ex), 
@@ -265,7 +303,12 @@ module RISCV_PIPELINED (
         .ex_mem_rd(ex_mem_rd_dup), 
         .mem_wb_rd(mem_wb_reg_dest), 
         .ex_mem_reg_write(ex_mem_regwrite_dup), 
+        .ex_mem_vec_regwrite(ex_mem_vec_reg_write),
         .mem_wb_reg_write(mem_wb_regwrite),
+        .mem_wb_vec_regwrite(mem_wb_vec_reg_write),
+        .id_ex_vec_op(vec_op_id_ex),
+        .ex_mem_vec_op(ex_mem_vec_op),
+        .mem_wb_vec_op(mem_wb_vec_op),
         .forward_a(forward_a), 
         .forward_b(forward_b),
         .forward_c(forward_c)
@@ -277,6 +320,8 @@ module RISCV_PIPELINED (
     logic zero;
     logic is_mac;
     logic [31:0] alu_input, alu_input2;
+    logic [31:0] v_alu_input [0:vector_length-1], v_alu_input2 [0:vector_length-1];
+    logic [31:0] v_alu_result [0:vector_length-1];
 
     ALU_control alu_control_unit (
         .alu_op(id_ex_alu_op),
@@ -289,37 +334,70 @@ module RISCV_PIPELINED (
     );
 
     logic [31:0] alu_operand1, alu_operand2, alu_operand3;
+    logic [31:0] va_operand1 [0:vector_length-1], va_operand2 [0:vector_length-1], va_operand3 [0:vector_length-1];
 
     always_comb begin
-        unique case (forward_a)
+        if(vec_op_id_ex) begin
+            unique case (forward_a)
+                2'b00: va_operand1 = vector_data_read1_id_ex;
+                2'b01: va_operand1 = mem_wb_write_data;
+                2'b10: va_operand1 = ex_mem_alu_result;
+
+                default: va_operand1 = vector_data_read1_id_ex;
+            endcase
+
+            unique case (forward_b)
+                2'b00: va_operand2 = vector_data_read2_id_ex;
+                2'b01: va_operand2 = mem_wb_write_data;
+                2'b10: va_operand2 = ex_mem_alu_result;
+            default: va_operand2 = vector_data_read2_id_ex;
+            endcase
+
+            unique case (forward_c)
+                2'b00: va_operand3 = vector_data_read3_id_ex;
+                2'b01: va_operand3 = mem_wb_write_data;
+                2'b10: va_operand3 = ex_mem_alu_result;
+                default: va_operand3 = vector_data_read3_id_ex;
+            endcase
+        end else begin
+             unique case (forward_a)
             2'b00: alu_operand1 = data_read1_id_ex;
-            2'b01: alu_operand1 = mem_wb_write_data;
-            2'b10: alu_operand1 = ex_mem_alu_result;
+            2'b01: alu_operand1 = mem_wb_write_data[0];
+            2'b10: alu_operand1 = ex_mem_alu_result[0];
             default: alu_operand1 = data_read1_id_ex;
-        endcase
+            endcase
 
-        unique case (forward_b)
-            2'b00: alu_operand2 = data_read2_id_ex;
-            2'b01: alu_operand2 = mem_wb_write_data;
-            2'b10: alu_operand2 = ex_mem_alu_result;
-            default: alu_operand2 = data_read2_id_ex;
-        endcase
+            unique case (forward_b)
+                2'b00: alu_operand2 = data_read2_id_ex;
+                2'b01: alu_operand2 = mem_wb_write_data[0];
+                2'b10: alu_operand2 = ex_mem_alu_result[0];
+                default: alu_operand2 = data_read2_id_ex;
+            endcase
 
-        unique case (forward_c)
-            2'b00: alu_operand3 = data_read3_id_ex;
-            2'b01: alu_operand3 = mem_wb_write_data;
-            2'b10: alu_operand3 = ex_mem_alu_result; 
-            default: alu_operand3 = data_read3_id_ex;
-        endcase
+            unique case (forward_c)
+                2'b00: alu_operand3 = data_read3_id_ex;
+                2'b01: alu_operand3 = mem_wb_write_data[0];
+                2'b10: alu_operand3 = ex_mem_alu_result[0];
+                default: alu_operand3 = data_read3_id_ex;
+            endcase
+        end
     end
         
     assign alu_input = id_ex_auipc ? pc_id_ex : alu_operand1;
     assign alu_input2 = id_ex_alu_src ? big_immediate_id_ex: alu_operand2;
+
+    always_comb begin
+        for(int i = 0; i < vector_length; i++) begin
+            v_alu_input[i] = (id_ex_auipc) ? pc_id_ex : va_operand1[i];
+            v_alu_input2[i] = (id_ex_alu_src) ? big_immediate_id_ex : va_operand2[i];
+        end
+    end
     
     logic [24:0] scalar_mac_input_a;
     logic [17:0] scalar_mac_input_b;
     logic [43:0] scalar_mac_result;
     logic [31:0] scalar_mac_input_c, ex_result;
+    logic [31:0] complete_alu_result [0:vector_length-1];
 
     // Prepare inputs if MAC
     always_comb begin
@@ -349,7 +427,28 @@ module RISCV_PIPELINED (
         .zero(zero) 
     );
 
+    vector_ALU #(
+        .vec_length(vector_length)
+    ) v_alu (
+        .is_mac(is_mac),
+        .a(v_alu_input),
+        .b(v_alu_input2),
+        .c(vector_data_read3_id_ex),
+        .alu_control(alu_control),
+        .result(v_alu_result)
+    );
+
     assign ex_result = (is_mac) ? scalar_mac_result[31:0] : alu_result;
+
+    always_comb begin
+        if(vec_op_id_ex) begin
+            for(int i = 0; i < vector_length; i++) begin
+                complete_alu_result[i] = v_alu_result[i];
+            end
+        end else begin
+            complete_alu_result[0] = ex_result;
+        end
+    end
 
     logic [31:0] link_addr_ex1;
 
@@ -375,20 +474,28 @@ module RISCV_PIPELINED (
 
     // ------EXECUTE STAGE / MEMORY STAGE------
 
-    EX_MEM_reg ex_mem_reg (
+    EX_MEM_reg #(
+        .vec_length(vector_length)
+    ) ex_mem_reg (
         .clk(clk), 
         .reset(reset), 
+        .vec_op(vec_op_id_ex),
+        .vec_reg_write(vec_reg_write_id_ex),
         .id_ex_mem_read(id_ex_mem_read),
         .id_ex_mem_write(id_ex_mem_write),
         .id_ex_memtoreg(id_ex_memtoreg), 
         .id_ex_reg_write(id_ex_reg_write), 
         .id_ex_jal(id_ex_jal), 
         .id_ex_jalr(id_ex_jalr), 
-        .alu_result(ex_result),
+        .alu_result(complete_alu_result),
         .data_read2_id_ex(alu_operand2), 
+        .vec_data_read2_id_ex(va_operand2),
         .reg_dest_id_ex(reg_dest_id_ex),
         .ex_link_address(link_addr_ex1),
         .funct3(funct3_id_ex),
+
+        .ex_mem_vec_op(ex_mem_vec_op),
+        .ex_mem_vec_reg_write(ex_mem_vec_reg_write),
         .ex_mem_memread(ex_mem_memread),
         .ex_mem_memwrite(ex_mem_memwrite),
         .ex_mem_memtoreg(ex_mem_memtoreg),
@@ -397,27 +504,47 @@ module RISCV_PIPELINED (
         .ex_mem_jalr(ex_mem_jalr),
         .ex_mem_alu_result(ex_mem_alu_result),
         .ex_mem_data_read2(ex_mem_data_read2),
+        .vec_ex_mem_data_read2(vec_ex_mem_data_read2),
         .ex_mem_reg_dest(ex_mem_reg_dest),
         .ex_mem_link_address_reg(ex_mem_link_address_reg),
         .ex_mem_funct3(ex_mem_funct3)
     );
 
     // ------MEMORY STAGE------
-    logic [31:0] memory_data_read;
+    logic [31:0] memory_data_read [0:vector_length-1];
+    logic [31:0] write_data [0:vector_length-1];
 
-    Data_memory data_mem(
+    always_comb begin
+        if(ex_mem_vec_op) begin
+            for(int i = 0; i < vector_length; i++) begin
+                write_data[i] = vec_ex_mem_data_read2[i];
+            end
+        end else begin
+            write_data[0] = ex_mem_data_read2;
+        end
+    end
+
+    Data_memory #(
+        .vec_length(vector_length)
+    ) data_mem(
         .clk(clk),
-        .address(ex_mem_alu_result),
-        .write_data(ex_mem_data_read2),
+        .address(ex_mem_alu_result[0]),
+        .write_data(write_data),
         .funct3(ex_mem_funct3),
         .mem_write(ex_mem_memwrite),
         .mem_read(ex_mem_memread),
+        .vec_op(ex_mem_vec_op),
+
         .read_data(memory_data_read)
     );
 
-    MEM_WB_reg mem_wb_reg (
+    MEM_WB_reg #(
+        .vec_length(vector_length)
+    ) mem_wb_reg (
         .clk(clk),
         .reset(reset),
+        .ex_mem_vec_op(ex_mem_vec_op),
+        .ex_mem_vec_reg_write(ex_mem_vec_reg_write),
         .ex_mem_memtoreg(ex_mem_memtoreg),
         .ex_mem_regwrite(ex_mem_regwrite),
         .ex_mem_jal(ex_mem_jal),
@@ -427,6 +554,8 @@ module RISCV_PIPELINED (
         .ex_mem_reg_dest(ex_mem_reg_dest),
         .ex_mem_link_address_reg(ex_mem_link_address_reg),
 
+        .mem_wb_vec_op(mem_wb_vec_op),
+        .mem_wb_vec_reg_write(mem_wb_vec_reg_write),
         .mem_wb_memtoreg(mem_wb_memtoreg),
         .mem_wb_regwrite(mem_wb_regwrite),
         .mem_wb_jal(mem_wb_jal),

@@ -26,11 +26,13 @@ module MEM_WB_reg #(
     output logic [31:0] mem_wb_memory_data_read [0:vec_length-1],
     output logic [4:0] mem_wb_reg_dest,
     output logic [31:0] mem_wb_link_address,
-    output logic [31:0] mem_wb_write_data
+    output logic [31:0] mem_wb_write_data [0:vec_length-1]
 );
 
     always_ff @(posedge clk or posedge reset) begin
         if (reset) begin
+            mem_wb_vec_op <= 1'b0;
+            mem_wb_vec_reg_write <= 1'b0;
             mem_wb_memtoreg <= 1'b0;
             mem_wb_regwrite <= 1'b0;
             mem_wb_jal <= 1'b0;
@@ -41,6 +43,8 @@ module MEM_WB_reg #(
             mem_wb_link_address <= 32'b0;
 
         end else begin
+            mem_wb_vec_op <= ex_mem_vec_op;
+            mem_wb_vec_reg_write <= ex_mem_vec_reg_write;
             mem_wb_memtoreg <= ex_mem_memtoreg;
             mem_wb_regwrite <= ex_mem_regwrite;
             mem_wb_jal <= ex_mem_jal;
@@ -55,7 +59,7 @@ module MEM_WB_reg #(
 
     always_comb begin 
         if (mem_wb_jal || mem_wb_jalr) begin
-            mem_wb_write_data = mem_wb_link_address;
+            mem_wb_write_data[0] = mem_wb_link_address;
         end else if(mem_wb_memtoreg) begin
             mem_wb_write_data = mem_wb_memory_data_read; 
         end else begin

@@ -11,10 +11,13 @@ module Immediate_generator #(
       // I-type: loads, OP-IMM, JALR
       7'b0000011, // LOAD
       7'b0010011, // OP-IMM
+      7'b0001011, // OP-IMM (vector)
+      7'b1111011, // LOAD (vector)
       7'b1100111: // JALR
         immediate = {{(XLEN-12){instruction[31]}}, instruction[31:20]};
 
       // stores
+      7'b0101011,
       7'b0100011:
         immediate = {{(XLEN-12){instruction[31]}},
                      instruction[31:25], instruction[11:7]};

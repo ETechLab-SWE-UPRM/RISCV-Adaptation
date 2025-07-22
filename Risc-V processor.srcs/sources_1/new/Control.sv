@@ -47,7 +47,7 @@ module Control (
                 reg_write = 1'b1;
             end
 
-            7'b1001100 : begin 
+            7'b1011011 : begin 
                 vec_op = 1'b1; 
                 alu_op = 2'b10; 
                 vec_reg_write = 1'b1;
@@ -59,6 +59,13 @@ module Control (
                 reg_write = 1'b1;
             end
 
+            7'b0001011 : begin 
+                vec_op = 1'b1; 
+                alu_op = 2'b10; 
+                alu_src = 1'b1; 
+                vec_reg_write = 1'b1;
+            end
+
             7'b0000011 : begin 
                 mem_read = 1'b1;
                 memtoreg = 1'b1;
@@ -67,7 +74,7 @@ module Control (
                 reg_write = 1'b1;
             end
 
-            7'b1111100 : begin 
+            7'b1111011 : begin 
                 vec_op = 1'b1; 
                 mem_read = 1'b1;
                 memtoreg = 1'b1;            
@@ -82,7 +89,7 @@ module Control (
                 alu_src = 1'b1; 
             end
 
-            7'b1011100 : begin
+            7'b0101011 : begin
                 vec_op = 1'b1; 
                 alu_op = 2'b00; 
                 mem_write = 1'b1; 
