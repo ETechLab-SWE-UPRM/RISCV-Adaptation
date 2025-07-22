@@ -26,6 +26,7 @@ module RISCV_PIPELINED (
     input logic reset, 
     output logic led
 );
+    // Keep this number even, because data memory is organized in pairs of words
     localparam vector_length = 2;
 
     // IF/ID pipeline registers

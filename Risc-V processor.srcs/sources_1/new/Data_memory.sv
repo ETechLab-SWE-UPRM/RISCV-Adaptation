@@ -3,21 +3,21 @@ module Data_memory #(
 ) (
     input  logic clk,
     input  logic [31:0] address,
-    input  logic [31:0] write_data [0:1],
+    input  logic [31:0] write_data [0:vec_length-1],
     input  logic [2:0] funct3,
     input  logic mem_write,
     input  logic mem_read,
     input  logic vec_op,
 
-    output logic [31:0] read_data [0:1]
+    output logic [31:0] read_data [0:vec_length-1]
 );
 
     localparam data_base = 32'h1000_0000; 
     localparam data_words = 8360;
     logic [31:0] byte_address;
-    logic [31:0] bram_data [0:1];
-    logic [31:0] write_word [0:1];
-    logic [3:0]  write_enable [0:1];
+    logic [31:0] bram_data [0:vec_length-1];
+    logic [31:0] write_word [0:vec_length-1];
+    logic [3:0]  write_enable [0:vec_length-1];
     logic [13:0] word_address;
     logic [13:0] next_address;
     
@@ -25,20 +25,26 @@ module Data_memory #(
     assign word_address = byte_address[15:2];
     assign next_address = word_address + 14'h1;
 
-    blk_mem_gen_0 mem_inst (
-        .clka(clk),
-        .ena(1'b1),
-        .wea(write_enable[0]),
-        .addra(word_address),
-        .dina(write_word[0]),
-        .douta(bram_data[0]),
-        .clkb(clk),
-        .enb(vec_op),
-        .web(write_enable[1]),
-        .addrb(next_address),
-        .dinb(write_word[1]),
-        .doutb(bram_data[1])
-    );
+    genvar i;
+    // 1 BRAM instance for each 2 words in the vector
+    generate
+        for(i = 0; i < vec_length; i = i + 2) begin : memory_block
+            blk_mem_gen_0 mem_inst (
+            .clka(clk),
+            .ena(1'b1),
+            .wea(write_enable[i]),
+            .addra(word_address),
+            .dina(write_word[i]),
+            .douta(bram_data[i]),
+            .clkb(clk),
+            .enb(1'b1),
+            .web(write_enable[i + 1]),
+            .addrb(next_address),
+            .dinb(write_word[i + 1]),
+            .doutb(bram_data[i + 1])
+        );
+        end
+    endgenerate
 
     always_comb begin
         for (int i = 0; i < vec_length; i++) begin
