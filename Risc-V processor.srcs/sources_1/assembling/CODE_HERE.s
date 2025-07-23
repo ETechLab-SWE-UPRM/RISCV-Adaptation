@@ -17,8 +17,8 @@
     .insn i, 0x7B, 0x02, \rd, \rs1, \offset
 .endm
 
-.macro vstore rs1, rs2, offset
-    .insn i 0x2B, 0x02, \rs1, \rs2, \offset
+.macro vstore rs2, rs1, offset
+    .insn i 0x2B, 0x02, \rs2, \rs1, \offset
 .endm
 
 .macro vaddi rd, rs1, offset
@@ -39,8 +39,10 @@
 
 main:
     vaddi t0, zero, 10
+    addi t0, zero, 15
     vaddi t1, zero, 2
     vslli t2, t1, 2
+    addi t2, zero, 4
     vstore t0, t2, 0
     sw t0, 0(t2)    
 forever:

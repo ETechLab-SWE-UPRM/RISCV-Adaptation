@@ -490,7 +490,7 @@ module RISCV_PIPELINED (
         .id_ex_jalr(id_ex_jalr), 
         .alu_result(complete_alu_result),
         .data_read2_id_ex(alu_operand2), 
-        .vec_data_read2_id_ex(va_operand2),
+        .vec_data_read2_id_ex(va_operand3),
         .reg_dest_id_ex(reg_dest_id_ex),
         .ex_link_address(link_addr_ex1),
         .funct3(funct3_id_ex),

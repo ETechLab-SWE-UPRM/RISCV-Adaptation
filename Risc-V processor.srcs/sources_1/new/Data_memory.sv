@@ -14,16 +14,25 @@ module Data_memory #(
 
     localparam data_base = 32'h1000_0000; 
     localparam data_words = 8360;
-    logic [31:0] byte_address;
     logic [31:0] bram_data [0:vec_length-1];
     logic [31:0] write_word [0:vec_length-1];
     logic [3:0]  write_enable [0:vec_length-1];
-    logic [13:0] word_address;
-    logic [13:0] next_address;
-    
-    assign byte_address = address - data_base;
-    assign word_address = byte_address[15:2];
-    assign next_address = word_address + 14'h1;
+    logic [13:0] addresses [0:vec_length-1];
+    logic in_bounds [0:vec_length-1];
+    logic vec_op_enable [0:vec_length-1];
+
+    assign vec_op_enable[0] = 1'b1;
+    assign addresses[0] = address[15:2];
+    assign in_bounds[0] = (addresses[0] < data_words);
+    // Calculate next addresses based on the current address and vector length
+    genvar j;
+    generate
+        for (j = 1; j < vec_length; j++) begin
+            assign addresses[j] = addresses[j-1] + 1;
+            assign in_bounds[j] = (addresses[j] < data_words);
+            assign vec_op_enable[j] = vec_op;
+        end
+    endgenerate
 
     genvar i;
     // 1 BRAM instance for each 2 words in the vector
@@ -31,18 +40,18 @@ module Data_memory #(
         for(i = 0; i < vec_length; i = i + 2) begin : memory_block
             blk_mem_gen_0 mem_inst (
             .clka(clk),
-            .ena(1'b1),
-            .wea(write_enable[i]),
-            .addra(word_address),
+            .ena(vec_op_enable[i]),
+            .wea(write_enable[i] && in_bounds[i]),
+            .addra(addresses[i]),
             .dina(write_word[i]),
             .douta(bram_data[i]),
             .clkb(clk),
-            .enb(1'b1),
-            .web(write_enable[i + 1]),
-            .addrb(next_address),
+            .enb(vec_op_enable[i + 1]),
+            .web(write_enable[i + 1] && in_bounds[i + 1]),
+            .addrb(addresses[i + 1]),
             .dinb(write_word[i + 1]),
             .doutb(bram_data[i + 1])
-        );
+            );
         end
     endgenerate
 
@@ -51,7 +60,7 @@ module Data_memory #(
             write_word[i]   = bram_data[i];
             write_enable[i] = 4'b0000;
 
-            if (mem_write) begin
+            if (mem_write && in_bounds[i]) begin
                 case (funct3)
                     3'b000: begin // SB
                         unique case (address[1:0])
@@ -90,7 +99,7 @@ module Data_memory #(
         for (int i = 0; i < vec_length; i++) begin
             read_data[i] = 32'h0;
             
-            if (mem_read) begin
+            if (mem_read && in_bounds[i]) begin
                 unique case (funct3)
                     3'b000: // LB (sign-extend)
                         case (address[1:0])

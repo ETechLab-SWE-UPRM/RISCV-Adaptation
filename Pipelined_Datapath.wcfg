@@ -12,20 +12,17 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="136.685 ns"></ZoomEndTime>
-      <Cursor1Time time="700,020.000 ns"></Cursor1Time>
+      <ZoomEndTime time="175.101 ns"></ZoomEndTime>
+      <Cursor1Time time="115.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="175"></NameColumnWidth>
-      <ValueColumnWidth column_width="90"></ValueColumnWidth>
+      <NameColumnWidth column_width="225"></NameColumnWidth>
+      <ValueColumnWidth column_width="129"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="17" />
+   <WVObjectSize size="15" />
    <wave_markers>
-      <marker time="92325000" label="" />
-      <marker time="92345000" label="" />
-      <marker time="245000" label="" />
-      <marker time="562375000" label="" />
-      <marker time="85000" label="" />
+      <marker time="95000" label="" />
+      <marker time="105000" label="" />
    </wave_markers>
    <wvobject fp_name="/PipelineTester/processor/data_mem/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
@@ -59,10 +56,6 @@
       <obj_property name="ElementShortName">read_data[0:1][31:0]</obj_property>
       <obj_property name="ObjectShortName">read_data[0:1][31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_mem/byte_address" type="array">
-      <obj_property name="ElementShortName">byte_address[31:0]</obj_property>
-      <obj_property name="ObjectShortName">byte_address[31:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/PipelineTester/processor/data_mem/bram_data" type="array">
       <obj_property name="ElementShortName">bram_data[0:1][31:0]</obj_property>
       <obj_property name="ObjectShortName">bram_data[0:1][31:0]</obj_property>
@@ -75,13 +68,9 @@
       <obj_property name="ElementShortName">write_enable[0:1][3:0]</obj_property>
       <obj_property name="ObjectShortName">write_enable[0:1][3:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_mem/word_address" type="array">
-      <obj_property name="ElementShortName">word_address[13:0]</obj_property>
-      <obj_property name="ObjectShortName">word_address[13:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_mem/next_address" type="array">
-      <obj_property name="ElementShortName">next_address[13:0]</obj_property>
-      <obj_property name="ObjectShortName">next_address[13:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/addresses" type="array">
+      <obj_property name="ElementShortName">addresses[0:1][13:0]</obj_property>
+      <obj_property name="ObjectShortName">addresses[0:1][13:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/PipelineTester/processor/data_mem/vec_length" type="array">
       <obj_property name="ElementShortName">vec_length[31:0]</obj_property>
