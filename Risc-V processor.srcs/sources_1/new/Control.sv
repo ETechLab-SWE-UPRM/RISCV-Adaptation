@@ -61,9 +61,20 @@ module Control (
 
             7'b0001011 : begin 
                 vec_op = 1'b1; 
-                alu_op = 2'b10; 
                 alu_src = 1'b1; 
                 vec_reg_write = 1'b1;
+                unique case(funct3)
+                    // Put VLOAD in I-types, because I need the other opcode for U-types
+                    // imm in I-types is too small      
+                    // Replaced slti in I-types
+                    3'b010 : begin
+                        alu_op = 2'b00;
+                        mem_read = 1'b1;
+                        memtoreg = 1'b1;
+                    end
+
+                    default: alu_op = 2'b10;
+                endcase
             end
 
             7'b0000011 : begin 
@@ -75,10 +86,9 @@ module Control (
             end
 
             7'b1111011 : begin 
-                vec_op = 1'b1; 
-                mem_read = 1'b1;
-                memtoreg = 1'b1;            
-                alu_op = 2'b00; 
+                vec_op = 1'b1;
+                auipc = 1'b1;
+                alu_op = 2'b00;
                 alu_src = 1'b1;
                 vec_reg_write = 1'b1;
             end

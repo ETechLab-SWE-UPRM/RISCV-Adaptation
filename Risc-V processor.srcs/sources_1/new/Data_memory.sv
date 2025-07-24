@@ -20,9 +20,11 @@ module Data_memory #(
     logic [13:0] addresses [0:vec_length-1];
     logic in_bounds [0:vec_length-1];
     logic vec_op_enable [0:vec_length-1];
+    logic [31:0] byte_address;
 
+    assign byte_address = address - data_base;
     assign vec_op_enable[0] = 1'b1;
-    assign addresses[0] = address[15:2];
+    assign addresses[0] = byte_address[15:2];
     assign in_bounds[0] = (addresses[0] < data_words);
     // Calculate next addresses based on the current address and vector length
     genvar j;

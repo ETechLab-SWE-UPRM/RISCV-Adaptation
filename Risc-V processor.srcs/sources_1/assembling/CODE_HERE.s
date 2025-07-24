@@ -14,7 +14,7 @@
 
 # opcode, funct3, registers
 .macro vload rd, rs1, offset
-    .insn i, 0x7B, 0x02, \rd, \rs1, \offset
+    .insn i, 0x0B, 0x02, \rd, \rs1, \offset
 .endm
 
 .macro vstore rs2, rs1, offset
@@ -29,6 +29,10 @@
     .insn i 0x0B, 0x01, \rd, \rs1, \offset
 .endm
 
+.macro vauipc rd, offset
+    .insn u 0x7B, \rd, \offset
+.endm
+
 .data 
     signal: .zero 4096 #1024 * 4
     kernel: .word 1,1,1 # {1,1,1}
@@ -38,12 +42,15 @@
 .globl main
 
 main:
-    vaddi t0, zero, 10
-    addi t0, zero, 15
-    vaddi t1, zero, 2
-    vslli t2, t1, 2
-    addi t2, zero, 4
-    vstore t0, t2, 0
-    sw t0, 0(t2)    
+    # ---------- initialization (do not use this) ----------
+    # -------- This is to add the 1d matrix to memory ----------
+    vauipc s0, 0x10000
+    vauipc s1, 0x10001
+    vaddi s1, s1, -4
+    vauipc s2, 0x10001
+    la s0, signal
+    la s1, kernel
+    la s2, result
+    
 forever:
     jal forever

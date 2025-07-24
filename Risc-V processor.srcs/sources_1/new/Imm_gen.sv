@@ -12,7 +12,6 @@ module Immediate_generator #(
       7'b0000011, // LOAD
       7'b0010011, // OP-IMM
       7'b0001011, // OP-IMM (vector)
-      7'b1111011, // LOAD (vector)
       7'b0101011, // STORE (vector)
       7'b1100111: // JALR
         immediate = {{(XLEN-12){instruction[31]}}, instruction[31:20]};
@@ -33,6 +32,7 @@ module Immediate_generator #(
 
       // U-type: LUI / AUIPC (upper 20 bits, low 12 = 0)
       7'b0110111, // LUI
+      7'b1111011, // AUIPC (vector)
       7'b0010111: // AUIPC
         immediate = {{(XLEN-32){instruction[31]}},
                      instruction[31:12], 12'b0};
