@@ -48,33 +48,6 @@
 .text
 .globl main
 
-# main:
-#     la t1, signal        # base address of signal[]
-#     la s1, kernel
-#     la s2, result
-
-#     li   t0, 0             # i = 0
-#     li   t2, 1
-#     li   t6, 1024
-# init_loop:
-#     add  t3, t0, t2        # t3 = i+1
-#     slli t4, t0, 2         # t4 = i*4
-#     add  t5, t1, t4        # t5 = &signal[i]
-#     sw   t3, 0(t5)
-#     addi t0, t0, 1
-#     blt  t0, t6, init_loop
-
-#    # ---------- Convolution (start here) ----------
-# convolution:
-#     li t0, 0 # i = 0 
-#     li s7, 3
-#     li s9, 1022
-    
-# outer_loop:
-#     li t4, 0 # sum = 0
-#     li t5, 0 # j = 0
-
-
 main:
     # ---------- initialization (do not use this) ----------
     # -------- This is to add the 1d matrix to memory ----------
@@ -84,17 +57,18 @@ main:
     vaddi s1, s1, -8
     vauipc s2, 0x10001
     vaddi s2, s2, -4
-    
-    vcaddi t0, t0, -2 # continous address for i and i+1
+
+    vcaddi t0, t0, 1 # values for i and i+1
+    vcaddi t3, t3, 0 # continous address for i+1
     li t0, 0 # i = 0
     li t2, 1024
 
 init_loop:
-    vaddi t3, t0, 2        # t3 = i+1
-    vaddi t0, t0, 2
-    vslli t4, t0, 2         # t4 = i*4
+    vslli t4, t3, 2         # t4 = i*4
     vadd t5, s0, t4        # t5 = &signal[i]
-    vstore t3, t5, 0
+    vstore t0, t5, 0
+    vaddi t3, t3, 2        # t3 = address[i,i+1]
+    vaddi t0, t0, 2 # t0 = [i, i+1]
     addi t0, t0, 2  # increment by 2 for vector operations
     blt t0, t2, init_loop
 
