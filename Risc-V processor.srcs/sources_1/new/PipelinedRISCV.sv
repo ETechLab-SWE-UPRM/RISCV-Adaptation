@@ -42,6 +42,7 @@ module RISCV_PIPELINED (
     // ID/EX pipeline registers
     logic [31:0] pc_id_ex, instruction_id_ex;
     logic vec_op_id_ex, vec_reg_write_id_ex;
+    logic id_ex_continous_addr;
     logic id_ex_branch, id_ex_beq, id_ex_bne, id_ex_blt, id_ex_bge, id_ex_mem_read, id_ex_memtoreg, id_ex_mem_write, id_ex_auipc, id_ex_alu_src, id_ex_reg_write, id_ex_jal, id_ex_jalr;
     logic [1:0] id_ex_alu_op;
     logic [31:0] data_read1_id_ex, data_read2_id_ex, data_read3_id_ex;
@@ -190,13 +191,14 @@ module RISCV_PIPELINED (
         .immediate(big_immediate) 
     );
     
-    logic vec_op, vec_reg_write, branch, beq, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc;
+    logic vec_op, vec_reg_write, continous_addr, branch, beq, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc;
     logic [1:0] alu_op;
     Control control_unit (
         .opcode(opcode),
         .funct3(funct3),
         .vec_op(vec_op),
         .vec_reg_write(vec_reg_write),
+        .continous_addr(continous_addr),
         .branch(branch),
         .beq(beq),
         .bne(bne),
@@ -235,6 +237,7 @@ module RISCV_PIPELINED (
         .flush(id_ex_flush),
         .vec_op(vec_op),
         .vec_reg_write(vec_reg_write),
+        .continous_addr(continous_addr),
         .branch(branch), 
         .beq(beq),
         .bne(bne),
@@ -268,6 +271,7 @@ module RISCV_PIPELINED (
         .instruction_id_ex(instruction_id_ex),
         .vec_op_id_ex(vec_op_id_ex),
         .vec_reg_write_id_ex(vec_reg_write_id_ex),
+        .id_ex_continous_addr(id_ex_continous_addr),
         .id_ex_branch(id_ex_branch),
         .id_ex_beq(id_ex_beq),
         .id_ex_bne(id_ex_bne),
@@ -389,7 +393,11 @@ module RISCV_PIPELINED (
     always_comb begin
         for(int i = 0; i < vector_length; i++) begin
             v_alu_input[i] = (id_ex_auipc) ? pc_id_ex : va_operand1[i];
-            v_alu_input2[i] = (id_ex_alu_src) ? big_immediate_id_ex : va_operand2[i];
+            if(id_ex_alu_src) begin
+                v_alu_input2[i] = (id_ex_continous_addr) ? big_immediate_id_ex + i : big_immediate_id_ex;
+            end else begin
+                v_alu_input2[i] = va_operand2[i];
+            end
         end
     end
     

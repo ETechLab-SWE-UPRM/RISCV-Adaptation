@@ -43,13 +43,13 @@ module Data_memory #(
             blk_mem_gen_0 mem_inst (
             .clka(clk),
             .ena(vec_op_enable[i]),
-            .wea(write_enable[i] && in_bounds[i]),
+            .wea(write_enable[i]),
             .addra(addresses[i]),
             .dina(write_word[i]),
             .douta(bram_data[i]),
             .clkb(clk),
             .enb(vec_op_enable[i + 1]),
-            .web(write_enable[i + 1] && in_bounds[i + 1]),
+            .web(write_enable[i + 1]),
             .addrb(addresses[i + 1]),
             .dinb(write_word[i + 1]),
             .doutb(bram_data[i + 1])
