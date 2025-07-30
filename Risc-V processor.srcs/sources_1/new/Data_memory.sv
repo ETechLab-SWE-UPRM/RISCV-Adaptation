@@ -2,6 +2,7 @@ module Data_memory #(
     parameter vec_length = 2
 ) (
     input  logic clk,
+    input  logic single_load,
     input  logic [31:0] address,
     input  logic [31:0] write_data [0:vec_length-1],
     input  logic [2:0] funct3,
@@ -117,6 +118,7 @@ module Data_memory #(
                         else if (address[1:0] == 2'b10)
                             read_data[i] = {{16{bram_data[i][31]}}, bram_data[i][31:16]};
 
+                    3'b110, // LSW (vector)
                     3'b010: // LW
                         read_data[i] = bram_data[i];
 
@@ -138,6 +140,11 @@ module Data_memory #(
                         read_data[i] = 32'd0;
                 endcase
             end
+
+            if(mem_read && single_load && in_bounds[i]) begin
+                read_data[i] = bram_data[0]; // For single load, all read_data[i] should be the first address
+            end
+
         end
     end
 endmodule

@@ -8,6 +8,7 @@ module ID_EX_reg #(
     input logic vec_op,
     input logic vec_reg_write,
     input logic continous_addr,
+    input logic single_load,
     input logic branch,
     input logic beq,
     input logic bne,
@@ -42,6 +43,7 @@ module ID_EX_reg #(
     output logic vec_op_id_ex,
     output logic vec_reg_write_id_ex,
     output logic id_ex_continous_addr,
+    output logic id_ex_single_load,
     output logic id_ex_branch,
     output logic id_ex_beq,
     output logic id_ex_bne,
@@ -78,6 +80,7 @@ module ID_EX_reg #(
             vec_op_id_ex <= 1'b0;
             vec_reg_write_id_ex <= 1'b0;
             id_ex_continous_addr <= 1'b0;
+            id_ex_single_load <= 1'b0;
             id_ex_branch <= 1'b0;
             id_ex_beq <= 1'b0;
             id_ex_bne <= 1'b0;
@@ -111,6 +114,7 @@ module ID_EX_reg #(
             vec_op_id_ex <= 1'b0;
             vec_reg_write_id_ex <= 1'b0;
             id_ex_continous_addr <= 1'b0;
+            id_ex_single_load <= 1'b0;
             id_ex_branch <= 1'b0;
             id_ex_beq <= 1'b0;
             id_ex_bne <= 1'b0;
@@ -145,6 +149,7 @@ module ID_EX_reg #(
             vec_op_id_ex <= vec_op;
             vec_reg_write_id_ex <= vec_reg_write;
             id_ex_continous_addr <= continous_addr;
+            id_ex_single_load <= single_load;
             id_ex_branch <= branch;
             id_ex_beq <= beq;
             id_ex_bne <= bne;

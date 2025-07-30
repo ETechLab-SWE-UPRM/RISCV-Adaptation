@@ -6,6 +6,7 @@ module Control (
     output logic vec_op,
     output logic vec_reg_write,
     output logic continous_addr,
+    output logic single_load,
     output logic branch,
     output logic beq,
     output logic bne,
@@ -27,6 +28,7 @@ module Control (
         vec_op = 1'b0;
         vec_reg_write = 1'b0;
         continous_addr = 1'b0;
+        single_load = 1'b0;
         branch = 1'b0;
         mem_read = 1'b0;
         memtoreg = 1'b0;
@@ -78,6 +80,13 @@ module Control (
                     3'b011 : begin
                         alu_op = 2'b00;
                         continous_addr = 1'b1; // This is to add the continuation of the immediate value
+                    end
+
+                    3'b110 : begin
+                        alu_op = 2'b00;
+                        single_load = 1'b1; // This is to load a single value from memory into a vector register (kernel computations)
+                        mem_read = 1'b1;
+                        memtoreg = 1'b1;
                     end
 
                     default: alu_op = 2'b10;
@@ -155,6 +164,7 @@ module Control (
                 vec_op = 1'b0;
                 vec_reg_write = 1'b0;
                 continous_addr = 1'b0;
+                single_load = 1'b0;
                 branch = 1'b0;
                 mem_read = 1'b0;
                 memtoreg = 1'b0;

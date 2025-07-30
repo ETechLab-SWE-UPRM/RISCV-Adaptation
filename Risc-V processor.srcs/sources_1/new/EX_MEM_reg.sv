@@ -6,6 +6,7 @@ module EX_MEM_reg #(
     input logic reset,
     input logic vec_op, 
     input logic vec_reg_write,
+    input logic id_ex_single_load,
     input logic id_ex_mem_read,
     input logic id_ex_mem_write,
     input logic id_ex_memtoreg,
@@ -21,6 +22,7 @@ module EX_MEM_reg #(
 
     output logic ex_mem_vec_op,
     output logic ex_mem_vec_reg_write,
+    output logic ex_mem_single_load,
     output logic ex_mem_memread,
     output logic ex_mem_memwrite,
     output logic ex_mem_memtoreg,
@@ -40,6 +42,7 @@ module EX_MEM_reg #(
         if (reset) begin
             ex_mem_vec_op <= 1'b0;
             ex_mem_vec_reg_write <= 1'b0;
+            ex_mem_single_load <= 1'b0;
             ex_mem_memread <= 1'b0;
             ex_mem_memwrite <= 1'b0;
             ex_mem_memtoreg <= 1'b0;
@@ -56,6 +59,7 @@ module EX_MEM_reg #(
         end else begin
             ex_mem_vec_op <= vec_op; 
             ex_mem_vec_reg_write <= vec_reg_write;
+            ex_mem_single_load <= id_ex_single_load;
             vec_ex_mem_data_read2 <= vec_data_read2_id_ex;
             ex_mem_memread <= id_ex_mem_read; 
             ex_mem_memwrite <= id_ex_mem_write; 

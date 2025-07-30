@@ -43,6 +43,7 @@ module RISCV_PIPELINED (
     logic [31:0] pc_id_ex, instruction_id_ex;
     logic vec_op_id_ex, vec_reg_write_id_ex;
     logic id_ex_continous_addr;
+    logic id_ex_single_load;
     logic id_ex_branch, id_ex_beq, id_ex_bne, id_ex_blt, id_ex_bge, id_ex_mem_read, id_ex_memtoreg, id_ex_mem_write, id_ex_auipc, id_ex_alu_src, id_ex_reg_write, id_ex_jal, id_ex_jalr;
     logic [1:0] id_ex_alu_op;
     logic [31:0] data_read1_id_ex, data_read2_id_ex, data_read3_id_ex;
@@ -61,6 +62,7 @@ module RISCV_PIPELINED (
 
     // EX/MEM pipeline registers
     logic ex_mem_vec_op, ex_mem_vec_reg_write;
+    logic ex_mem_single_load;
     logic ex_mem_memread, ex_mem_memwrite, ex_mem_memtoreg, ex_mem_regwrite, ex_mem_jal, ex_mem_jalr;
     logic [31:0] ex_mem_alu_result [0:vector_length-1], ex_mem_data_read2;
     logic [31:0] vec_ex_mem_data_read2 [0:vector_length-1];
@@ -191,7 +193,7 @@ module RISCV_PIPELINED (
         .immediate(big_immediate) 
     );
     
-    logic vec_op, vec_reg_write, continous_addr, branch, beq, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc;
+    logic vec_op, vec_reg_write, continous_addr, single_load, branch, beq, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc;
     logic [1:0] alu_op;
     Control control_unit (
         .opcode(opcode),
@@ -199,6 +201,7 @@ module RISCV_PIPELINED (
         .vec_op(vec_op),
         .vec_reg_write(vec_reg_write),
         .continous_addr(continous_addr),
+        .single_load(single_load),
         .branch(branch),
         .beq(beq),
         .bne(bne),
@@ -238,6 +241,7 @@ module RISCV_PIPELINED (
         .vec_op(vec_op),
         .vec_reg_write(vec_reg_write),
         .continous_addr(continous_addr),
+        .single_load(single_load),
         .branch(branch), 
         .beq(beq),
         .bne(bne),
@@ -272,6 +276,7 @@ module RISCV_PIPELINED (
         .vec_op_id_ex(vec_op_id_ex),
         .vec_reg_write_id_ex(vec_reg_write_id_ex),
         .id_ex_continous_addr(id_ex_continous_addr),
+        .id_ex_single_load(id_ex_single_load),
         .id_ex_branch(id_ex_branch),
         .id_ex_beq(id_ex_beq),
         .id_ex_bne(id_ex_bne),
@@ -490,6 +495,7 @@ module RISCV_PIPELINED (
         .reset(reset), 
         .vec_op(vec_op_id_ex),
         .vec_reg_write(vec_reg_write_id_ex),
+        .id_ex_single_load(id_ex_single_load),
         .id_ex_mem_read(id_ex_mem_read),
         .id_ex_mem_write(id_ex_mem_write),
         .id_ex_memtoreg(id_ex_memtoreg), 
@@ -505,6 +511,7 @@ module RISCV_PIPELINED (
 
         .ex_mem_vec_op(ex_mem_vec_op),
         .ex_mem_vec_reg_write(ex_mem_vec_reg_write),
+        .ex_mem_single_load(ex_mem_single_load),
         .ex_mem_memread(ex_mem_memread),
         .ex_mem_memwrite(ex_mem_memwrite),
         .ex_mem_memtoreg(ex_mem_memtoreg),
@@ -538,6 +545,7 @@ module RISCV_PIPELINED (
         .vec_length(vector_length)
     ) data_mem(
         .clk(clk),
+        .single_load(ex_mem_single_load),
         .address(ex_mem_alu_result[0]),
         .write_data(write_data),
         .funct3(ex_mem_funct3),

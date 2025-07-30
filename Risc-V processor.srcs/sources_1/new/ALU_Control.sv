@@ -36,8 +36,8 @@ module ALU_control (
                             is_mac = 1'b1;
                             alu_control = 4'b1011;                        
                         end
-                        5'b01_100 : alu_control = 4'b1100;
-                        5'b01_101 : alu_control = 4'b1101;
+                        5'b01_100 : alu_control = 4'b1100; // not used
+                        5'b01_101 : alu_control = 4'b1101; // not used
                         default: alu_control = 4'b0;
                     endcase
                 end else begin
