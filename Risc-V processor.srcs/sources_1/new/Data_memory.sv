@@ -37,26 +37,20 @@ module Data_memory #(
         end
     endgenerate
 
-    genvar i;
-    // 1 BRAM instance for each 2 words in the vector
-    generate
-        for(i = 0; i < vec_length; i = i + 2) begin : memory_block
-            blk_mem_gen_0 mem_inst (
-            .clka(clk),
-            .ena(vec_op_enable[i]),
-            .wea(write_enable[i]),
-            .addra(addresses[i]),
-            .dina(write_word[i]),
-            .douta(bram_data[i]),
-            .clkb(clk),
-            .enb(vec_op_enable[i + 1]),
-            .web(write_enable[i + 1]),
-            .addrb(addresses[i + 1]),
-            .dinb(write_word[i + 1]),
-            .doutb(bram_data[i + 1])
-            );
-        end
-    endgenerate
+    blk_mem_gen_0 mem_inst (
+    .clka(clk),
+    .ena(vec_op_enable[0]),
+    .wea(write_enable[0]),
+    .addra(addresses[0]),
+    .dina(write_word[0]),
+    .douta(bram_data[0]),
+    .clkb(clk),
+    .enb(vec_op_enable[1]),
+    .web(write_enable[1]),
+    .addrb(addresses[1]),
+    .dinb(write_word[1]),
+    .doutb(bram_data[1])
+    );
 
     always_comb begin
         for (int i = 0; i < vec_length; i++) begin

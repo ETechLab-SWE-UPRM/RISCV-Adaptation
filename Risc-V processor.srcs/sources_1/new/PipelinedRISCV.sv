@@ -5,7 +5,7 @@
 // Create Date: 05/27/2025 10:22:03 AM
 // Design Name: Eutanio 
 // Module Name: RISCV_PIPELINED
-// Project Name: RISC-V Processor
+// Project Name: RISC-V Processor (w/ vector computations and UART communication)
 // Target Devices: Basys3
 // Tool Versions: SystemVerilog
 // Description: A pipelined RISC-V processor implementation, with support for the majority of its instructions.
@@ -21,13 +21,16 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module RISCV_PIPELINED (
+module RISCV_PIPELINED #(
+    // Keep this number even, because data memory is organized in pairs of words
+    parameter vector_length = 2
+) (
     input logic clk,
     input logic reset, 
     output logic led
 );
-    // Keep this number even, because data memory is organized in pairs of words
-    localparam vector_length = 2;
+    localparam data_base = 32'h1000_0000;
+    localparam uart_base = 32'h1000_1000;
 
     // IF/ID pipeline registers
     logic [31:0] instruction_if_id;
@@ -83,9 +86,9 @@ module RISCV_PIPELINED (
     logic [31:0] mem_wb_write_data [0:vector_length-1];
 
     // -- INSTRUCTION FETCH STAGE --
-    logic [31:0] pc ;
+    (* MARK_DEBUG = "TRUE" *) logic [31:0] pc ;
     logic [31:0] next_pc;
-    logic [31:0] instruction;
+    (* MARK_DEBUG = "TRUE" *) logic [31:0] instruction;
 
     always_comb begin
         if(ex_taken) begin
@@ -331,7 +334,7 @@ module RISCV_PIPELINED (
     logic is_mac;
     logic [31:0] alu_input, alu_input2;
     logic [31:0] v_alu_input [0:vector_length-1], v_alu_input2 [0:vector_length-1];
-    logic [31:0] v_alu_result [0:vector_length-1];
+    (* MARK_DEBUG = "TRUE" *)  logic [31:0] v_alu_result [0:vector_length-1];
 
     ALU_control alu_control_unit (
         .alu_op(id_ex_alu_op),
@@ -528,7 +531,7 @@ module RISCV_PIPELINED (
 
     // ------MEMORY STAGE------
     logic [31:0] memory_data_read [0:vector_length-1];
-    logic [31:0] write_data [0:vector_length-1];
+    (* MARK_DEBUG = "TRUE" *) logic [31:0] write_data [0:vector_length-1];
 
     always_comb begin
         if(ex_mem_vec_op) begin

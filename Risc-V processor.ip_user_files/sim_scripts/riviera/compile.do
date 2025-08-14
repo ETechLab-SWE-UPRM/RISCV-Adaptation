@@ -69,7 +69,7 @@ vlog -work xil_defaultlib  -incr -l xpm -l blk_mem_gen_v8_4_9 -l xil_defaultlib 
 "../../../Risc-V processor.srcs/sources_1/new/hazard_detection.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/vector_ALU.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/vector_registers.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/PipelineTester.sv" \
+"../../../Risc-V processor.srcs/sim_1/new/PipelineTester.sv" \
 
 vlog -work xil_defaultlib \
 "glbl.v"

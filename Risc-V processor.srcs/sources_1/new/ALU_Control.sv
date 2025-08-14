@@ -50,7 +50,6 @@ module ALU_control (
                         3'b101: alu_control = 4'b0101;
                         3'b110: alu_control = 4'b0001;
                         3'b111: alu_control = 4'b0000;
-                        3'b110: alu_control = 4'b1010;
                         default: alu_control = 4'b0;
                     endcase
                 end
