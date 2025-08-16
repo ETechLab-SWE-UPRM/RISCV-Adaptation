@@ -51,7 +51,6 @@ module uart_top
         input [DBITS-1:0] write_data,   // data from Tx FIFO
         output rx_full,                 // do not write data to FIFO
         output rx_empty,                // no data to read from FIFO
-        output reg rx_word_valid,   
         output tx,                      // serial data out
         output [DBITS-1:0] read_data    // data to Rx FIFO
     );
@@ -64,31 +63,6 @@ module uart_top
     wire tx_fifo_not_empty;             // Tx FIFO contains data to transmit
     wire [DBITS-1:0] tx_fifo_out;       // from Tx FIFO to UART transmitter
     wire [DBITS-1:0] rx_data_out;       // from UART receiver to Rx FIFO
-    reg [31:0] data_word;
-    reg [1:0] data_place;
-
-    always @(posedge clk_100MHz or posedge reset) begin
-        if (reset) begin
-            data_word <= 32'b0;
-            data_place <= 2'b0;
-            rx_word_valid <= 1'b0;
-        end else begin
-            rx_word_valid <= 1'b0;
-            if(rx_done_tick) begin
-                case (data_place)
-                    2'b00: data_word[7:0] <= rx_data_out;
-                    2'b01: data_word[15:8] <= rx_data_out;
-                    2'b10: data_word[23:16] <= rx_data_out;
-                    2'b11: begin
-                        data_word[31:24] <= rx_data_out;
-                        rx_word_valid <= 1'b1;
-                    end
-                    default: ;
-                endcase
-                data_place <= data_place + 1;
-            end
-        end
-    end
 
     // Instantiate Modules for UART Core
     baud_rate_generator 
