@@ -2,32 +2,26 @@ vlib modelsim_lib/work
 vlib modelsim_lib/msim
 
 vlib modelsim_lib/msim/xpm
-vlib modelsim_lib/msim/blk_mem_gen_v8_4_9
-vlib modelsim_lib/msim/xil_defaultlib
 vlib modelsim_lib/msim/xbip_dsp48_wrapper_v3_0_6
 vlib modelsim_lib/msim/xbip_utils_v3_0_14
 vlib modelsim_lib/msim/xbip_pipe_v3_0_10
 vlib modelsim_lib/msim/dsp_macro_v1_0_7
+vlib modelsim_lib/msim/xil_defaultlib
+vlib modelsim_lib/msim/blk_mem_gen_v8_4_9
 
 vmap xpm modelsim_lib/msim/xpm
-vmap blk_mem_gen_v8_4_9 modelsim_lib/msim/blk_mem_gen_v8_4_9
-vmap xil_defaultlib modelsim_lib/msim/xil_defaultlib
 vmap xbip_dsp48_wrapper_v3_0_6 modelsim_lib/msim/xbip_dsp48_wrapper_v3_0_6
 vmap xbip_utils_v3_0_14 modelsim_lib/msim/xbip_utils_v3_0_14
 vmap xbip_pipe_v3_0_10 modelsim_lib/msim/xbip_pipe_v3_0_10
 vmap dsp_macro_v1_0_7 modelsim_lib/msim/dsp_macro_v1_0_7
+vmap xil_defaultlib modelsim_lib/msim/xil_defaultlib
+vmap blk_mem_gen_v8_4_9 modelsim_lib/msim/blk_mem_gen_v8_4_9
 
 vlog -work xpm  -incr -mfcu  -sv \
 "C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
 
 vcom -work xpm  -93  \
 "C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_VCOMP.vhd" \
-
-vlog -work blk_mem_gen_v8_4_9  -incr -mfcu  \
-"../../ipstatic/simulation/blk_mem_gen_v8_4.v" \
-
-vlog -work xil_defaultlib  -incr -mfcu  \
-"../../../Risc-V processor.gen/sources_1/ip/blk_mem_gen_0_1/sim/blk_mem_gen_0.v" \
 
 vcom -work xbip_dsp48_wrapper_v3_0_6  -93  \
 "../../ipstatic/hdl/xbip_dsp48_wrapper_v3_0_vh_rfs.vhd" \
@@ -44,8 +38,17 @@ vcom -work dsp_macro_v1_0_7  -93  \
 vcom -work xil_defaultlib  -93  \
 "../../../Risc-V processor.gen/sources_1/ip/MAC_dsp/sim/MAC_dsp.vhd" \
 
+vlog -work blk_mem_gen_v8_4_9  -incr -mfcu  \
+"../../ipstatic/simulation/blk_mem_gen_v8_4.v" \
+
 vlog -work xil_defaultlib  -incr -mfcu  \
+"../../../Risc-V processor.gen/sources_1/ip/blk_mem_gen_0_1/sim/blk_mem_gen_0.v" \
 "../../../Risc-V processor.gen/sources_1/ip/Instruction_Memory/sim/Instruction_Memory.v" \
+"../../../Risc-V processor.srcs/sources_1/new/baud_rate_generator.v" \
+"../../../Risc-V processor.srcs/sources_1/new/fifo.v" \
+"../../../Risc-V processor.srcs/sources_1/new/uart_receiver.v" \
+"../../../Risc-V processor.srcs/sources_1/new/uart_top.v" \
+"../../../Risc-V processor.srcs/sources_1/new/uart_transmitter.v" \
 
 vlog -work xil_defaultlib  -incr -mfcu  -sv \
 "../../../Risc-V processor.srcs/sources_1/new/ALU.sv" \

@@ -19,20 +19,17 @@ module Data_memory #(
     logic [31:0] write_word [0:vec_length-1];
     logic [3:0]  write_enable [0:vec_length-1];
     logic [13:0] addresses [0:vec_length-1];
-    logic in_bounds [0:vec_length-1];
     logic vec_op_enable [0:vec_length-1];
     logic [31:0] byte_address;
-
+    
     assign byte_address = address - data_base;
     assign vec_op_enable[0] = 1'b1;
     assign addresses[0] = byte_address[15:2];
-    assign in_bounds[0] = (addresses[0] < data_words);
     // Calculate next addresses based on the current address and vector length
     genvar j;
     generate
         for (j = 1; j < vec_length; j++) begin
             assign addresses[j] = addresses[j-1] + 1;
-            assign in_bounds[j] = (addresses[j] < data_words);
             assign vec_op_enable[j] = vec_op;
         end
     endgenerate
@@ -57,7 +54,7 @@ module Data_memory #(
             write_word[i]   = bram_data[i];
             write_enable[i] = 4'b0000;
 
-            if (mem_write && in_bounds[i]) begin
+            if (mem_write) begin
                 case (funct3)
                     3'b000: begin // SB
                         unique case (address[1:0])
@@ -96,7 +93,7 @@ module Data_memory #(
         for (int i = 0; i < vec_length; i++) begin
             read_data[i] = 32'h0;
             
-            if (mem_read && in_bounds[i]) begin
+            if (mem_read) begin
                 unique case (funct3)
                     3'b000: // LB (sign-extend)
                         case (address[1:0])
@@ -135,7 +132,7 @@ module Data_memory #(
                 endcase
             end
 
-            if(mem_read && single_load && in_bounds[i]) begin
+            if(mem_read && single_load) begin
                 read_data[i] = bram_data[0]; // For single load, all read_data[i] should be the first address
             end
 

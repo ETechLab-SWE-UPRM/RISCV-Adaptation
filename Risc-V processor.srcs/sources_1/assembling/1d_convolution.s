@@ -1,9 +1,3 @@
-// Memory locations for MMIO
-.set UART_BASE, 0x100082A0
-.set UART_STATUS, 0x04
-.set UART_RECEIVE, 0x08
-.set UART_SEND, 0x0C
-
 # Macro definitions for RISC-V assembly mac and vector instructions
 # opcode, funct3, funct7, registers 
 .macro mac rd, rs1, rs2
@@ -16,25 +10,6 @@
 
 .macro vadd rd, rs1, rs2
     .insn r 0x5B, 0x00, 0x00, \rd, \rs1, \rs2
-.endm
-
-// load UART status, immediate value for different registers is need be
-.macro load_UART_status rd
-    lui \rd, %hi(UART_BASE)
-    addi \rd, \rd, %lo(UART_BASE + UART_STATUS)
-    lw \rd, 0(\rd)
-.endm
-
-.macro UART_READ rd
-    lui \rd, %hi(UART_BASE)
-    addi \rd, \rd, %lo(UART_BASE + UART_RECEIVE)
-    lw \rd, 0(\rd)
-.endm
-
-.macro UART_WRITE rs1, rs2=t0
-    lui \rs2, %hi(UART_BASE)
-    addi \rs2, \rs2, %lo(UART_BASE + UART_SEND)
-    sw \rs1, 0(\rs2)
 .endm
 
 # opcode, funct3, registers

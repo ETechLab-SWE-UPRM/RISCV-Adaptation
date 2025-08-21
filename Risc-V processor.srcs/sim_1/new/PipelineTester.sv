@@ -3,11 +3,19 @@
 module PipelineTester;
 
     logic clk = 0; 
-    logic rst;
+    logic rst, rx, tx;
+    logic [3:0] an;
+    logic [6:0] seg;
+    logic led;
 
     RISCV_PIPELINED processor (
         .clk(clk),
-        .reset(rst)
+        .reset(rst),
+        .rx(rx),
+        .tx(tx),
+        .seg(seg),
+        .an(an),
+        .led(led)
     );
 
     always #5 clk = ~clk; // Clock period of 10 time units

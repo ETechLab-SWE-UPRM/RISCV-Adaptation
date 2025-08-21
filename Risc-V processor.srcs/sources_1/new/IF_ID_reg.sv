@@ -22,11 +22,11 @@ module IF_ID_reg (
             instruction_if_id <= 32'b0;
         end else if (flush) begin
             pc_if_id <= 32'b0;
-            instruction_if_id <= 32'h13;
+            instruction_if_id <= 32'h0;
             double_flush <= 1'b1; 
         end else if (double_flush) begin
             pc_if_id <= 32'b0;
-            instruction_if_id <= 32'h13;
+            instruction_if_id <= 32'h0;
             double_flush <= 1'b0;
         end else if (if_id_write) begin
             pc_if_id <= pc;

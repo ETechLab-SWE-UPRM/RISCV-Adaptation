@@ -8,17 +8,20 @@ module Hazard_Detection (
     output logic stall, pc_write, if_id_write
 );
 
-    logic hazard;
+    logic hazard1, hazard2;
+
+    assign hazard1 =  (id_ex_mem_read && (if_id_vec_op == id_ex_vec_op) && 
+        (((if_id_rs1 != 5'b0) && (if_id_rs1 == reg_dest_id_ex))));
+    
+    assign hazard2 =  (id_ex_mem_read && (if_id_vec_op == id_ex_vec_op) && 
+        (((if_id_rs2 != 5'b0) && (if_id_rs2 == reg_dest_id_ex))));
 
     always_comb begin
         stall = 1'b0;
         pc_write = 1'b1;
         if_id_write = 1'b1;
 
-        hazard = (id_ex_mem_read && (if_id_vec_op && id_ex_vec_op) && 
-        (((if_id_rs1 != 5'b0) && (if_id_rs1 == reg_dest_id_ex)) || ((if_id_rs2 != 5'b0) && (if_id_rs2 == reg_dest_id_ex))));
-
-        if(hazard) begin
+        if(hazard1 || hazard2) begin
             stall = 1'b1; 
             pc_write = 1'b0; 
             if_id_write = 1'b0; 

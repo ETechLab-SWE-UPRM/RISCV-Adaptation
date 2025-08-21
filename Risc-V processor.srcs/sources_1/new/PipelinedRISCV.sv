@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: CAWT
 // Engineer: Fernando L. Pizarro Diaz
@@ -21,16 +22,32 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module RISCV_PIPELINED #(
-    // Keep this number even, because data memory is organized in pairs of words
-    parameter vector_length = 2
-) (
+module RISCV_PIPELINED (
     input logic clk,
     input logic reset, 
+    input logic rx, 
+    output logic tx,
+    output logic [6:0] seg, 
+    output logic [3:0] an,
     output logic led
 );
+    // Keep this number even, because data memory is organized in pairs of words
+    localparam vector_length = 2;
+
     localparam data_base = 32'h1000_0000;
-    localparam uart_base = 32'h1000_1000;
+    localparam data_word_space = 8360 * 4; // 33,440 bytes
+    localparam uart_status = data_base + data_word_space + 4; // 8361 in memory
+    localparam uart_receive = uart_status + 4;
+    localparam uart_send = uart_receive + 4;
+
+    // UART Parameters
+    localparam data_bits = 8;
+    localparam stop_tick = 16; // Stop bit / Oversampling ticks
+    localparam fifo_exp = 2; // 2^2 = 4 entries in the FIFO's
+
+    logic [data_bits-1:0] uart_write_data;
+    logic [data_bits-1:0] uart_read_data;
+    logic uart_rx_full, uart_rx_empty;
 
     // IF/ID pipeline registers
     logic [31:0] instruction_if_id;
@@ -65,6 +82,7 @@ module RISCV_PIPELINED #(
 
     // EX/MEM pipeline registers
     logic ex_mem_vec_op, ex_mem_vec_reg_write;
+    logic ex_mem_enable;
     logic ex_mem_single_load;
     logic ex_mem_memread, ex_mem_memwrite, ex_mem_memtoreg, ex_mem_regwrite, ex_mem_jal, ex_mem_jalr;
     logic [31:0] ex_mem_alu_result [0:vector_length-1], ex_mem_data_read2;
@@ -86,9 +104,9 @@ module RISCV_PIPELINED #(
     logic [31:0] mem_wb_write_data [0:vector_length-1];
 
     // -- INSTRUCTION FETCH STAGE --
-    (* MARK_DEBUG = "TRUE" *) logic [31:0] pc ;
+    logic [31:0] pc ;
     logic [31:0] next_pc;
-    (* MARK_DEBUG = "TRUE" *) logic [31:0] instruction;
+    logic [31:0] instruction;
 
     always_comb begin
         if(ex_taken) begin
@@ -140,7 +158,8 @@ module RISCV_PIPELINED #(
     );
 
     // ------DECODE STAGE------
-    logic [4:0] reg1, reg2, reg_dest;
+    logic [4:0] reg1, reg2;
+    (* MARK_DEBUG = "TRUE" *) logic [4:0] reg_dest;
     logic [6:0] opcode;
     logic [2:0] funct3;
     logic [6:0] funct7;
@@ -154,7 +173,8 @@ module RISCV_PIPELINED #(
     assign funct3 = instruction_if_id[14:12]; 
     assign funct7 = instruction_if_id[31:25]; 
 
-    logic [31:0] data_read1, data_read2, data_read3;
+    logic [31:0] data_read1, data_read2;
+    (* MARK_DEBUG = "TRUE" *) logic [31:0] data_read3;
     logic [31:0] vector_data_read1 [0:vector_length-1];
     logic [31:0] vector_data_read2 [0:vector_length-1];
     logic [31:0] vector_data_read3 [0:vector_length-1];
@@ -334,7 +354,7 @@ module RISCV_PIPELINED #(
     logic is_mac;
     logic [31:0] alu_input, alu_input2;
     logic [31:0] v_alu_input [0:vector_length-1], v_alu_input2 [0:vector_length-1];
-    (* MARK_DEBUG = "TRUE" *)  logic [31:0] v_alu_result [0:vector_length-1];
+    logic [31:0] v_alu_result [0:vector_length-1];
 
     ALU_control alu_control_unit (
         .alu_op(id_ex_alu_op),
@@ -415,6 +435,11 @@ module RISCV_PIPELINED #(
     logic [31:0] scalar_mac_input_c, ex_result;
     logic [31:0] complete_alu_result [0:vector_length-1];
 
+    logic [24:0] vector_mac_input_a [0:vector_length-1];
+    logic [17:0] vector_mac_input_b [0:vector_length-1];
+    logic [43:0] vector_mac_result [0:vector_length-1];
+    logic [31:0] vector_mac_input_c [0:vector_length-1], vec_ex_result [0:vector_length-1];
+
     // Prepare inputs if MAC
     always_comb begin
         if (is_mac) begin 
@@ -427,6 +452,34 @@ module RISCV_PIPELINED #(
             scalar_mac_input_c = 32'b0;
         end
     end
+
+    always_comb begin 
+        if(is_mac) begin
+            for(int i = 0; i < vector_length; i++) begin
+                vector_mac_input_a[i] = va_operand1[i][24:0];
+                vector_mac_input_b[i] = va_operand2[i][17:0];
+                vector_mac_input_c[i] = va_operand3[i];
+            end
+        end else begin
+            for(int i = 0; i < vector_length; i++) begin
+                vector_mac_input_a[i] = 25'b0;
+                vector_mac_input_b[i] = 18'b0;
+                vector_mac_input_c[i] = 32'b0;
+            end
+        end
+    end
+
+    genvar mac_num;
+    generate 
+        for (mac_num = 0; mac_num < vector_length; mac_num++) begin : mac_block
+            MAC_dsp vector_mac (
+                .A(vector_mac_input_a[mac_num]),
+                .B(vector_mac_input_b[mac_num]),
+                .C(vector_mac_input_c[mac_num]),
+                .P(vector_mac_result[mac_num])
+            );
+        end
+    endgenerate
 
     MAC_dsp scalar_dsp (
         .A(scalar_mac_input_a),
@@ -446,7 +499,6 @@ module RISCV_PIPELINED #(
     vector_ALU #(
         .vec_length(vector_length)
     ) v_alu (
-        .is_mac(is_mac),
         .a(v_alu_input),
         .b(v_alu_input2),
         .c(vector_data_read3_id_ex),
@@ -455,10 +507,22 @@ module RISCV_PIPELINED #(
     );
 
     assign ex_result = (is_mac) ? scalar_mac_result[31:0] : alu_result;
+    
+    always_comb begin
+        if(is_mac) begin
+            for(int i = 0; i < vector_length; i++) begin
+                vec_ex_result[i] = vector_mac_result[i][31:0];
+            end
+        end else begin
+            for(int i = 0; i < vector_length; i++) begin
+                vec_ex_result[i] = v_alu_result[i];
+            end
+        end
+    end
 
     always_comb begin
         if(vec_op_id_ex) begin
-            complete_alu_result = v_alu_result;
+            complete_alu_result = vec_ex_result;
         end else begin
             complete_alu_result[0] = ex_result;
             for(int i = 1; i < vector_length; i++) begin
@@ -531,7 +595,13 @@ module RISCV_PIPELINED #(
 
     // ------MEMORY STAGE------
     logic [31:0] memory_data_read [0:vector_length-1];
-    (* MARK_DEBUG = "TRUE" *) logic [31:0] write_data [0:vector_length-1];
+    logic inside_data_mem;
+    (* MARK_DEBUG = "TRUE" *) logic [31:0] memory_address;
+    logic [31:0] write_data [0:vector_length-1];
+
+    assign memory_address = ex_mem_alu_result[0];
+    assign inside_data_mem = (memory_address < (data_base + data_word_space -1));
+    assign ex_mem_enable = (ex_mem_memread || ex_mem_memwrite) && inside_data_mem;
 
     always_comb begin
         if(ex_mem_vec_op) begin
@@ -549,7 +619,7 @@ module RISCV_PIPELINED #(
     ) data_mem(
         .clk(clk),
         .single_load(ex_mem_single_load),
-        .address(ex_mem_alu_result[0]),
+        .address(memory_address),
         .write_data(write_data),
         .funct3(ex_mem_funct3),
         .mem_write(ex_mem_memwrite),
@@ -558,6 +628,122 @@ module RISCV_PIPELINED #(
 
         .read_data(memory_data_read)
     );
+
+    // holds the data received from UART
+    (* MARK_DEBUG = "TRUE" *) logic [31:0] uart_data;
+    (* MARK_DEBUG = "TRUE" *) logic [31:0] uart_send_data;
+
+    logic [31:0] uart_memory [0:vector_length-1];
+    logic override_data_read;
+    logic data_word_complete; // indicates if a complete word has been received
+    logic [1:0] data_place; // rx indexing
+    logic [1:0] data_send; // tx indexing
+    logic uart_write_to_mem, send_byte, ready_to_send;
+
+    uart_top #(
+        .DBITS(data_bits),
+        .SB_TICK(stop_tick),
+        .FIFO_EXP(fifo_exp)
+    ) uart (
+        .clk_100MHz(clk),
+        .reset(reset),
+        .read_uart(uart_write_to_mem),
+        .write_uart(send_byte),
+        .rx(rx),
+        .write_data(uart_write_data),
+        .rx_full(uart_rx_full),
+        .rx_empty(uart_rx_empty),
+        .tx(tx),
+        .read_data(uart_read_data)
+    );
+
+    always_ff @(posedge clk or posedge reset) begin
+        if(reset) begin
+            uart_write_to_mem <= 1'b0;
+        end else if(uart_rx_full) begin
+            uart_write_to_mem <= 1'b1;
+        end else if(uart_rx_empty) begin
+            uart_write_to_mem <= 1'b0;
+        end
+    end
+
+    // TX
+    always_ff @(posedge clk or posedge reset) begin
+        if(reset) begin
+            data_send <= 2'b00;
+            ready_to_send <= 1'b0;
+            uart_write_data <= 8'b0;
+            send_byte <= 1'b0;
+            uart_send_data <= 32'b0;
+        end else if(send_byte) begin
+            send_byte <= 1'b0;
+        end else if (ready_to_send) begin
+            case (data_send)
+                2'b00: begin
+                    uart_write_data <= uart_send_data[7:0];
+                    send_byte <= 1'b1;
+                end
+                2'b01: begin
+                    uart_write_data <= uart_send_data[15:8];
+                    send_byte <= 1'b1;
+                end
+                2'b10: begin
+                    uart_write_data <= uart_send_data[23:16];
+                    send_byte <= 1'b1;
+                end
+                2'b11: begin
+                    uart_write_data <= uart_send_data[31:24];
+                    send_byte <= 1'b1;
+                    data_word_complete <= 1'b0;
+                    ready_to_send <= 1'b0;
+                end
+                default: ;
+            endcase
+        end else if((memory_address == uart_send) && ex_mem_memwrite && data_word_complete) begin
+            uart_send_data <= write_data[0];
+            ready_to_send <= 1'b1;
+        end
+    end
+
+    // RX
+    always_ff @(posedge clk or posedge reset) begin
+        if(reset) begin
+            data_word_complete <= 1'b0;
+            data_place <= 2'b00;
+            uart_data <= 32'b0;
+        end else if(uart_write_to_mem) begin
+            case (data_place) 
+                2'b00: uart_data[7:0] <= uart_read_data;
+                2'b01: uart_data[15:8] <= uart_read_data;
+                2'b10: uart_data[23:16] <= uart_read_data;
+                2'b11: begin
+                    uart_data[31:24] <= uart_read_data;
+                    data_word_complete <= 1'b1;
+                end
+                default: ;
+            endcase
+            data_place <= data_place + 1'b1;
+        end
+    end
+
+    (* MARK_DEBUG = "TRUE" *) logic status_read, receive_read;
+    assign status_read = (memory_address == uart_status) && ex_mem_memread;
+    assign receive_read = (memory_address == uart_receive) && ex_mem_memread;
+
+    always_comb begin
+        override_data_read = 1'b0;
+        for(int i = 0; i < vector_length; i++) begin
+            uart_memory[i] = 32'b0;
+        end
+
+        if(status_read) begin
+            uart_memory[0] = (data_word_complete) ? 32'b1 : 32'b0;
+            override_data_read = 1'b1;
+        end else if(receive_read && data_word_complete) begin
+                uart_memory[0] = uart_data;
+            override_data_read = 1'b1;
+        end
+    end
 
     MEM_WB_reg #(
         .vec_length(vector_length)
@@ -571,7 +757,7 @@ module RISCV_PIPELINED #(
         .ex_mem_jal(ex_mem_jal),
         .ex_mem_jalr(ex_mem_jalr),
         .ex_mem_alu_result(ex_mem_alu_result),
-        .memory_data_read(memory_data_read),
+        .memory_data_read((override_data_read) ? uart_memory : memory_data_read),
         .ex_mem_reg_dest(ex_mem_reg_dest),
         .ex_mem_link_address_reg(ex_mem_link_address_reg),
 
@@ -587,4 +773,9 @@ module RISCV_PIPELINED #(
         .mem_wb_link_address(mem_wb_link_address),
         .mem_wb_write_data(mem_wb_write_data)
     );    
+
+    // 7 segment display
+    assign an = 4'b1110;
+    assign seg = {~uart_rx_full, 2'b11, ~uart_rx_empty, 3'b111};
+
 endmodule
