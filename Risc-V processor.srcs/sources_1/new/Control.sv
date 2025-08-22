@@ -20,7 +20,8 @@ module Control (
     output logic reg_write,
     output logic jal,
     output logic jalr,
-    output logic auipc
+    output logic auipc,
+    output logic lui
 );
 
     always_comb begin
@@ -43,6 +44,7 @@ module Control (
         blt = 1'b0;
         bge = 1'b0;
         auipc = 1'b0;
+        lui = 0;
 
 
         case (opcode)
@@ -148,6 +150,7 @@ module Control (
             end
 
             7'b0110111 : begin // LUI
+                lui = 1'b1;
                 alu_op = 2'b00; 
                 alu_src = 1'b1; 
                 reg_write = 1'b1;                 
@@ -179,6 +182,7 @@ module Control (
                 blt = 1'b0;
                 bge = 1'b0;
                 auipc = 1'b0;
+                lui = 1'b0;
             end
         endcase
     end 

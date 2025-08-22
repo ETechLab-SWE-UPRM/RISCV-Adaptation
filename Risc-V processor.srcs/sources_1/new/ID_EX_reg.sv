@@ -22,6 +22,7 @@ module ID_EX_reg #(
     input logic jal,
     input logic jalr,
     input logic auipc,
+    input logic lui,
     input logic [1:0] alu_op,
     input logic [31:0] pc_if_id,
     input logic [31:0] instruction_if_id,
@@ -57,6 +58,7 @@ module ID_EX_reg #(
     output logic id_ex_jal,
     output logic id_ex_jalr,
     output logic id_ex_auipc,
+    output logic id_ex_lui,
     output logic [1:0] id_ex_alu_op,
     output logic [31:0] scalar_data_read1_id_ex,
     output logic [31:0] scalar_data_read2_id_ex,
@@ -94,6 +96,7 @@ module ID_EX_reg #(
             id_ex_jal <= 1'b0;
             id_ex_jalr <= 1'b0;
             id_ex_auipc <= 1'b0;
+            id_ex_lui <= 1'b0;
             id_ex_alu_op <= 2'b0;
             scalar_data_read1_id_ex <= 32'b0;
             scalar_data_read2_id_ex <= 32'b0;
@@ -128,6 +131,7 @@ module ID_EX_reg #(
             id_ex_jal <= 1'b0;
             id_ex_jalr <= 1'b0;
             id_ex_auipc <= 1'b0;
+            id_ex_lui <= 1'b0;
             id_ex_alu_op <= 2'b0;
             scalar_data_read1_id_ex <= 32'b0;
             scalar_data_read2_id_ex <= 32'b0;
@@ -163,6 +167,7 @@ module ID_EX_reg #(
             id_ex_jal <= jal;
             id_ex_jalr <= jalr;
             id_ex_auipc <= auipc;
+            id_ex_lui <= lui;
             id_ex_alu_op <= alu_op;
             scalar_data_read1_id_ex <= scalar_data_read1;
             scalar_data_read2_id_ex <= scalar_data_read2;

@@ -65,6 +65,7 @@ module RISCV_PIPELINED (
     logic id_ex_continous_addr;
     logic id_ex_single_load;
     logic id_ex_branch, id_ex_beq, id_ex_bne, id_ex_blt, id_ex_bge, id_ex_mem_read, id_ex_memtoreg, id_ex_mem_write, id_ex_auipc, id_ex_alu_src, id_ex_reg_write, id_ex_jal, id_ex_jalr;
+    logic id_ex_lui;
     logic [1:0] id_ex_alu_op;
     logic [31:0] data_read1_id_ex, data_read2_id_ex, data_read3_id_ex;
     logic [31:0] vector_data_read1_id_ex [0:vector_length-1];
@@ -98,7 +99,7 @@ module RISCV_PIPELINED (
     (* DONT_TOUCH = "true" *) wire       ex_mem_regwrite_dup = ex_mem_regwrite;
     
     // MEM/WB pipeline registers
-    logic mem_wb_memtoreg, mem_wb_regwrite, mem_wb_jal, mem_wb_jalr, mem_wb_memtovreg, mem_wb_vec_op, mem_wb_vec_reg_write;
+    logic mem_wb_memtoreg, mem_wb_regwrite, mem_wb_jal, mem_wb_jalr, mem_wb_vec_op, mem_wb_vec_reg_write;
     logic [31:0] mem_wb_alu_result [0:vector_length-1], mem_wb_memory_data_read [0:vector_length-1], mem_wb_link_address;
     logic [4:0] mem_wb_reg_dest;
     logic [31:0] mem_wb_write_data [0:vector_length-1];
@@ -216,7 +217,7 @@ module RISCV_PIPELINED (
         .immediate(big_immediate) 
     );
     
-    logic vec_op, vec_reg_write, continous_addr, single_load, branch, beq, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc;
+    logic vec_op, vec_reg_write, continous_addr, single_load, branch, beq, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc, lui;
     logic [1:0] alu_op;
     Control control_unit (
         .opcode(opcode),
@@ -238,7 +239,8 @@ module RISCV_PIPELINED (
         .reg_write(reg_write),
         .jal(jal),
         .jalr(jalr),
-        .auipc(auipc)
+        .auipc(auipc),
+        .lui(lui)
     );
 
     Hazard_Detection hazard_detection_unit (
@@ -278,6 +280,7 @@ module RISCV_PIPELINED (
         .jal(jal), 
         .jalr(jalr), 
         .auipc(auipc),
+        .lui(lui),
         .alu_op(alu_op), 
         .pc_if_id(pc_if_id), 
         .instruction_if_id(instruction_if_id), 
@@ -309,6 +312,7 @@ module RISCV_PIPELINED (
         .id_ex_memtoreg(id_ex_memtoreg),
         .id_ex_mem_write(id_ex_mem_write),
         .id_ex_auipc(id_ex_auipc),
+        .id_ex_lui(id_ex_lui),
         .id_ex_alu_src(id_ex_alu_src),
         .id_ex_reg_write(id_ex_reg_write),
         .id_ex_jal(id_ex_jal),
@@ -370,7 +374,13 @@ module RISCV_PIPELINED (
     logic [31:0] va_operand1 [0:vector_length-1], va_operand2 [0:vector_length-1], va_operand3 [0:vector_length-1];
 
     always_comb begin
-        if(vec_op_id_ex) begin
+        if(reset) begin
+            for (int i = 0; i < vector_length; i++) begin
+                va_operand1[i] = '0;
+                va_operand2[i] = '0;
+                va_operand3[i] = '0;
+            end
+        end if(vec_op_id_ex) begin
             unique case (forward_a)
                 2'b00: va_operand1 = vector_data_read1_id_ex;
                 2'b01: va_operand1 = mem_wb_write_data;
@@ -415,7 +425,7 @@ module RISCV_PIPELINED (
         end
     end
         
-    assign alu_input = id_ex_auipc ? pc_id_ex : alu_operand1;
+    assign alu_input = (id_ex_auipc) ? pc_id_ex : (id_ex_lui) ? '0 : alu_operand1;
     assign alu_input2 = id_ex_alu_src ? big_immediate_id_ex: alu_operand2;
 
     always_comb begin
@@ -509,7 +519,11 @@ module RISCV_PIPELINED (
     assign ex_result = (is_mac) ? scalar_mac_result[31:0] : alu_result;
     
     always_comb begin
-        if(is_mac) begin
+        if(reset) begin
+            for (int i = 0; i < vector_length; i++) begin
+                vec_ex_result[i] = 32'b0;
+            end
+        end else if(is_mac) begin
             for(int i = 0; i < vector_length; i++) begin
                 vec_ex_result[i] = vector_mac_result[i][31:0];
             end
@@ -694,14 +708,15 @@ module RISCV_PIPELINED (
                 2'b11: begin
                     uart_write_data <= uart_send_data[31:24];
                     send_byte <= 1'b1;
-                    data_word_complete <= 1'b0;
                     ready_to_send <= 1'b0;
                 end
                 default: ;
             endcase
+            data_send <= data_send + 1'b1;
         end else if((memory_address == uart_send) && ex_mem_memwrite && data_word_complete) begin
             uart_send_data <= write_data[0];
             ready_to_send <= 1'b1;
+            data_send <= 2'b00;
         end
     end
 
@@ -711,6 +726,8 @@ module RISCV_PIPELINED (
             data_word_complete <= 1'b0;
             data_place <= 2'b00;
             uart_data <= 32'b0;
+        end else if(data_send == 2'b11) begin
+            data_word_complete <= 1'b0;
         end else if(uart_write_to_mem) begin
             case (data_place) 
                 2'b00: uart_data[7:0] <= uart_read_data;
