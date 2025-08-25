@@ -1,5 +1,7 @@
 module Data_memory #(
-    parameter vec_length = 2
+    parameter vec_length = 2,
+    parameter data_addresses = 8360 * 4,
+    parameter UART_base = 32'h1000_82A0
 ) (
     input  logic clk,
     input  logic single_load,
@@ -13,24 +15,25 @@ module Data_memory #(
     output logic [31:0] read_data [0:vec_length-1]
 );
 
-    localparam data_base = 32'h1000_0000; 
-    localparam data_words = 8360;
     logic [31:0] bram_data [0:vec_length-1];
     logic [31:0] write_word [0:vec_length-1];
     logic [3:0]  write_enable [0:vec_length-1];
     logic [13:0] addresses [0:vec_length-1];
     logic vec_op_enable [0:vec_length-1];
     logic [31:0] byte_address;
+    logic in_range [0:vec_length-1];
     
     assign byte_address = address - data_base;
     assign vec_op_enable[0] = 1'b1;
     assign addresses[0] = byte_address[15:2];
+    assign in_range[0] = (addresses[0] < data_addresses);
     // Calculate next addresses based on the current address and vector length
     genvar j;
     generate
         for (j = 1; j < vec_length; j++) begin
             assign addresses[j] = addresses[j-1] + 1;
             assign vec_op_enable[j] = vec_op;
+            assign in_range[j] = addresses[j] < (data_addresses);
         end
     endgenerate
 
@@ -54,7 +57,7 @@ module Data_memory #(
             write_word[i]   = bram_data[i];
             write_enable[i] = 4'b0000;
 
-            if (mem_write) begin
+            if (mem_write && in_range[i]) begin
                 case (funct3)
                     3'b000: begin // SB
                         unique case (address[1:0])
@@ -93,7 +96,7 @@ module Data_memory #(
         for (int i = 0; i < vec_length; i++) begin
             read_data[i] = 32'h0;
             
-            if (mem_read) begin
+            if (mem_read && in_range[i]) begin
                 unique case (funct3)
                     3'b000: // LB (sign-extend)
                         case (address[1:0])
