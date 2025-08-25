@@ -45,7 +45,7 @@ module RISCV_PIPELINED (
     localparam stop_tick = 16; // Stop bit / Oversampling ticks
     localparam fifo_exp = 2; // 2^2 = 4 entries in the FIFO's
 
-    logic [data_bits-1:0] uart_write_data;
+    (* MARK_DEBUG = "TRUE" *) logic [data_bits-1:0] uart_write_data;
     logic [data_bits-1:0] uart_read_data;
     logic uart_rx_full, uart_rx_empty;
 
@@ -652,6 +652,8 @@ module RISCV_PIPELINED (
     logic data_word_complete; // indicates if a complete word has been received
     logic [1:0] data_place; // rx indexing
     logic [1:0] data_send; // tx indexing
+    (* MARK_DEBUG = "TRUE" *) logic tx_done_tick; // baud rate tick to send the bits back
+    logic word_in_progress; // indicates if a word is being sent
     logic uart_write_to_mem, send_byte, ready_to_send;
 
     uart_top #(
@@ -668,6 +670,7 @@ module RISCV_PIPELINED (
         .rx_full(uart_rx_full),
         .rx_empty(uart_rx_empty),
         .tx(tx),
+        .tx_done(tx_done_tick),
         .read_data(uart_read_data)
     );
 
@@ -689,57 +692,61 @@ module RISCV_PIPELINED (
             uart_write_data <= 8'b0;
             send_byte <= 1'b0;
             uart_send_data <= 32'b0;
-        end else if(send_byte) begin
-            send_byte <= 1'b0;
-        end else if (ready_to_send) begin
-            case (data_send)
-                2'b00: begin
-                    uart_write_data <= uart_send_data[7:0];
-                    send_byte <= 1'b1;
-                end
-                2'b01: begin
-                    uart_write_data <= uart_send_data[15:8];
-                    send_byte <= 1'b1;
-                end
-                2'b10: begin
-                    uart_write_data <= uart_send_data[23:16];
-                    send_byte <= 1'b1;
-                end
-                2'b11: begin
-                    uart_write_data <= uart_send_data[31:24];
-                    send_byte <= 1'b1;
-                    ready_to_send <= 1'b0;
-                end
-                default: ;
-            endcase
-            data_send <= data_send + 1'b1;
-        end else if((memory_address == uart_send) && ex_mem_memwrite && data_word_complete) begin
-            uart_send_data <= write_data[0];
-            ready_to_send <= 1'b1;
-            data_send <= 2'b00;
-        end
-    end
-
-    // RX
-    always_ff @(posedge clk or posedge reset) begin
-        if(reset) begin
+            word_in_progress <= 1'b0;
             data_word_complete <= 1'b0;
             data_place <= 2'b00;
             uart_data <= 32'b0;
-        end else if(data_send == 2'b11) begin
-            data_word_complete <= 1'b0;
-        end else if(uart_write_to_mem) begin
-            case (data_place) 
-                2'b00: uart_data[7:0] <= uart_read_data;
-                2'b01: uart_data[15:8] <= uart_read_data;
-                2'b10: uart_data[23:16] <= uart_read_data;
-                2'b11: begin
-                    uart_data[31:24] <= uart_read_data;
-                    data_word_complete <= 1'b1;
+        end else begin
+            send_byte <= 1'b0;
+
+            // TX
+            if((memory_address == uart_send) && ex_mem_memwrite && data_word_complete && !word_in_progress) begin
+                uart_send_data <= write_data[0];
+                ready_to_send <= 1'b1;
+                data_send <= 2'd1;
+                word_in_progress <= 1'b1;
+                uart_write_data <= write_data[0][31:24];
+                send_byte <= 1'b1;
+                data_word_complete <= 1'b0;
+                data_place <= 2'b0;
+            end
+
+            if (ready_to_send && tx_done_tick) begin
+                case (data_send)
+                2'd1: begin
+                    uart_write_data <= uart_send_data[23:16];
+                    send_byte <= 1'b1;
+                end
+                2'd2: begin
+                    uart_write_data <= uart_send_data[15:8];
+                    send_byte <= 1'b1;
+                end
+                2'd3: begin
+                    uart_write_data <= uart_send_data[7:0];
+                    send_byte <= 1'b1;
+                    ready_to_send <= 1'b0;
+                    uart_send_data <= 32'b0;
+                    word_in_progress <= 1'b0;
                 end
                 default: ;
-            endcase
-            data_place <= data_place + 1'b1;
+                endcase
+                data_send <= data_send + 1'b1;
+            end 
+
+            // RX 
+            if(uart_write_to_mem) begin
+                case (data_place) 
+                    2'd0: uart_data[31:24] <= uart_read_data;
+                    2'd1: uart_data[23:16] <= uart_read_data;
+                    2'd2: uart_data[15:8] <= uart_read_data;
+                    2'd3: begin
+                        uart_data[7:0] <= uart_read_data;
+                        data_word_complete <= 1'b1;
+                    end
+                    default: ;
+                endcase
+                data_place <= data_place + 1'b1;
+            end
         end
     end
 

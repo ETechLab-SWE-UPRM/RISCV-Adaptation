@@ -52,6 +52,7 @@ module uart_top
         output rx_full,                 // do not write data to FIFO
         output rx_empty,                // no data to read from FIFO
         output tx,                      // serial data out
+        output tx_done,
         output [DBITS-1:0] read_data    // data to Rx FIFO
     );
     
@@ -63,6 +64,8 @@ module uart_top
     wire tx_fifo_not_empty;             // Tx FIFO contains data to transmit
     wire [DBITS-1:0] tx_fifo_out;       // from Tx FIFO to UART transmitter
     wire [DBITS-1:0] rx_data_out;       // from UART receiver to Rx FIFO
+
+    assign tx_done = tx_done_tick;
 
     // Instantiate Modules for UART Core
     baud_rate_generator 

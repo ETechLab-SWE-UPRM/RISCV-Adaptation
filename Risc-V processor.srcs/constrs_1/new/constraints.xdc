@@ -157,6 +157,7 @@ set_property CONFIG_MODE SPIx4 [current_design]
 
 
 
+
 create_debug_core u_ila_0 ila
 set_property ALL_PROBE_SAME_MU true [get_debug_cores u_ila_0]
 set_property ALL_PROBE_SAME_MU_CNT 2 [get_debug_cores u_ila_0]
@@ -178,23 +179,31 @@ connect_debug_port u_ila_0/probe1 [get_nets [list {memory_address[0]} {memory_ad
 create_debug_port u_ila_0 probe
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe2]
 set_property port_width 32 [get_debug_ports u_ila_0/probe2]
-connect_debug_port u_ila_0/probe2 [get_nets [list {uart_send_data[0]} {uart_send_data[1]} {uart_send_data[2]} {uart_send_data[3]} {uart_send_data[4]} {uart_send_data[5]} {uart_send_data[6]} {uart_send_data[7]} {uart_send_data[8]} {uart_send_data[9]} {uart_send_data[10]} {uart_send_data[11]} {uart_send_data[12]} {uart_send_data[13]} {uart_send_data[14]} {uart_send_data[15]} {uart_send_data[16]} {uart_send_data[17]} {uart_send_data[18]} {uart_send_data[19]} {uart_send_data[20]} {uart_send_data[21]} {uart_send_data[22]} {uart_send_data[23]} {uart_send_data[24]} {uart_send_data[25]} {uart_send_data[26]} {uart_send_data[27]} {uart_send_data[28]} {uart_send_data[29]} {uart_send_data[30]} {uart_send_data[31]}]]
+connect_debug_port u_ila_0/probe2 [get_nets [list {uart_data[0]} {uart_data[1]} {uart_data[2]} {uart_data[3]} {uart_data[4]} {uart_data[5]} {uart_data[6]} {uart_data[7]} {uart_data[8]} {uart_data[9]} {uart_data[10]} {uart_data[11]} {uart_data[12]} {uart_data[13]} {uart_data[14]} {uart_data[15]} {uart_data[16]} {uart_data[17]} {uart_data[18]} {uart_data[19]} {uart_data[20]} {uart_data[21]} {uart_data[22]} {uart_data[23]} {uart_data[24]} {uart_data[25]} {uart_data[26]} {uart_data[27]} {uart_data[28]} {uart_data[29]} {uart_data[30]} {uart_data[31]}]]
 create_debug_port u_ila_0 probe
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe3]
-set_property port_width 5 [get_debug_ports u_ila_0/probe3]
-connect_debug_port u_ila_0/probe3 [get_nets [list {reg_dest[0]} {reg_dest[1]} {reg_dest[2]} {reg_dest[3]} {reg_dest[4]}]]
+set_property port_width 8 [get_debug_ports u_ila_0/probe3]
+connect_debug_port u_ila_0/probe3 [get_nets [list {uart_write_data[0]} {uart_write_data[1]} {uart_write_data[2]} {uart_write_data[3]} {uart_write_data[4]} {uart_write_data[5]} {uart_write_data[6]} {uart_write_data[7]}]]
 create_debug_port u_ila_0 probe
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe4]
 set_property port_width 32 [get_debug_ports u_ila_0/probe4]
-connect_debug_port u_ila_0/probe4 [get_nets [list {uart_data[0]} {uart_data[1]} {uart_data[2]} {uart_data[3]} {uart_data[4]} {uart_data[5]} {uart_data[6]} {uart_data[7]} {uart_data[8]} {uart_data[9]} {uart_data[10]} {uart_data[11]} {uart_data[12]} {uart_data[13]} {uart_data[14]} {uart_data[15]} {uart_data[16]} {uart_data[17]} {uart_data[18]} {uart_data[19]} {uart_data[20]} {uart_data[21]} {uart_data[22]} {uart_data[23]} {uart_data[24]} {uart_data[25]} {uart_data[26]} {uart_data[27]} {uart_data[28]} {uart_data[29]} {uart_data[30]} {uart_data[31]}]]
+connect_debug_port u_ila_0/probe4 [get_nets [list {uart_send_data[0]} {uart_send_data[1]} {uart_send_data[2]} {uart_send_data[3]} {uart_send_data[4]} {uart_send_data[5]} {uart_send_data[6]} {uart_send_data[7]} {uart_send_data[8]} {uart_send_data[9]} {uart_send_data[10]} {uart_send_data[11]} {uart_send_data[12]} {uart_send_data[13]} {uart_send_data[14]} {uart_send_data[15]} {uart_send_data[16]} {uart_send_data[17]} {uart_send_data[18]} {uart_send_data[19]} {uart_send_data[20]} {uart_send_data[21]} {uart_send_data[22]} {uart_send_data[23]} {uart_send_data[24]} {uart_send_data[25]} {uart_send_data[26]} {uart_send_data[27]} {uart_send_data[28]} {uart_send_data[29]} {uart_send_data[30]} {uart_send_data[31]}]]
 create_debug_port u_ila_0 probe
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe5]
-set_property port_width 1 [get_debug_ports u_ila_0/probe5]
-connect_debug_port u_ila_0/probe5 [get_nets [list receive_read]]
+set_property port_width 5 [get_debug_ports u_ila_0/probe5]
+connect_debug_port u_ila_0/probe5 [get_nets [list {reg_dest[0]} {reg_dest[1]} {reg_dest[2]} {reg_dest[3]} {reg_dest[4]}]]
 create_debug_port u_ila_0 probe
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe6]
 set_property port_width 1 [get_debug_ports u_ila_0/probe6]
-connect_debug_port u_ila_0/probe6 [get_nets [list status_read]]
+connect_debug_port u_ila_0/probe6 [get_nets [list receive_read]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe7]
+set_property port_width 1 [get_debug_ports u_ila_0/probe7]
+connect_debug_port u_ila_0/probe7 [get_nets [list status_read]]
+create_debug_port u_ila_0 probe
+set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe8]
+set_property port_width 1 [get_debug_ports u_ila_0/probe8]
+connect_debug_port u_ila_0/probe8 [get_nets [list tx_done_tick]]
 set_property C_CLK_INPUT_FREQ_HZ 300000000 [get_debug_cores dbg_hub]
 set_property C_ENABLE_CLK_DIVIDER false [get_debug_cores dbg_hub]
 set_property C_USER_SCAN_CHAIN 1 [get_debug_cores dbg_hub]
