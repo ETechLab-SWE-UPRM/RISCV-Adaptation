@@ -1,5 +1,6 @@
 module Data_memory #(
     parameter vec_length = 2,
+    parameter data_base = 32'h1000_0000,
     parameter data_addresses = 8360 * 4,
     parameter UART_base = 32'h1000_82A0
 ) (
