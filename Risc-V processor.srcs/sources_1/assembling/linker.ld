@@ -1,5 +1,5 @@
 /* linker.ld */
-ENTRY(main)
+ENTRY(_start)
 
 MEMORY
 {
@@ -7,21 +7,29 @@ MEMORY
   RAM (rwx): ORIGIN = 0x10000000, LENGTH = 33000 /* 33KB RAM for data */
 }
 
+__stack_top = ORIGIN(RAM) + LENGTH(RAM);
+
 SECTIONS
 {
-  /* all .text (your instructions) go into ROM starting at 0x0 */
+  /* all .text go into ROM starting at 0x0 */
   .text : {
+    *(init)
     *(.text)        /* every input section named .text */
+    *(.rodata)      /* read-only data */
   } > ROM
 
   /* all initialized data (.data) goes into RAM at 0x1000_0000 */
   .data : {
-    *(.data)        /* your signal/kernel/result labels */
+    __data_start = .;
+    *(.data*)
+    __data_end = .;
   } > RAM
 
   /* uninitialized data (.bss) also lives in RAM, zero-filled */
   .bss  : {
+    __bss_start = .;
     *(.bss)
     *(COMMON)
+    __bss_end = .;
   } > RAM
 }

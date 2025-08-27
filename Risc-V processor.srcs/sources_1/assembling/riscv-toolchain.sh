@@ -4,64 +4,83 @@ set -euo pipefail
 COE_DIR="new"
 ASS_DIR="assembling"
 
-# Args (can be overwritten)
-SRC=${1:-CODE_HERE.S}
-LD=${2:-linker.ld}
+# Args (can be overridden on CLI)
+LD=${1:-linker.ld}
+I_COE=${2:-instructions.coe}
+D_COE=${3:-data_init.coe}
 
-# Dont overwrite these, theyre used for names cause I lazy
-I_COE=${3:-instructions.coe}
-D_COE=${4:-data_init.coe}
+#CHANGE THIS WHENEVER BRAM CHANGES
+RAM_WORDS=$((33000/4))
 
-# Derive names
-BASE=$(basename "${SRC%.*}")
-OBJ="${BASE}.o"
-ELF="${BASE}.elf"
+# Output ELF
+ELF="program.elf"
 
-# RISC-V toolchain settings
+# Toolchain settings
 ARCH=rv32im
 ABI=ilp32
+CC=riscv64-unknown-elf-gcc
+OBJCOPY=riscv64-unknown-elf-objcopy
 
-echo "→ Assembling ${SRC} → ${OBJ}"
-riscv64-unknown-elf-gcc \
-  -march=${ARCH} -mabi=${ABI} \
-  -nostdlib -T "${LD}" \
-  -c "${SRC}" -o "${OBJ}"
+echo "→ Collecting sources in ${ASS_DIR}"
+mapfile -t SRC_LIST < <(find -maxdepth 1 \( -name '*.c' -o -name '*.s' \) | sort)
+if [ ${#SRC_LIST[@]} -eq 0 ]; then
+  echo "No sources (.c/.s) found in ${ASS_DIR}" >&2
+  exit 1
+fi
 
-echo "→ Linking ${OBJ} → ${ELF}"
-riscv64-unknown-elf-gcc \
-  -march=${ARCH} -mabi=${ABI} \
-  -nostdlib -T "${LD}" \
-  "${OBJ}" -o "${ELF}"
+# Common flags
+CFLAGS="-O2 -ffreestanding -fno-pic -fno-builtin -march=${ARCH} -mabi=${ABI} -Wall -Wextra -ffunction-sections -fdata-sections"
+LDFLAGS="-nostdlib -Wl,--gc-sections -Wl,--no-relax -T ${LD} -march=${ARCH} -mabi=${ABI}"
 
-echo "→ Converting ${ELF} to COE files ${I_COE}, ${D_COE}"
-riscv64-unknown-elf-objcopy -O binary --only-section .text "${ELF}" text.bin
+OBJ_LIST=()
+for src in "${SRC_LIST[@]}"; do
+  obj="${src%.*}.o"
+  echo "   CC ${src} -> ${obj}"
+  ${CC} ${CFLAGS} -c "${src}" -o "${obj}"
+  OBJ_LIST+=("${obj}")
+done
+
+echo "→ Linking -> ${ASS_DIR}/${ELF}"
+${CC} ${LDFLAGS} "${OBJ_LIST[@]}" -o "${ELF}"
+
+echo "→ Extracting sections into raw binaries"
+# Instruction memory: include .init, .text, .rodata (if you keep consts in ROM)
+riscv64-unknown-elf-objcopy -O binary \
+  --only-section .init \
+  --only-section .text* \
+  --only-section .rodata* \
+  "${ELF}" "text.bin"
+
+# Data memory: include .data, .sdata
+riscv64-unknown-elf-objcopy -O binary \
+  --only-section .data* \
+  --only-section .sdata* \
+  "${ELF}" "data.bin"
 
 cd ..
 
-# produce COE
+echo "→ Converting binaries to COE format"
+# Instructions COE
 {
   echo "memory_initialization_radix=16;"
   echo "memory_initialization_vector="
   xxd -p -c4 "${ASS_DIR}/text.bin" \
     | sed -E 's/^([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/\4\3\2\1/' \
-    | sed 's/$/,/'             \
-    | sed '$ s/,$/;/' 
-} > "${COE_DIR}/instructions.coe"
+    | sed 's/$/,/' \
+    | sed '$ s/,$/;/'
+} > "${COE_DIR}/${I_COE}"
 
-truncate -s -1 "${COE_DIR}/instructions.coe"
-
-riscv64-unknown-elf-objcopy -O binary --only-section .data "${ASS_DIR}/${ELF}" data.bin
-
+# Data COE
 {
   echo "memory_initialization_radix=16;"
   echo "memory_initialization_vector="
   xxd -p -c4 "${ASS_DIR}/data.bin" \
     | sed -E 's/^([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/\4\3\2\1/' \
-    | sed 's/$/,/'             \
-    | sed '$ s/,$/;/' 
-} > "${COE_DIR}/data_init.coe"
+    | sed 's/$/,/' \
+    | yes "00000000," | head -n $RAM_WORDS
+} | sed '$ s/,$/;/' > "${COE_DIR}/${D_COE}"
 
-truncate -s -1 "${COE_DIR}/data_init.coe"
-
-echo "→ ${I_COE} and ${D_COE} files generated on ${COE_DIR}"
-echo "WARNING: Remember to regenerate the ip core in Vivado to reflect the changes." >&2
+echo "→ Done."
+echo "   - ${COE_DIR}/${I_COE} (instructions/rodata)"
+echo "   - ${COE_DIR}/${D_COE} (initialized data)"
+echo "WARNING: Remember to regenerate the BRAM IP in Vivado with the new COEs." >&2
