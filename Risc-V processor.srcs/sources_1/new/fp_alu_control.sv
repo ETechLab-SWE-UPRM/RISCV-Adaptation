@@ -7,7 +7,7 @@ module fp_alu_control (
     input logic [2:0] funct3,
 
     output fp_alu_op_t fp_alu_op,
-    output logic [2:0] rm
+    output rm_t rm
 );
 
     always_comb begin

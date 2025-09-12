@@ -8,7 +8,7 @@ module fp_control_tester ();
 
     logic [1:0] fp_op;
     fp_alu_op_t fp_alu_op;
-    logic [2:0] rm;
+    rm_t rm;
     logic fp_alu_src;
     logic fp_reg_write;
     logic fp_load;
