@@ -22,6 +22,35 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
+package fp_fma_pkg;
+    typedef enum logic [1:0] { 
+        FM_NONE  = 2'b00,
+        FMADD    = 2'b01,
+        FNMADD   = 2'b10
+    } fp_fma_t;
+endpackage
+
+package fp_alu_pkg;
+    typedef enum logic [2:0] {
+        FADD = 3'd0,
+        FSUB = 3'd1,
+        FMUL = 3'd2,
+        FEQ = 3'd3, // Equal
+        FLT = 3'd4, // Less Than
+        FLE = 3'd5 // Less Than or Equal
+    } fp_alu_op_t;
+
+    typedef enum logic [2:0] {
+        RNE,
+        RTZ,
+        RDN,
+        RUP,
+        RMM,
+        DYN
+    } rm_t;
+    
+endpackage
+
 module RISCV_PIPELINED (
     input logic clk,
     input logic reset, 

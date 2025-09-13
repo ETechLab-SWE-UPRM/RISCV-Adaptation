@@ -153,7 +153,6 @@ module fp_alu (
     logic [24:0] mant_result;
     logic result_sign;
     logic [8:0] result_exp;
-    logic [31:0] result;
 
     assign result_exp = aligned_numbers.exp;
 
@@ -196,6 +195,19 @@ module fp_alu (
                         result_sign = aligned_numbers.sign2;
                     end
                 end
+                $display("FSUB Mantissa Result: %b", mant_result);
+            end
+
+            FLE : begin
+                
+            end
+
+            FLT : begin
+                
+            end
+
+            FEQ : begin
+                
             end
         endcase
 
