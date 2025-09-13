@@ -3,23 +3,25 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="fp_regs_tester_behav.wdb" id="1">
+      <db_ref path="fp_alu_testing_behav.wdb" id="1">
          <top_modules>
-            <top_module name="fp_regs_tester" />
+            <top_module name="\$unit_fp_alu_sv_3596582802 " />
+            <top_module name="fp_alu_pkg" />
+            <top_module name="fp_alu_testing" />
             <top_module name="glbl" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="280.859 ns"></ZoomEndTime>
-      <Cursor1Time time="70.000 ns"></Cursor1Time>
+      <ZoomEndTime time="399.425 ns"></ZoomEndTime>
+      <Cursor1Time time="110.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="195"></NameColumnWidth>
-      <ValueColumnWidth column_width="110"></ValueColumnWidth>
+      <ValueColumnWidth column_width="98"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="14" />
+   <WVObjectSize size="9" />
    <wave_markers>
       <marker time="51285000" label="" />
       <marker time="51455000" label="" />
@@ -27,60 +29,40 @@
       <marker time="51345000" label="" />
       <marker time="215000" label="" />
    </wave_markers>
-   <wvobject fp_name="/fp_regs_tester/clk" type="logic">
+   <wvobject fp_name="/fp_alu_testing/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/fp_regs_tester/reset" type="logic">
+   <wvobject fp_name="/fp_alu_testing/reset" type="logic">
       <obj_property name="ElementShortName">reset</obj_property>
       <obj_property name="ObjectShortName">reset</obj_property>
    </wvobject>
-   <wvobject fp_name="/fp_regs_tester/read_reg1" type="array">
-      <obj_property name="ElementShortName">read_reg1[4:0]</obj_property>
-      <obj_property name="ObjectShortName">read_reg1[4:0]</obj_property>
+   <wvobject fp_name="/fp_alu_testing/a" type="array">
+      <obj_property name="ElementShortName">a[31:0]</obj_property>
+      <obj_property name="ObjectShortName">a[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/fp_regs_tester/read_reg2" type="array">
-      <obj_property name="ElementShortName">read_reg2[4:0]</obj_property>
-      <obj_property name="ObjectShortName">read_reg2[4:0]</obj_property>
+   <wvobject fp_name="/fp_alu_testing/b" type="array">
+      <obj_property name="ElementShortName">b[31:0]</obj_property>
+      <obj_property name="ObjectShortName">b[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/fp_regs_tester/read_reg3" type="array">
-      <obj_property name="ElementShortName">read_reg3[4:0]</obj_property>
-      <obj_property name="ObjectShortName">read_reg3[4:0]</obj_property>
+   <wvobject fp_name="/fp_alu_testing/fp_alu_op" type="array">
+      <obj_property name="ElementShortName">fp_alu_op[2:0]</obj_property>
+      <obj_property name="ObjectShortName">fp_alu_op[2:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/fp_regs_tester/read_regdest" type="array">
-      <obj_property name="ElementShortName">read_regdest[4:0]</obj_property>
-      <obj_property name="ObjectShortName">read_regdest[4:0]</obj_property>
+   <wvobject fp_name="/fp_alu_testing/rm" type="array">
+      <obj_property name="ElementShortName">rm[2:0]</obj_property>
+      <obj_property name="ObjectShortName">rm[2:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/fp_regs_tester/write_reg" type="array">
-      <obj_property name="ElementShortName">write_reg[4:0]</obj_property>
-      <obj_property name="ObjectShortName">write_reg[4:0]</obj_property>
+   <wvobject fp_name="/fp_alu_testing/result" type="array">
+      <obj_property name="ElementShortName">result[31:0]</obj_property>
+      <obj_property name="ObjectShortName">result[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/fp_regs_tester/write_data" type="array">
-      <obj_property name="ElementShortName">write_data[31:0]</obj_property>
-      <obj_property name="ObjectShortName">write_data[31:0]</obj_property>
+   <wvobject fp_name="/fp_alu_testing/fp_alu/aligned_numbers" type="array">
+      <obj_property name="ElementShortName">aligned_numbers</obj_property>
+      <obj_property name="ObjectShortName">aligned_numbers</obj_property>
    </wvobject>
-   <wvobject fp_name="/fp_regs_tester/reg_write_enable" type="logic">
-      <obj_property name="ElementShortName">reg_write_enable</obj_property>
-      <obj_property name="ObjectShortName">reg_write_enable</obj_property>
-   </wvobject>
-   <wvobject fp_name="/fp_regs_tester/read_data1" type="array">
-      <obj_property name="ElementShortName">read_data1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">read_data1[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/fp_regs_tester/read_data2" type="array">
-      <obj_property name="ElementShortName">read_data2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">read_data2[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/fp_regs_tester/read_data3" type="array">
-      <obj_property name="ElementShortName">read_data3[31:0]</obj_property>
-      <obj_property name="ObjectShortName">read_data3[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/fp_regs_tester/read_data4" type="array">
-      <obj_property name="ElementShortName">read_data4[31:0]</obj_property>
-      <obj_property name="ObjectShortName">read_data4[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/fp_regs_tester/fp_reg_inst/fp_regs" type="array">
-      <obj_property name="ElementShortName">fp_regs[0:31][31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_regs[0:31][31:0]</obj_property>
+   <wvobject fp_name="/fp_alu_testing/fp_alu/mant_result" type="array">
+      <obj_property name="ElementShortName">mant_result[27:0]</obj_property>
+      <obj_property name="ObjectShortName">mant_result[27:0]</obj_property>
    </wvobject>
 </wave_config>
