@@ -183,7 +183,19 @@ module fp_alu (
             end
 
             FSUB : begin
-                
+                aligned_numbers.sign2 = ~aligned_numbers.sign2;
+                if(aligned_numbers.sign1 == aligned_numbers.sign2) begin
+                    mant_result = aligned_numbers.frac1 + aligned_numbers.frac2;
+                    result_sign = aligned_numbers.sign1;
+                end else begin
+                    if (aligned_numbers.frac1 > aligned_numbers.frac2) begin
+                        mant_result = aligned_numbers.frac1 - aligned_numbers.frac2;
+                        result_sign = aligned_numbers.sign1;
+                    end else begin
+                        mant_result = aligned_numbers.frac2 - aligned_numbers.frac1;
+                        result_sign = aligned_numbers.sign2;
+                    end
+                end
             end
         endcase
 
@@ -192,7 +204,7 @@ module fp_alu (
             mant_result = mant_result >> 1;
             aligned_numbers.exp = aligned_numbers.exp + 1;
         end else if (~mant_result[23]) begin
-            // Normalize by left shifting and decrementing exponent
+            // Underflow, Normalize by left shifting and decrementing exponent
             while(~mant_result[23] && aligned_numbers.exp >= 0) begin
                 mant_result = mant_result << 1;
                 aligned_numbers.exp = aligned_numbers.exp - 1;

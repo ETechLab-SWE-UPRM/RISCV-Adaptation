@@ -31,6 +31,8 @@ module fp_alu_testing ();
         fp_alu_op = FADD;
         rm = RTZ;
         #100;
+        fp_alu_op = FSUB;
+        #100;
         $display("FADD Result: %h", result); // Expected: 0x41A3D70A (20.8)
         $finish;
     end
