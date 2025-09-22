@@ -10,6 +10,7 @@ module fp_alu_testing ();
     logic [31:0] result;
 
     fp_alu fp_alu (
+        .clk(clk),
         .a(a),
         .b(b),
         .fp_alu_op(fp_alu_op),
@@ -33,7 +34,12 @@ module fp_alu_testing ();
         #100;
         fp_alu_op = FSUB;
         #100;
-        $display("FADD Result: %h", result); // Expected: 0x41A3D70A (20.8)
+        fp_alu_op = FLT;
+        #100;
+        fp_alu_op = FLE;
+        #100;
+        fp_alu_op = FEQ;
+        #100;
         $finish;
     end
 
