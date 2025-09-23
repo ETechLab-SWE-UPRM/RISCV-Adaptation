@@ -1,6 +1,9 @@
 `timescale 1ns/1ps
 
-module fp_hazard_detection (
+module fp_hazard_detection #(
+    parameter FMADD_CYCLES = 7,
+    parameter ADDER_CYCLES = 3
+) (
     input logic clk,
     input logic reset,
     input logic id_ex_busy,
@@ -14,8 +17,6 @@ module fp_hazard_detection (
 
     output logic stall, pc_write, if_id_write
 );
-    localparam FMADD_CYCLES = 7;
-    localparam ADDER_CYCLES = 3;
 
     // Check if any FP register is being executed
     logic [3:0] busy [31:0]; 
