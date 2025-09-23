@@ -1,3 +1,4 @@
+import fp_fma_pkg::*;
 
 module ID_EX_reg #(
     parameter vec_length = 2
@@ -6,6 +7,8 @@ module ID_EX_reg #(
     input logic reset, 
     input logic flush,
     input logic vec_op,
+    input logic fp_instruction,
+    input logic fp_reg_write,
     input logic vec_reg_write,
     input logic continous_addr,
     input logic single_load,
@@ -23,18 +26,27 @@ module ID_EX_reg #(
     input logic jalr,
     input logic auipc,
     input logic lui,
+    input logic fpload,
+    input logic fpstore,
+    input fp_fma_t fmat_type,
     input logic [1:0] alu_op,
+    input logic [1:0] fp_op,
     input logic [31:0] pc_if_id,
     input logic [31:0] instruction_if_id,
     input logic [31:0] big_immediate,
     input logic [4:0] reg1,
     input logic [4:0] reg2,
+    input logic [4:0] reg3,
     input logic [4:0] reg_dest,
     input logic [2:0] funct3,
     input logic [6:0] funct7,
     input logic [31:0] scalar_data_read1,
     input logic [31:0] scalar_data_read2,
     input logic [31:0] scalar_data_read3,
+    input logic [31:0] fp_data_read1,
+    input logic [31:0] fp_data_read2,
+    input logic [31:0] fp_data_read3,
+    input logic [31:0] fp_data_read4,
     input logic [31:0] vector_data_read1 [0:vec_length-1],
     input logic [31:0] vector_data_read2 [0:vec_length-1],
     input logic [31:0] vector_data_read3 [0:vec_length-1],
@@ -42,6 +54,8 @@ module ID_EX_reg #(
     output logic [31:0] pc_id_ex,
     output logic [31:0] instruction_id_ex,
     output logic vec_op_id_ex,
+    output logic fp_instruction_id_ex,
+    output logic fp_reg_write_id_ex,
     output logic vec_reg_write_id_ex,
     output logic id_ex_continous_addr,
     output logic id_ex_single_load,
@@ -59,15 +73,24 @@ module ID_EX_reg #(
     output logic id_ex_jalr,
     output logic id_ex_auipc,
     output logic id_ex_lui,
+    output logic id_ex_fpload,
+    output logic id_ex_fpstore,
+    output fp_fma_t id_ex_fmat_type,
     output logic [1:0] id_ex_alu_op,
+    output logic [1:0] id_ex_fp_op,
     output logic [31:0] scalar_data_read1_id_ex,
     output logic [31:0] scalar_data_read2_id_ex,
     output logic [31:0] scalar_data_read3_id_ex,
+    output logic [31:0] fp_data_read1_id_ex,
+    output logic [31:0] fp_data_read2_id_ex,
+    output logic [31:0] fp_data_read3_id_ex,
+    output logic [31:0] fp_data_read4_id_ex,
     output logic [31:0] vector_data_read1_id_ex [0:vec_length-1],
     output logic [31:0] vector_data_read2_id_ex [0:vec_length-1],
     output logic [31:0] vector_data_read3_id_ex [0:vec_length-1],
     output logic [31:0] big_immediate_id_ex,
     output logic [4:0] reg_dest_id_ex,
+    output logic [4:0] reg3_id_ex,
     output logic [4:0] reg2_id_ex,
     output logic [4:0] reg1_id_ex,
     output logic [2:0] funct3_id_ex,
@@ -80,6 +103,8 @@ module ID_EX_reg #(
             pc_id_ex <= 32'b0;
             instruction_id_ex <= 32'b0;
             vec_op_id_ex <= 1'b0;
+            fp_instruction_id_ex <= 1'b0;
+            fp_reg_write_id_ex <= 1'b0;
             vec_reg_write_id_ex <= 1'b0;
             id_ex_continous_addr <= 1'b0;
             id_ex_single_load <= 1'b0;
@@ -97,10 +122,18 @@ module ID_EX_reg #(
             id_ex_jalr <= 1'b0;
             id_ex_auipc <= 1'b0;
             id_ex_lui <= 1'b0;
+            id_ex_fpload <= 1'b0;
+            id_ex_fpstore <= 1'b0;
+            id_ex_fmat_type <= NONE;
             id_ex_alu_op <= 2'b0;
+            id_ex_fp_op <= 2'b0;
             scalar_data_read1_id_ex <= 32'b0;
             scalar_data_read2_id_ex <= 32'b0;
             scalar_data_read3_id_ex <= 32'b0; 
+            fp_data_read1_id_ex <= 32'b0;
+            fp_data_read2_id_ex <= 32'b0;
+            fp_data_read3_id_ex <= 32'b0;
+            fp_data_read4_id_ex <= 32'b0; 
             vector_data_read1_id_ex <= '{default: 32'b0};
             vector_data_read2_id_ex <= '{default: 32'b0};
             vector_data_read3_id_ex <= '{default: 32'b0};
@@ -115,6 +148,8 @@ module ID_EX_reg #(
             pc_id_ex <= 32'b0;
             instruction_id_ex <= 32'h13;
             vec_op_id_ex <= 1'b0;
+            fp_instruction_id_ex <= 1'b0;
+            fp_reg_write_id_ex <= 1'b0;
             vec_reg_write_id_ex <= 1'b0;
             id_ex_continous_addr <= 1'b0;
             id_ex_single_load <= 1'b0;
@@ -132,15 +167,24 @@ module ID_EX_reg #(
             id_ex_jalr <= 1'b0;
             id_ex_auipc <= 1'b0;
             id_ex_lui <= 1'b0;
+            id_ex_fpload <= 1'b0;
+            id_ex_fpstore <= 1'b0;
+            id_ex_fmat_type <= NONE;
             id_ex_alu_op <= 2'b0;
+            id_ex_fp_op <= 2'b0;
             scalar_data_read1_id_ex <= 32'b0;
             scalar_data_read2_id_ex <= 32'b0;
             scalar_data_read3_id_ex <= 32'b0; 
+            fp_data_read1_id_ex <= 32'b0;
+            fp_data_read2_id_ex <= 32'b0;
+            fp_data_read3_id_ex <= 32'b0;
+            fp_data_read4_id_ex <= 32'b0; 
             vector_data_read1_id_ex <= '{default: 32'b0};
             vector_data_read2_id_ex <= '{default: 32'b0};
             vector_data_read3_id_ex <= '{default: 32'b0};
             big_immediate_id_ex <= 32'b0;
             reg_dest_id_ex <= 5'b0;
+            reg3_id_ex <= 5'b0;
             reg2_id_ex <= 5'b0;
             reg1_id_ex <= 5'b0;
             funct3_id_ex <= 3'b0;
@@ -151,6 +195,8 @@ module ID_EX_reg #(
             pc_id_ex <= pc_if_id; 
             instruction_id_ex <= instruction_if_id;
             vec_op_id_ex <= vec_op;
+            fp_instruction_id_ex <= fp_instruction;
+            fp_reg_write_id_ex <= fp_reg_write;
             vec_reg_write_id_ex <= vec_reg_write;
             id_ex_continous_addr <= continous_addr;
             id_ex_single_load <= single_load;
@@ -168,15 +214,24 @@ module ID_EX_reg #(
             id_ex_jalr <= jalr;
             id_ex_auipc <= auipc;
             id_ex_lui <= lui;
+            id_ex_fpload <= fpload;
+            id_ex_fpstore <= fpstore;
+            id_ex_fmat_type <= fmat_type;
             id_ex_alu_op <= alu_op;
+            id_ex_fp_op <= fp_op;
             scalar_data_read1_id_ex <= scalar_data_read1;
             scalar_data_read2_id_ex <= scalar_data_read2;
             scalar_data_read3_id_ex <= scalar_data_read3;
+            fp_data_read1_id_ex <= fp_data_read1;
+            fp_data_read2_id_ex <= fp_data_read2;
+            fp_data_read3_id_ex <= fp_data_read3;
+            fp_data_read4_id_ex <= fp_data_read4;
             vector_data_read1_id_ex <= vector_data_read1;
             vector_data_read2_id_ex <= vector_data_read2;
             vector_data_read3_id_ex <= vector_data_read3;
             big_immediate_id_ex <= big_immediate;
             reg_dest_id_ex <= reg_dest;
+            reg3_id_ex <= reg3;
             reg1_id_ex <= reg1;
             reg2_id_ex <= reg2;
             funct3_id_ex <= funct3;

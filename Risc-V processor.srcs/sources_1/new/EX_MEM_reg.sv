@@ -5,6 +5,8 @@ module EX_MEM_reg #(
     input logic clk,
     input logic reset,
     input logic vec_op, 
+    input logic id_ex_fp_instruction,
+    input logic id_ex_fp_reg_write,
     input logic vec_reg_write,
     input logic id_ex_single_load,
     input logic id_ex_mem_read,
@@ -21,6 +23,8 @@ module EX_MEM_reg #(
     input logic [2:0] funct3, 
 
     output logic ex_mem_vec_op,
+    output logic ex_mem_fp_instruction,
+    output logic ex_mem_fp_reg_write,
     output logic ex_mem_vec_reg_write,
     output logic ex_mem_single_load,
     output logic ex_mem_memread,
@@ -41,6 +45,8 @@ module EX_MEM_reg #(
     always_ff @(posedge clk or posedge reset) begin
         if (reset) begin
             ex_mem_vec_op <= 1'b0;
+            ex_mem_fp_isntruction <= 1'b0;
+            ex_mem_fp_instruction <= 1'b0;
             ex_mem_vec_reg_write <= 1'b0;
             ex_mem_single_load <= 1'b0;
             ex_mem_memread <= 1'b0;
@@ -58,6 +64,8 @@ module EX_MEM_reg #(
 
         end else begin
             ex_mem_vec_op <= vec_op; 
+            ex_mem_fp_instruction <= id_ex_fp_instruction;
+            ex_mem_fp_reg_write <= id_ex_fp_reg_write;
             ex_mem_vec_reg_write <= vec_reg_write;
             ex_mem_single_load <= id_ex_single_load;
             vec_ex_mem_data_read2 <= vec_data_read2_id_ex;
