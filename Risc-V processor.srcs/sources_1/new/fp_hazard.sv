@@ -20,11 +20,12 @@ module fp_hazard_detection #(
 
     // Check if any FP register is being executed
     logic [3:0] busy [31:0]; 
-    logic hazard1, hazard2;
+    logic hazard1, hazard2, hazard3;
     logic fp_hazard1, fp_hazard2, fp_hazard3;
 
     assign hazard1 = (id_ex_mem_read && (if_id_rs1 == reg_dest_id_ex));
     assign hazard2 = (id_ex_mem_read && (if_id_rs2 == reg_dest_id_ex));
+    assign hazard3 = (id_ex_mem_read && (if_id_rs3 == reg_dest_id_ex));
 
     always_ff @(posedge clk or posedge reset) begin
         if(reset) begin
@@ -49,18 +50,18 @@ module fp_hazard_detection #(
     end
 
     always_comb begin
-        stall = 1'b1; 
-        pc_write = 1'b0; 
-        if_id_write = 1'b0;
-        
-        if(hazard1 || hazard2 || fp_hazard1 || fp_hazard2 || fp_hazard3) begin
-            stall = 1'b1; 
-            pc_write = 1'b0; 
-            if_id_write = 1'b0; 
-        end
-    
         fp_hazard1 = (busy[if_id_rs1] > 0);
         fp_hazard2 = (busy[if_id_rs2] > 0);
         fp_hazard3 = (busy[if_id_rs3] > 0);
+        
+        stall = 1'b0; 
+        pc_write = 1'b1; 
+        if_id_write = 1'b1;
+
+        if(hazard1 || hazard2 || hazard3 || fp_hazard1 || fp_hazard2 || fp_hazard3) begin
+            stall = 1'b1;
+            pc_write = 1'b0;
+            if_id_write = 1'b0;
+        end
     end
 endmodule

@@ -16,7 +16,7 @@ RAM_WORDS=$((33000/4))
 ELF="program.elf"
 
 # Toolchain settings
-ARCH=rv32im
+ARCH=rv32imf
 ABI=ilp32
 CC=riscv64-unknown-elf-gcc
 OBJCOPY=riscv64-unknown-elf-objcopy
@@ -48,13 +48,16 @@ echo "→ Extracting sections into raw binaries"
 riscv64-unknown-elf-objcopy -O binary \
   --only-section .init \
   --only-section .text* \
-  --only-section .rodata* \
   "${ELF}" "text.bin"
 
 # Data memory: include .data, .sdata
 riscv64-unknown-elf-objcopy -O binary \
   --only-section .data* \
   --only-section .sdata* \
+  --only-section .bss* \
+  --only-section .stack* \
+  --only-section .rodata* \
+  --only-section .srodata* \
   "${ELF}" "data.bin"
 
 cd ..
@@ -76,8 +79,7 @@ echo "→ Converting binaries to COE format"
   echo "memory_initialization_vector="
   xxd -p -c4 "${ASS_DIR}/data.bin" \
     | sed -E 's/^([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/\4\3\2\1/' \
-    | sed 's/$/,/' \
-    | yes "00000000," | head -n $RAM_WORDS
+    | sed 's/$/,/'
 } | sed '$ s/,$/;/' > "${COE_DIR}/${D_COE}"
 
 echo "→ Done."

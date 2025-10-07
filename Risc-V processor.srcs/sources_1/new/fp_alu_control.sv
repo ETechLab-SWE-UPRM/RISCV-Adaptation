@@ -11,13 +11,13 @@ module fp_alu_control (
 );
 
     always_comb begin
-        rm = funct3;
-        fp_alu_op = '0;
+        rm = rm_t'(funct3);
+        fp_alu_op = FNONE;
         unique case (fp_op)
             2'b00: ;
 
             2'b01: begin
-                fp_alu_op = FADD;
+                fp_alu_op = FMEM;
             end
 
             2'b10: begin

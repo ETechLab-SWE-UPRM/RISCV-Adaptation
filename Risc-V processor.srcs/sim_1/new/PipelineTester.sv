@@ -46,21 +46,8 @@ module PipelineTester;
     rst = 1'b1;
     #100;
     rst = 1'b0;
+    #20000;
 
-    // Wait a little after reset
-    #(10*BIT_TIME_NS);
-
-    // Send "a" "b" "c" "d"
-    uart_send_byte("a");
-    #(BIT_TIME_NS);   // small gap
-    uart_send_byte("b");
-    #(BIT_TIME_NS);
-    uart_send_byte("c");
-    #(BIT_TIME_NS);
-    uart_send_byte("d");
-
-    // Wait for DUT to process
-    #(100*BIT_TIME_NS);
 
     $finish;
   end

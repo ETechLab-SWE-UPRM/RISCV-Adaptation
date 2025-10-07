@@ -24,20 +24,22 @@
 
 package fp_fma_pkg;
     typedef enum logic [1:0] { 
-        FM_NONE  = 2'b00,
-        FMADD    = 2'b01,
-        FNMADD   = 2'b10
+        FM_NONE  = 2'd3,
+        FMADD    = 2'd0,
+        FNMADD   = 2'd1
     } fp_fma_t;
 endpackage
 
 package fp_alu_pkg;
-    typedef enum logic [2:0] {
-        FADD = 3'd0,
-        FSUB = 3'd1,
-        FMUL = 3'd2,
-        FEQ = 3'd3, // Equal
-        FLT = 3'd4, // Less Than
-        FLE = 3'd5 // Less Than or Equal
+    typedef enum logic [3:0] {
+        FADD,
+        FSUB,
+        FMUL,
+        FEQ,
+        FLT,
+        FLE,
+        FMEM, // Load or store 
+        FNONE
     } fp_alu_op_t;
 
     typedef enum logic [2:0] {
@@ -48,7 +50,6 @@ package fp_alu_pkg;
         RMM,
         DYN
     } rm_t;
-    
 endpackage
 
 module RISCV_PIPELINED (
@@ -60,8 +61,13 @@ module RISCV_PIPELINED (
     output logic [3:0] an,
     output logic led
 );
+    import fp_fma_pkg::*;
+    import fp_alu_pkg::*;
+
     // Keep this number even, because data memory is organized in pairs of words
     localparam vector_length = 2;
+    localparam FMADD_DELAY = 7;
+    localparam FADDER_DELAY = 3;
 
     localparam data_base = 32'h1000_0000;
     localparam data_word_space = 8360 * 4; // 33,440 bytes
@@ -87,24 +93,37 @@ module RISCV_PIPELINED (
     
     // Hazard detection unit to handle stalls
     logic stall, pc_write, if_id_write;
+    logic fp_stall, fp_pc_write, fp_if_id_write;
     
     // ID/EX pipeline registers
     logic [31:0] pc_id_ex, instruction_id_ex;
     logic vec_op_id_ex, vec_reg_write_id_ex;
+    logic fp_instruction_id_ex, fp_reg_write_id_ex;
     logic id_ex_continous_addr;
     logic id_ex_single_load;
     logic id_ex_branch, id_ex_beq, id_ex_bne, id_ex_blt, id_ex_bge, id_ex_mem_read, id_ex_memtoreg, id_ex_mem_write, id_ex_auipc, id_ex_alu_src, id_ex_reg_write, id_ex_jal, id_ex_jalr;
     logic id_ex_lui;
+    logic id_ex_fp_alu_src,id_ex_fp_load, id_ex_fp_store;
+    fp_fma_t id_ex_fmat_type;
+    logic [1:0] id_ex_fp_op;
     logic [1:0] id_ex_alu_op;
     logic [31:0] data_read1_id_ex, data_read2_id_ex, data_read3_id_ex;
+    logic [31:0] fp_data_read1_id_ex, fp_data_read2_id_ex, fp_data_read3_id_ex, fp_data_read4_id_ex;
     logic [31:0] vector_data_read1_id_ex [0:vector_length-1];
     logic [31:0] vector_data_read2_id_ex [0:vector_length-1];
     logic [31:0] vector_data_read3_id_ex [0:vector_length-1];
     logic [31:0] big_immediate_id_ex;
-    logic [4:0] reg_dest_id_ex, reg1_id_ex, reg2_id_ex;
+    logic [4:0] reg_dest_id_ex, reg1_id_ex, reg2_id_ex, reg3_id_ex;
     logic [2:0] funct3_id_ex;
     logic [6:0] funct7_id_ex;
     logic id_ex_flush; 
+
+    // FP ALU and MAC signals
+    fp_alu_op_t fp_alu_op;
+    rm_t rm;
+    logic fp_alu_result_valid;
+    logic fp_mac_result_valid;
+    logic a_ready, b_ready, c_ready;
 
     assign id_ex_flush = ex_taken || stall;
     
@@ -112,7 +131,7 @@ module RISCV_PIPELINED (
 
     // EX/MEM pipeline registers
     logic ex_mem_vec_op, ex_mem_vec_reg_write;
-    logic ex_mem_enable;
+    logic ex_mem_fp_instruction, ex_mem_fp_reg_write;
     logic ex_mem_single_load;
     logic ex_mem_memread, ex_mem_memwrite, ex_mem_memtoreg, ex_mem_regwrite, ex_mem_jal, ex_mem_jalr;
     logic [31:0] ex_mem_alu_result [0:vector_length-1], ex_mem_data_read2;
@@ -129,6 +148,7 @@ module RISCV_PIPELINED (
     
     // MEM/WB pipeline registers
     logic mem_wb_memtoreg, mem_wb_regwrite, mem_wb_jal, mem_wb_jalr, mem_wb_vec_op, mem_wb_vec_reg_write;
+    logic mem_wb_fp_instruction, mem_wb_fp_reg_write;
     logic [31:0] mem_wb_alu_result [0:vector_length-1], mem_wb_memory_data_read [0:vector_length-1], mem_wb_link_address;
     logic [4:0] mem_wb_reg_dest;
     logic [31:0] mem_wb_write_data [0:vector_length-1];
@@ -149,14 +169,14 @@ module RISCV_PIPELINED (
     ProgramCounter pc_i (
         .clk(clk),
         .reset(reset),
-        .pc_write(pc_write),
+        .pc_write(pc_write && fp_pc_write),
         .next_pc(next_pc), 
         .pc(pc)
     );
 
     InstructionMemory im (
         .clk(clk),
-        .stall(stall),
+        .stall(stall || fp_stall),
         .instruction_address(pc), 
         .instruction(instruction)
     );
@@ -180,7 +200,7 @@ module RISCV_PIPELINED (
         .clk(clk), 
         .reset(reset), 
         .flush(ex_taken), 
-        .if_id_write(if_id_write),
+        .if_id_write(if_id_write && fp_if_id_write),
         .pc(fetch_pc), 
         .instruction(instruction), 
         .pc_if_id(pc_if_id), 
@@ -188,7 +208,7 @@ module RISCV_PIPELINED (
     );
 
     // ------DECODE STAGE------
-    logic [4:0] reg1, reg2;
+    logic [4:0] reg1, reg2, reg3;
     (* MARK_DEBUG = "TRUE" *) logic [4:0] reg_dest;
     logic [6:0] opcode;
     logic [2:0] funct3;
@@ -199,12 +219,14 @@ module RISCV_PIPELINED (
     assign opcode = instruction_if_id[6:0]; 
     assign reg1 = instruction_if_id[19:15]; 
     assign reg2 = instruction_if_id[24:20]; 
+    assign reg3 = instruction_if_id[31:27];
     assign reg_dest = instruction_if_id[11:7]; 
     assign funct3 = instruction_if_id[14:12]; 
     assign funct7 = instruction_if_id[31:25]; 
 
     logic [31:0] data_read1, data_read2;
     (* MARK_DEBUG = "TRUE" *) logic [31:0] data_read3;
+    logic [31:0] fp_data_read1, fp_data_read2, fp_data_read3, fp_data_read4;
     logic [31:0] vector_data_read1 [0:vector_length-1];
     logic [31:0] vector_data_read2 [0:vector_length-1];
     logic [31:0] vector_data_read3 [0:vector_length-1];
@@ -239,6 +261,23 @@ module RISCV_PIPELINED (
         .read_data3(vector_data_read3)
     );
 
+    Floating_Point_registers fp_regs (
+        .clk(clk),
+        .reset(reset),
+        .read_reg1(reg1),
+        .read_reg2(reg2),
+        .read_reg3(reg3),
+        .read_regdest(reg_dest),
+        .write_reg(mem_wb_reg_dest), 
+        .write_data(mem_wb_write_data[0]),
+        .reg_write_enable(mem_wb_fp_reg_write),
+
+        .read_data1(fp_data_read1),
+        .read_data2(fp_data_read2),
+        .read_data3(fp_data_read3),
+        .read_data4(fp_data_read4)
+    );
+
     logic [31:0] big_immediate;
 
     Immediate_generator imm_gen (
@@ -251,6 +290,7 @@ module RISCV_PIPELINED (
     Control control_unit (
         .opcode(opcode),
         .funct3(funct3),
+
         .vec_op(vec_op),
         .vec_reg_write(vec_reg_write),
         .continous_addr(continous_addr),
@@ -272,6 +312,24 @@ module RISCV_PIPELINED (
         .lui(lui)
     );
 
+    logic [1:0] fp_op;
+    logic fp_instruction,fp_alu_src, fp_reg_write, fp_load, fp_store;
+    fp_fma_t fmat_type;
+
+    fp_control fp_control_u (
+        .opcode(opcode),
+        .funct3(funct3),
+        .funct7(funct7),
+
+        .fp_instruction(fp_instruction),
+        .fp_op(fp_op),
+        .fp_alu_src(fp_alu_src),
+        .fp_reg_write(fp_reg_write),
+        .fp_load(fp_load),
+        .fp_store(fp_store),
+        .fmat_type(fmat_type)
+    );
+
     Hazard_Detection hazard_detection_unit (
         .if_id_vec_op(vec_op),
         .id_ex_vec_op(vec_op_id_ex),
@@ -279,9 +337,32 @@ module RISCV_PIPELINED (
         .if_id_rs2(reg2), 
         .reg_dest_id_ex(reg_dest_id_ex),
         .id_ex_mem_read(id_ex_mem_read),
+
         .stall(stall), 
         .pc_write(pc_write), 
         .if_id_write(if_id_write)
+    );
+
+    fp_hazard_detection #(
+        .FMADD_CYCLES(0),
+        .ADDER_CYCLES(0)
+    ) fp_hd_u (
+        .clk(clk),
+        .reset(reset),
+        .id_ex_busy(fp_instruction_id_ex),
+        .id_ex_fmadd(id_ex_fmat_type == FMADD),
+        .id_ex_adder(fp_alu_op == FADD || fp_alu_op == FSUB),
+        .if_id_rs1(reg1),
+        .if_id_rs2(reg2),
+        .if_id_rs3(reg3),
+        .reg_dest_id_ex(reg_dest_id_ex),
+        .id_ex_mem_read(id_ex_fp_load),
+        .fp_fmadd_result_valid(fp_mac_result_valid),
+        .fp_adder_result_valid(fp_alu_result_valid),
+
+        .stall(fp_stall),
+        .pc_write(fp_pc_write),
+        .if_id_write(fp_if_id_write)
     );
 
     // ------INSTRUCTION DECODE / EXECUTE STAGE------    
@@ -293,6 +374,8 @@ module RISCV_PIPELINED (
         .reset(reset), 
         .flush(id_ex_flush),
         .vec_op(vec_op),
+        .fp_instruction(fp_instruction),
+        .fp_reg_write(fp_reg_write),
         .vec_reg_write(vec_reg_write),
         .continous_addr(continous_addr),
         .single_load(single_load),
@@ -310,18 +393,28 @@ module RISCV_PIPELINED (
         .jalr(jalr), 
         .auipc(auipc),
         .lui(lui),
+        .fp_alu_src(fp_alu_src),
+        .fp_load(fp_load),
+        .fp_store(fp_store),
+        .fmat_type(fmat_type),
         .alu_op(alu_op), 
+        .fp_op(fp_op),
         .pc_if_id(pc_if_id), 
         .instruction_if_id(instruction_if_id), 
         .big_immediate(big_immediate), 
-        .reg1(reg1), 
-        .reg2(reg2), 
+        .reg1(reg1),
+        .reg2(reg2),
+        .reg3(reg3),
         .reg_dest(reg_dest), 
         .funct3(funct3), 
         .funct7(funct7),
         .scalar_data_read1(data_read1),
         .scalar_data_read2(data_read2),
         .scalar_data_read3(data_read3),
+        .fp_data_read1(fp_data_read1),
+        .fp_data_read2(fp_data_read2),
+        .fp_data_read3(fp_data_read3),
+        .fp_data_read4(fp_data_read4),
         .vector_data_read1(vector_data_read1),
         .vector_data_read2(vector_data_read2),
         .vector_data_read3(vector_data_read3),
@@ -329,6 +422,8 @@ module RISCV_PIPELINED (
         .pc_id_ex(pc_id_ex),
         .instruction_id_ex(instruction_id_ex),
         .vec_op_id_ex(vec_op_id_ex),
+        .fp_instruction_id_ex(fp_instruction_id_ex),
+        .fp_reg_write_id_ex(fp_reg_write_id_ex),
         .vec_reg_write_id_ex(vec_reg_write_id_ex),
         .id_ex_continous_addr(id_ex_continous_addr),
         .id_ex_single_load(id_ex_single_load),
@@ -342,14 +437,23 @@ module RISCV_PIPELINED (
         .id_ex_mem_write(id_ex_mem_write),
         .id_ex_auipc(id_ex_auipc),
         .id_ex_lui(id_ex_lui),
+        .id_ex_fp_alu_src(id_ex_fp_alu_src),
+        .id_ex_fp_load(id_ex_fp_load),
+        .id_ex_fp_store(id_ex_fp_store),
+        .id_ex_fmat_type(id_ex_fmat_type),
         .id_ex_alu_src(id_ex_alu_src),
         .id_ex_reg_write(id_ex_reg_write),
         .id_ex_jal(id_ex_jal),
         .id_ex_jalr(id_ex_jalr),
         .id_ex_alu_op(id_ex_alu_op),
+        .id_ex_fp_op(id_ex_fp_op),
         .scalar_data_read1_id_ex(data_read1_id_ex),
         .scalar_data_read2_id_ex(data_read2_id_ex),
         .scalar_data_read3_id_ex(data_read3_id_ex),
+        .fp_data_read1_id_ex(fp_data_read1_id_ex),
+        .fp_data_read2_id_ex(fp_data_read2_id_ex),
+        .fp_data_read3_id_ex(fp_data_read3_id_ex),
+        .fp_data_read4_id_ex(fp_data_read4_id_ex),
         .vector_data_read1_id_ex(vector_data_read1_id_ex),
         .vector_data_read2_id_ex(vector_data_read2_id_ex),
         .vector_data_read3_id_ex(vector_data_read3_id_ex),
@@ -357,6 +461,7 @@ module RISCV_PIPELINED (
         .reg_dest_id_ex(reg_dest_id_ex),
         .reg1_id_ex(reg1_id_ex), 
         .reg2_id_ex(reg2_id_ex),
+        .reg3_id_ex(reg3_id_ex),
         .funct3_id_ex(funct3_id_ex),
         .funct7_id_ex(funct7_id_ex)
     );
@@ -380,6 +485,26 @@ module RISCV_PIPELINED (
         .forward_c(forward_c)
     );
 
+    logic [1:0] fp_forward_a, fp_forward_b, fp_forward_c, fp_forward_d;
+    fp_forward fp_forwarding_unit ( 
+        .id_ex_rs1(reg1_id_ex),
+        .id_ex_rs2(reg2_id_ex),
+        .id_ex_rs3(reg3_id_ex),
+        .id_ex_rs4(reg_dest_id_ex),
+        .ex_mem_rd(ex_mem_rd_dup),
+        .mem_wb_rd(mem_wb_reg_dest),
+        .ex_mem_reg_write(ex_mem_fp_reg_write),
+        .mem_wb_reg_write(mem_wb_fp_reg_write),
+        .id_ex_fp_instruction(fp_instruction_id_ex),
+        .ex_mem_fp_instruction(ex_mem_fp_instruction),
+        .mem_wb_fp_instruction(mem_wb_fp_instruction),
+
+        .fp_forward_a(fp_forward_a),
+        .fp_forward_b(fp_forward_b),
+        .fp_forward_c(fp_forward_c),
+        .fp_forward_d(fp_forward_d)
+    );
+
     // ------EXECUTE STAGE------
     logic [3:0] alu_control;
     logic [31:0] alu_result;
@@ -388,6 +513,7 @@ module RISCV_PIPELINED (
     logic [31:0] alu_input, alu_input2;
     logic [31:0] v_alu_input [0:vector_length-1], v_alu_input2 [0:vector_length-1];
     logic [31:0] v_alu_result [0:vector_length-1];
+    logic [31:0] fp_alu_result;
 
     ALU_control alu_control_unit (
         .alu_op(id_ex_alu_op),
@@ -398,6 +524,53 @@ module RISCV_PIPELINED (
         .is_mac(is_mac),
         .alu_control(alu_control)
     );
+
+    fp_alu_control fp_alu_control_unit (
+        .fp_op(id_ex_fp_op),
+        .funct7(funct7_id_ex),
+        .funct3(funct3_id_ex),
+
+        .fp_alu_op(fp_alu_op),
+        .rm(rm)
+    );
+
+    logic [31:0] fp_alu_operand1, fp_alu_operand2, fp_alu_operand3, fp_alu_operand4;
+    logic [31:0] fp_ex_result;
+
+    always_comb begin
+        if(reset) begin
+            fp_alu_operand1 = '0;
+            fp_alu_operand2 = '0;
+            fp_alu_operand3 = '0;
+        end else begin
+            if(fp_instruction_id_ex) begin
+                unique case (fp_forward_a)
+                    2'b00: fp_alu_operand1 = fp_data_read1_id_ex;
+                    2'b01: fp_alu_operand1 = mem_wb_write_data[0];
+                    2'b10: fp_alu_operand1 = ex_mem_alu_result[0];
+                endcase
+
+                unique case (fp_forward_b)
+                    2'b00: fp_alu_operand2 = fp_data_read2_id_ex;
+                    2'b01: fp_alu_operand2 = mem_wb_write_data[0];
+                    2'b10: fp_alu_operand2 = ex_mem_alu_result[0];
+                endcase
+
+                unique case (fp_forward_c)
+                    2'b00: fp_alu_operand3 = fp_data_read3_id_ex;
+                    2'b01: fp_alu_operand3 = mem_wb_write_data[0];
+                    2'b10: fp_alu_operand3 = ex_mem_alu_result[0];
+                endcase
+
+                unique case (fp_forward_d)
+                    2'b00: fp_alu_operand4 = fp_data_read4_id_ex;
+                    2'b01: fp_alu_operand4 = mem_wb_write_data[0];
+                    2'b10: fp_alu_operand4 = ex_mem_alu_result[0];
+                    default: fp_alu_operand4 = fp_data_read4_id_ex;
+                endcase
+            end
+        end
+    end
 
     logic [31:0] alu_operand1, alu_operand2, alu_operand3;
     logic [31:0] va_operand1 [0:vector_length-1], va_operand2 [0:vector_length-1], va_operand3 [0:vector_length-1];
@@ -479,6 +652,11 @@ module RISCV_PIPELINED (
     logic [43:0] vector_mac_result [0:vector_length-1];
     logic [31:0] vector_mac_input_c [0:vector_length-1], vec_ex_result [0:vector_length-1];
 
+    logic [31:0] fp_mac_input_a;
+    logic [31:0] fp_mac_input_b;
+    logic [31:0] fp_mac_input_c;
+    logic [31:0] fp_mac_result;
+
     // Prepare inputs if MAC
     always_comb begin
         if (is_mac) begin 
@@ -506,6 +684,18 @@ module RISCV_PIPELINED (
                 vector_mac_input_c[i] = 32'b0;
             end
         end
+    end
+
+    always_comb begin
+        if(fp_instruction_id_ex && id_ex_fmat_type == FMADD) begin
+            fp_mac_input_a = fp_alu_operand1;
+            fp_mac_input_b = fp_alu_operand2;
+            fp_mac_input_c = fp_alu_operand3;
+        end else begin
+            fp_mac_input_a = 25'b0;
+            fp_mac_input_b = 18'b0;
+            fp_mac_input_c = 32'b0;
+        end 
     end
 
     genvar mac_num;
@@ -545,6 +735,47 @@ module RISCV_PIPELINED (
         .result(v_alu_result)
     );
 
+    logic [31:0] alu_fp_1, alu_fp_2;
+
+    always_comb begin
+        if(reset) begin
+            alu_fp_1 = 32'b0;
+            alu_fp_2 = 32'b0;
+        end else begin
+            alu_fp_1 = id_ex_fp_store || id_ex_fp_load ? alu_operand1 : fp_alu_operand1;
+            alu_fp_2 = id_ex_fp_alu_src ? big_immediate_id_ex : fp_alu_operand2;
+        end
+    end
+
+    fp_alu fp_alu (
+        .clk(clk),
+        .a(alu_fp_1),
+        .b(alu_fp_2),
+        .fp_alu_op(fp_alu_op),
+        .rm(rm),
+
+        .result(fp_alu_result),
+        .result_valid(fp_alu_result_valid)
+    );
+
+    // MAC operations
+    floating_point_fmadd fmadder (
+        //.aclk(clk),
+        .s_axis_a_tdata(fp_mac_input_a),
+        .s_axis_b_tdata(fp_mac_input_b),
+        .s_axis_c_tdata(fp_mac_input_c),
+        .s_axis_a_tvalid(id_ex_fmat_type == FMADD),
+        .s_axis_b_tvalid(id_ex_fmat_type == FMADD),
+        .s_axis_c_tvalid(id_ex_fmat_type == FMADD),
+        //.s_axis_a_tready(a_ready),
+        //.s_axis_b_tready(b_ready),
+        //.s_axis_c_tready(c_ready),
+
+        .m_axis_result_tdata(fp_mac_result),
+        .m_axis_result_tvalid(fp_mac_result_valid)
+        //.m_axis_result_tready(1'b1)
+    );
+
     assign ex_result = (is_mac) ? scalar_mac_result[31:0] : alu_result;
     
     always_comb begin
@@ -566,6 +797,11 @@ module RISCV_PIPELINED (
     always_comb begin
         if(vec_op_id_ex) begin
             complete_alu_result = vec_ex_result;
+        end else if (fp_instruction_id_ex) begin
+            complete_alu_result[0] = id_ex_fmat_type == FMADD ? fp_mac_result : fp_alu_result;
+            for(int i = 1; i < vector_length; i++) begin
+                complete_alu_result[i] = 32'b0;
+            end
         end else begin
             complete_alu_result[0] = ex_result;
             for(int i = 1; i < vector_length; i++) begin
@@ -595,6 +831,14 @@ module RISCV_PIPELINED (
         .branch_taken(ex_taken)
     );
 
+    logic [31:0] data_to_memory;
+    assign data_to_memory = fp_instruction_id_ex ? fp_alu_operand2 : alu_operand2;
+
+    logic ex_mem_read, ex_mem_write, ex_mem_to_reg;
+
+    assign ex_mem_read = id_ex_mem_read | id_ex_fp_load;
+    assign ex_mem_write = id_ex_mem_write | id_ex_fp_store;
+    assign ex_mem_to_reg = id_ex_memtoreg | id_ex_fp_load;
 
     // ------EXECUTE STAGE / MEMORY STAGE------
 
@@ -604,22 +848,26 @@ module RISCV_PIPELINED (
         .clk(clk), 
         .reset(reset), 
         .vec_op(vec_op_id_ex),
+        .id_ex_fp_instruction(fp_instruction_id_ex),
+        .id_ex_fp_reg_write(fp_reg_write_id_ex),
         .vec_reg_write(vec_reg_write_id_ex),
         .id_ex_single_load(id_ex_single_load),
-        .id_ex_mem_read(id_ex_mem_read),
-        .id_ex_mem_write(id_ex_mem_write),
-        .id_ex_memtoreg(id_ex_memtoreg), 
+        .id_ex_mem_read(ex_mem_read),
+        .id_ex_mem_write(ex_mem_write),
+        .id_ex_memtoreg(ex_mem_to_reg), 
         .id_ex_reg_write(id_ex_reg_write), 
         .id_ex_jal(id_ex_jal), 
         .id_ex_jalr(id_ex_jalr), 
         .alu_result(complete_alu_result),
-        .data_read2_id_ex(alu_operand2), 
+        .data_read2_id_ex(data_to_memory), 
         .vec_data_read2_id_ex(va_operand3),
         .reg_dest_id_ex(reg_dest_id_ex),
         .ex_link_address(link_addr_ex1),
         .funct3(funct3_id_ex),
 
         .ex_mem_vec_op(ex_mem_vec_op),
+        .ex_mem_fp_instruction(ex_mem_fp_instruction),
+        .ex_mem_fp_reg_write(ex_mem_fp_reg_write),
         .ex_mem_vec_reg_write(ex_mem_vec_reg_write),
         .ex_mem_single_load(ex_mem_single_load),
         .ex_mem_memread(ex_mem_memread),
@@ -644,7 +892,6 @@ module RISCV_PIPELINED (
 
     assign memory_address = ex_mem_alu_result[0];
     assign inside_data_mem = (memory_address < (data_base + data_word_space -1));
-    assign ex_mem_enable = (ex_mem_memread || ex_mem_memwrite) && inside_data_mem;
 
     always_comb begin
         if(ex_mem_vec_op) begin
@@ -716,7 +963,6 @@ module RISCV_PIPELINED (
         end
     end
 
-    // TX
     always_ff @(posedge clk or posedge reset) begin
         if(reset) begin
             data_send <= 2'b00;
@@ -796,7 +1042,7 @@ module RISCV_PIPELINED (
             uart_memory[0] = (data_word_complete) ? 32'b1 : 32'b0;
             override_data_read = 1'b1;
         end else if(receive_read && data_word_complete) begin
-                uart_memory[0] = uart_data;
+            uart_memory[0] = uart_data;
             override_data_read = 1'b1;
         end
     end
@@ -807,6 +1053,8 @@ module RISCV_PIPELINED (
         .clk(clk),
         .reset(reset),
         .ex_mem_vec_op(ex_mem_vec_op),
+        .ex_mem_fp_instruction(ex_mem_fp_instruction),
+        .ex_mem_fp_reg_write(ex_mem_fp_reg_write),
         .ex_mem_vec_reg_write(ex_mem_vec_reg_write),
         .ex_mem_memtoreg(ex_mem_memtoreg),
         .ex_mem_regwrite(ex_mem_regwrite),
@@ -818,6 +1066,8 @@ module RISCV_PIPELINED (
         .ex_mem_link_address_reg(ex_mem_link_address_reg),
 
         .mem_wb_vec_op(mem_wb_vec_op),
+        .mem_wb_fp_instruction(mem_wb_fp_instruction),
+        .mem_wb_fp_reg_write(mem_wb_fp_reg_write),
         .mem_wb_vec_reg_write(mem_wb_vec_reg_write),
         .mem_wb_memtoreg(mem_wb_memtoreg),
         .mem_wb_regwrite(mem_wb_regwrite),

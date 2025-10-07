@@ -30,35 +30,35 @@ module fp_alu (
     logic comp_result_valid;
 
     floating_point_add_sub fpadder (
-        .aclk(clk),
+        //.aclk(clk),
         .s_axis_a_tdata(a),
         .s_axis_b_tdata(b),
-        .s_axis_a_tready(adder_a_ready),
-        .s_axis_b_tready(adder_b_ready),
+        //.s_axis_a_tready(adder_a_ready),
+        //.s_axis_b_tready(adder_b_ready),
         .s_axis_a_tvalid(adder_a_valid),
         .s_axis_b_tvalid(adder_b_valid),
         .s_axis_operation_tdata(adder_op),
-        .s_axis_operation_tready(adder_op_ready),
+        //.s_axis_operation_tready(adder_op_ready),
         .s_axis_operation_tvalid(adder_op_valid),
         .m_axis_result_tdata(adder_result),
-        .m_axis_result_tvalid(adder_result_valid),
-        .m_axis_result_tready(1'b1)
+        .m_axis_result_tvalid(adder_result_valid)
+        //.m_axis_result_tready(1'b1)
     );
 
     floating_point_branching fpbranch (
-        .aclk(clk),
+        //.aclk(clk),
         .s_axis_a_tdata(a),
         .s_axis_b_tdata(b),
-        .s_axis_a_tready(comp_a_ready),
-        .s_axis_b_tready(comp_b_ready),
+        //.s_axis_a_tready(comp_a_ready),
+        //.s_axis_b_tready(comp_b_ready),
         .s_axis_a_tvalid(comp_a_valid),
         .s_axis_b_tvalid(comp_b_valid),
         .s_axis_operation_tdata(comp_op),
-        .s_axis_operation_tready(comp_op_ready),
+        //.s_axis_operation_tready(comp_op_ready),
         .s_axis_operation_tvalid(comp_op_valid),
         .m_axis_result_tdata(comp_result),
-        .m_axis_result_tvalid(comp_result_valid),
-        .m_axis_result_tready(1'b1)
+        .m_axis_result_tvalid(comp_result_valid)
+        //.m_axis_result_tready(1'b1)
     );
 
     always_comb begin
@@ -71,13 +71,14 @@ module fp_alu (
         comp_op_valid = 1'b0;
         comp_op = 8'd64; // Default to NaN
         result = 32'd0;
+        result_valid = 1'b0;
 
         unique case (fp_alu_op)
             FADD, FSUB : begin
                 adder_a_valid = 1'b1;
                 adder_b_valid = 1'b1;
                 adder_op_valid = 1'b1;
-                adder_op = {2'b0, rm, fp_alu_op};
+                adder_op = 8'd0;
             end
 
             FLT : begin
@@ -100,6 +101,9 @@ module fp_alu (
                 comp_op_valid = 1'b1;
                 comp_op = 8'd2;
             end
+
+            FMEM : result = $signed(a) + $signed(b); 
+            
         endcase
 
         if(adder_result_valid) begin

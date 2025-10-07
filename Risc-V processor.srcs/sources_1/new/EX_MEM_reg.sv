@@ -45,8 +45,8 @@ module EX_MEM_reg #(
     always_ff @(posedge clk or posedge reset) begin
         if (reset) begin
             ex_mem_vec_op <= 1'b0;
-            ex_mem_fp_isntruction <= 1'b0;
             ex_mem_fp_instruction <= 1'b0;
+            ex_mem_fp_reg_write <= 1'b0;
             ex_mem_vec_reg_write <= 1'b0;
             ex_mem_single_load <= 1'b0;
             ex_mem_memread <= 1'b0;

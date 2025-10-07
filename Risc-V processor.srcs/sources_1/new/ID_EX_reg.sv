@@ -26,8 +26,9 @@ module ID_EX_reg #(
     input logic jalr,
     input logic auipc,
     input logic lui,
-    input logic fpload,
-    input logic fpstore,
+    input logic fp_alu_src,
+    input logic fp_load,
+    input logic fp_store,
     input fp_fma_t fmat_type,
     input logic [1:0] alu_op,
     input logic [1:0] fp_op,
@@ -73,8 +74,9 @@ module ID_EX_reg #(
     output logic id_ex_jalr,
     output logic id_ex_auipc,
     output logic id_ex_lui,
-    output logic id_ex_fpload,
-    output logic id_ex_fpstore,
+    output logic id_ex_fp_alu_src,
+    output logic id_ex_fp_load,
+    output logic id_ex_fp_store,
     output fp_fma_t id_ex_fmat_type,
     output logic [1:0] id_ex_alu_op,
     output logic [1:0] id_ex_fp_op,
@@ -94,8 +96,7 @@ module ID_EX_reg #(
     output logic [4:0] reg2_id_ex,
     output logic [4:0] reg1_id_ex,
     output logic [2:0] funct3_id_ex,
-    output logic [6:0] funct7_id_ex
-    
+    output logic [6:0] funct7_id_ex  
 );
 
     always_ff @(posedge clk or posedge reset) begin
@@ -122,9 +123,10 @@ module ID_EX_reg #(
             id_ex_jalr <= 1'b0;
             id_ex_auipc <= 1'b0;
             id_ex_lui <= 1'b0;
-            id_ex_fpload <= 1'b0;
-            id_ex_fpstore <= 1'b0;
-            id_ex_fmat_type <= NONE;
+            id_ex_fp_alu_src <= 1'b0;
+            id_ex_fp_load <= 1'b0;
+            id_ex_fp_store <= 1'b0;
+            id_ex_fmat_type <= FM_NONE;
             id_ex_alu_op <= 2'b0;
             id_ex_fp_op <= 2'b0;
             scalar_data_read1_id_ex <= 32'b0;
@@ -139,6 +141,7 @@ module ID_EX_reg #(
             vector_data_read3_id_ex <= '{default: 32'b0};
             big_immediate_id_ex <= 32'b0;
             reg_dest_id_ex <= 5'b0;
+            reg3_id_ex <= 5'b0;
             reg2_id_ex <= 5'b0;
             reg1_id_ex <= 5'b0;
             funct3_id_ex <= 3'b0;
@@ -167,9 +170,10 @@ module ID_EX_reg #(
             id_ex_jalr <= 1'b0;
             id_ex_auipc <= 1'b0;
             id_ex_lui <= 1'b0;
-            id_ex_fpload <= 1'b0;
-            id_ex_fpstore <= 1'b0;
-            id_ex_fmat_type <= NONE;
+            id_ex_fp_alu_src <= 1'b0;
+            id_ex_fp_load <= 1'b0;
+            id_ex_fp_store <= 1'b0;
+            id_ex_fmat_type <= FM_NONE;
             id_ex_alu_op <= 2'b0;
             id_ex_fp_op <= 2'b0;
             scalar_data_read1_id_ex <= 32'b0;
@@ -214,8 +218,9 @@ module ID_EX_reg #(
             id_ex_jalr <= jalr;
             id_ex_auipc <= auipc;
             id_ex_lui <= lui;
-            id_ex_fpload <= fpload;
-            id_ex_fpstore <= fpstore;
+            id_ex_fp_alu_src <= fp_alu_src;
+            id_ex_fp_load <= fp_load;
+            id_ex_fp_store <= fp_store;
             id_ex_fmat_type <= fmat_type;
             id_ex_alu_op <= alu_op;
             id_ex_fp_op <= fp_op;

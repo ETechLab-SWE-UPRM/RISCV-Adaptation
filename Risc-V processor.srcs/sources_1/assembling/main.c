@@ -3,13 +3,11 @@
 
 int main(void) {
     for(;;){
-        while(UART_read_status() == 0){
-        // Wait for UART status to be ready
-        }
+        volatile int32_t x = 5;
+        volatile float d = 5.65;
+        volatile float a = 2.5;
+        volatile float b = 3.5;
 
-        uint32_t received_data = UART_read();
-        received_data = received_data + 1;
-        UART_send(received_data);
-
+        volatile float c = a + b;
     }
 }

@@ -15,13 +15,15 @@ SECTIONS
   .text : {
     *(init)
     *(.text)        /* every input section named .text */
-    *(.rodata)      /* read-only data */
   } > ROM
 
   /* all initialized data (.data) goes into RAM at 0x1000_0000 */
   .data : {
     __data_start = .;
     *(.data*)
+    *(.rodata)      /* read-only data */
+    *(.sdata*)      /* small data */
+    *(.srodata*)    /* small read-only data */
     __data_end = .;
   } > RAM
 
