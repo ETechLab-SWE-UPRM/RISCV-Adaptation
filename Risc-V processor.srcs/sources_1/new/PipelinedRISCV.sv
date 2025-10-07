@@ -125,7 +125,7 @@ module RISCV_PIPELINED (
     logic fp_mac_result_valid;
     logic a_ready, b_ready, c_ready;
 
-    assign id_ex_flush = ex_taken || stall;
+    assign id_ex_flush = ex_taken || stall || fp_stall;
     
     logic [31:0] ex_next_pc;
 
