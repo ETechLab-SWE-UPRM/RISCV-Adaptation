@@ -51,17 +51,14 @@
 -- The following code must appear in the VHDL architecture header.
 
 ------------- Begin Cut here for COMPONENT Declaration ------ COMP_TAG
-COMPONENT floating_point_fmadd
+COMPONENT floating_point_multiplier
   PORT (
     s_axis_a_tvalid : IN STD_LOGIC;
     s_axis_a_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
     s_axis_b_tvalid : IN STD_LOGIC;
     s_axis_b_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-    s_axis_c_tvalid : IN STD_LOGIC;
-    s_axis_c_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
     m_axis_result_tvalid : OUT STD_LOGIC;
-    m_axis_result_tdata : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
-    m_axis_result_tuser : OUT STD_LOGIC_VECTOR(2 DOWNTO 0) 
+    m_axis_result_tdata : OUT STD_LOGIC_VECTOR(31 DOWNTO 0) 
   );
 END COMPONENT;
 -- COMP_TAG_END ------ End COMPONENT Declaration ------------
@@ -70,22 +67,19 @@ END COMPONENT;
 -- body. Substitute your own instance name and net names.
 
 ------------- Begin Cut here for INSTANTIATION Template ----- INST_TAG
-your_instance_name : floating_point_fmadd
+your_instance_name : floating_point_multiplier
   PORT MAP (
     s_axis_a_tvalid => s_axis_a_tvalid,
     s_axis_a_tdata => s_axis_a_tdata,
     s_axis_b_tvalid => s_axis_b_tvalid,
     s_axis_b_tdata => s_axis_b_tdata,
-    s_axis_c_tvalid => s_axis_c_tvalid,
-    s_axis_c_tdata => s_axis_c_tdata,
     m_axis_result_tvalid => m_axis_result_tvalid,
-    m_axis_result_tdata => m_axis_result_tdata,
-    m_axis_result_tuser => m_axis_result_tuser
+    m_axis_result_tdata => m_axis_result_tdata
   );
 -- INST_TAG_END ------ End INSTANTIATION Template ---------
 
--- You must compile the wrapper file floating_point_fmadd.vhd when simulating
--- the core, floating_point_fmadd. When compiling the wrapper file, be sure to
+-- You must compile the wrapper file floating_point_multiplier.vhd when simulating
+-- the core, floating_point_multiplier. When compiling the wrapper file, be sure to
 -- reference the VHDL simulation library.
 
 

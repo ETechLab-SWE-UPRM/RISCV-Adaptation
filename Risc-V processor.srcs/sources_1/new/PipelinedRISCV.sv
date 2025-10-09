@@ -66,8 +66,8 @@ module RISCV_PIPELINED (
 
     // Keep this number even, because data memory is organized in pairs of words
     localparam vector_length = 2;
-    localparam FMADD_DELAY = 7;
-    localparam FADDER_DELAY = 3;
+    localparam FMADD_DELAY = 0;
+    localparam FADDER_DELAY = 0;
 
     localparam data_base = 32'h1000_0000;
     localparam data_word_space = 8360 * 4; // 33,440 bytes
@@ -134,6 +134,9 @@ module RISCV_PIPELINED (
     logic ex_mem_fp_instruction, ex_mem_fp_reg_write;
     logic ex_mem_single_load;
     logic ex_mem_memread, ex_mem_memwrite, ex_mem_memtoreg, ex_mem_regwrite, ex_mem_jal, ex_mem_jalr;
+    logic ex_mem_fmat_type;
+    logic [31:0] ex_mem_fp_mac_1, ex_mem_fp_mac_2, ex_mem_mac_result;
+    logic ex_mem_fp_mac1_valid, ex_mem_fp_mac2_valid;
     logic [31:0] ex_mem_alu_result [0:vector_length-1], ex_mem_data_read2;
     logic [31:0] vec_ex_mem_data_read2 [0:vector_length-1];
     logic [4:0] ex_mem_reg_dest;
@@ -344,8 +347,8 @@ module RISCV_PIPELINED (
     );
 
     fp_hazard_detection #(
-        .FMADD_CYCLES(0),
-        .ADDER_CYCLES(0)
+        .FMADD_CYCLES(FMADD_DELAY),
+        .ADDER_CYCLES(FADDER_DELAY)
     ) fp_hd_u (
         .clk(clk),
         .reset(reset),
@@ -655,7 +658,7 @@ module RISCV_PIPELINED (
     logic [31:0] fp_mac_input_a;
     logic [31:0] fp_mac_input_b;
     logic [31:0] fp_mac_input_c;
-    logic [31:0] fp_mac_result;
+    logic [31:0] fp_mac_mul_result;
 
     // Prepare inputs if MAC
     always_comb begin
@@ -758,22 +761,15 @@ module RISCV_PIPELINED (
         .result_valid(fp_alu_result_valid)
     );
 
-    // MAC operations
-    floating_point_fmadd fmadder (
-        //.aclk(clk),
+    // MAC multiply operations
+    floating_point_multiplier mac_mult (
         .s_axis_a_tdata(fp_mac_input_a),
         .s_axis_b_tdata(fp_mac_input_b),
-        .s_axis_c_tdata(fp_mac_input_c),
         .s_axis_a_tvalid(id_ex_fmat_type == FMADD),
         .s_axis_b_tvalid(id_ex_fmat_type == FMADD),
-        .s_axis_c_tvalid(id_ex_fmat_type == FMADD),
-        //.s_axis_a_tready(a_ready),
-        //.s_axis_b_tready(b_ready),
-        //.s_axis_c_tready(c_ready),
 
-        .m_axis_result_tdata(fp_mac_result),
+        .m_axis_result_tdata(fp_mac_mul_result),
         .m_axis_result_tvalid(fp_mac_result_valid)
-        //.m_axis_result_tready(1'b1)
     );
 
     assign ex_result = (is_mac) ? scalar_mac_result[31:0] : alu_result;
@@ -798,7 +794,7 @@ module RISCV_PIPELINED (
         if(vec_op_id_ex) begin
             complete_alu_result = vec_ex_result;
         end else if (fp_instruction_id_ex) begin
-            complete_alu_result[0] = id_ex_fmat_type == FMADD ? fp_mac_result : fp_alu_result;
+            complete_alu_result[0] = fp_alu_result;
             for(int i = 1; i < vector_length; i++) begin
                 complete_alu_result[i] = 32'b0;
             end
@@ -858,6 +854,9 @@ module RISCV_PIPELINED (
         .id_ex_reg_write(id_ex_reg_write), 
         .id_ex_jal(id_ex_jal), 
         .id_ex_jalr(id_ex_jalr), 
+        .id_ex_fmat_type(id_ex_fmat_type),
+        .id_ex_fp_mac_1(fp_mac_mul_result),
+        .id_ex_fp_mac_2(fp_mac_input_c),
         .alu_result(complete_alu_result),
         .data_read2_id_ex(data_to_memory), 
         .vec_data_read2_id_ex(va_operand3),
@@ -876,12 +875,30 @@ module RISCV_PIPELINED (
         .ex_mem_regwrite(ex_mem_regwrite),
         .ex_mem_jal(ex_mem_jal),
         .ex_mem_jalr(ex_mem_jalr),
+        .ex_mem_fmat_type(ex_mem_fmat_type),
+        .ex_mem_fp_mac_1(ex_mem_fp_mac_1),
+        .ex_mem_fp_mac_2(ex_mem_fp_mac_2),
         .ex_mem_alu_result(ex_mem_alu_result),
         .ex_mem_data_read2(ex_mem_data_read2),
         .vec_ex_mem_data_read2(vec_ex_mem_data_read2),
         .ex_mem_reg_dest(ex_mem_reg_dest),
         .ex_mem_link_address_reg(ex_mem_link_address_reg),
         .ex_mem_funct3(ex_mem_funct3)
+    );
+
+    logic ex_mem_mac_result_valid;
+
+    //MAC adder operations 
+    floating_point_add_sub mac_adder (
+        .s_axis_a_tdata(ex_mem_fp_mac_1),
+        .s_axis_b_tdata(ex_mem_fp_mac_2),
+        .s_axis_a_tvalid(ex_mem_fmat_type == FMADD),
+        .s_axis_b_tvalid(ex_mem_fmat_type == FMADD),
+        .s_axis_operation_tdata('0), // always add
+        .s_axis_operation_tvalid(ex_mem_fmat_type == FMADD),
+
+        .m_axis_result_tdata(ex_mem_mac_result),
+        .m_axis_result_tvalid(ex_mem_mac_result_valid)
     );
 
     // ------MEMORY STAGE------

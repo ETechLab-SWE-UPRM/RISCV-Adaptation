@@ -5,10 +5,12 @@
 
 int main(void) {
     for(;;){
-        volatile float d = 5.65;
         volatile float a = 2.5;
-        volatile float b = 3.5;
+        volatile float b = 5.65;
+        volatile float c = 3.5;
 
-        volatile float c = d + a * b;
+        volatile float d = c + a * b;
+        volatile float e = d + c * a;
+        volatile float f = e + d * c;
     }
 }

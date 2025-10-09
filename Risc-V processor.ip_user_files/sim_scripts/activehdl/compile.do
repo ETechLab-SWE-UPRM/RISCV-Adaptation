@@ -66,7 +66,6 @@ vlog -work floating_point_v7_1_19  -v2k5 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l 
 "../../ipstatic/hdl/floating_point_v7_1_rfs.v" \
 
 vlog -work xil_defaultlib  -v2k5 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
-"../../../Risc-V processor.gen/sources_1/ip/floating_point_fmadd/sim/floating_point_fmadd.v" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_branching/sim/floating_point_branching.v" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_add_sub/sim/floating_point_add_sub.v" \
 "../../../Risc-V processor.gen/sources_1/ip/Instruction_Memory/sim/Instruction_Memory.v" \

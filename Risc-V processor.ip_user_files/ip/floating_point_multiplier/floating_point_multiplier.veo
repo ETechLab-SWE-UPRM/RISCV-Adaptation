@@ -54,20 +54,17 @@
 // (in parentheses) to your own signal names.
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
-floating_point_fmadd your_instance_name (
+floating_point_multiplier your_instance_name (
   .s_axis_a_tvalid(s_axis_a_tvalid),            // input wire s_axis_a_tvalid
   .s_axis_a_tdata(s_axis_a_tdata),              // input wire [31 : 0] s_axis_a_tdata
   .s_axis_b_tvalid(s_axis_b_tvalid),            // input wire s_axis_b_tvalid
   .s_axis_b_tdata(s_axis_b_tdata),              // input wire [31 : 0] s_axis_b_tdata
-  .s_axis_c_tvalid(s_axis_c_tvalid),            // input wire s_axis_c_tvalid
-  .s_axis_c_tdata(s_axis_c_tdata),              // input wire [31 : 0] s_axis_c_tdata
   .m_axis_result_tvalid(m_axis_result_tvalid),  // output wire m_axis_result_tvalid
-  .m_axis_result_tdata(m_axis_result_tdata),    // output wire [31 : 0] m_axis_result_tdata
-  .m_axis_result_tuser(m_axis_result_tuser)    // output wire [2 : 0] m_axis_result_tuser
+  .m_axis_result_tdata(m_axis_result_tdata)    // output wire [31 : 0] m_axis_result_tdata
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 
-// You must compile the wrapper file floating_point_fmadd.v when simulating
-// the core, floating_point_fmadd. When compiling the wrapper file, be sure to
+// You must compile the wrapper file floating_point_multiplier.v when simulating
+// the core, floating_point_multiplier. When compiling the wrapper file, be sure to
 // reference the Verilog simulation library.
 

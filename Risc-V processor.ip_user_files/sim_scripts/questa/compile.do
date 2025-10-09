@@ -63,7 +63,6 @@ vlog -work floating_point_v7_1_19  -incr -mfcu  \
 "../../ipstatic/hdl/floating_point_v7_1_rfs.v" \
 
 vlog -work xil_defaultlib  -incr -mfcu  \
-"../../../Risc-V processor.gen/sources_1/ip/floating_point_fmadd/sim/floating_point_fmadd.v" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_branching/sim/floating_point_branching.v" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_add_sub/sim/floating_point_add_sub.v" \
 "../../../Risc-V processor.gen/sources_1/ip/Instruction_Memory/sim/Instruction_Memory.v" \
