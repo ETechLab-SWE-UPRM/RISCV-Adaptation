@@ -4,15 +4,18 @@
 // Engineer: Fernando L. Pizarro Diaz
 // 
 // Create Date: 05/27/2025 10:22:03 AM
-// Design Name: Eutanio 
-// Module Name: RISCV_PIPELINED
-// Project Name: RISC-V Processor (w/ vector computations and UART communication)
+// Design Name: Risc V Embedded Processor
+// Module Name: RISC-V_PIPELINED
+// Project Name: RISC-V Processor (w/ vector computations, floating point computations, and UART communication)
 // Target Devices: Basys3
-// Tool Versions: SystemVerilog
-// Description: A pipelined RISC-V processor implementation, with support for the majority of its instructions.
-// Has 2 memory instances, and one DSP instance for MAC operations (A*B + C = P).
-// ALU has its own register called accumulator (C). 
-// MAC is its own instruction to substitute the mul -> add instruction when calculating convolutions
+// Tool Versions: SystemVerilog 2012
+// Description: A pipelined RISC-V processor implementation, with support for all integer instructions (excluding environment instructions), 
+// and support for custom vector and some floating point computations (FADD, FSUB, FMADD).
+// Contains usual components such as instruction (ROM) and data memory (RAM), 3 dedicated ALU components, and several DSPs for faster computations.
+// For integer operations, the destination register serves as the 3rd input and the accumulator to the scalar MAC DSP.
+// MAC is its own instruction to substitute the mul -> add instruction when calculating convolutions. Uses the same opcode as MUL.
+// UART communication is implemented through memory-mapped I/O.
+//
 // 
 // Dependencies: 
 // 
@@ -24,9 +27,9 @@
 
 package fp_fma_pkg;
     typedef enum logic [1:0] { 
-        FM_NONE  = 2'd3,
-        FMADD    = 2'd0,
-        FNMADD   = 2'd1
+        FM_NONE,
+        FMADD,
+        FNMADD
     } fp_fma_t;
 endpackage
 
@@ -790,7 +793,7 @@ module RISCV_PIPELINED (
         end
     end
 
-    always_comb begin
+    always_comb begin : alu_result_mux
         if(vec_op_id_ex) begin
             complete_alu_result = vec_ex_result;
         end else if (fp_instruction_id_ex) begin
@@ -970,7 +973,7 @@ module RISCV_PIPELINED (
         .read_data(uart_read_data)
     );
 
-    always_ff @(posedge clk or posedge reset) begin
+    always_ff @(posedge clk or posedge reset) begin : uart_write_control
         if(reset) begin
             uart_write_to_mem <= 1'b0;
         end else if(uart_rx_full) begin
@@ -980,7 +983,7 @@ module RISCV_PIPELINED (
         end
     end
 
-    always_ff @(posedge clk or posedge reset) begin
+    always_ff @(posedge clk or posedge reset) begin : uart_rx_tx_process
         if(reset) begin
             data_send <= 2'b00;
             ready_to_send <= 1'b0;
@@ -1049,7 +1052,7 @@ module RISCV_PIPELINED (
     assign status_read = (memory_address == uart_status) && ex_mem_memread;
     assign receive_read = (memory_address == uart_receive) && ex_mem_memread;
 
-    always_comb begin
+    always_comb begin : uart_memory_override
         override_data_read = 1'b0;
         for(int i = 0; i < vector_length; i++) begin
             uart_memory[i] = 32'b0;
@@ -1061,6 +1064,12 @@ module RISCV_PIPELINED (
         end else if(receive_read && data_word_complete) begin
             uart_memory[0] = uart_data;
             override_data_read = 1'b1;
+        end
+    end
+
+    always_comb begin : mac_result_override
+        if(ex_mem_fmat_type == FMADD && ex_mem_mac_result_valid) begin
+            ex_mem_alu_result[0] = ex_mem_mac_result;
         end
     end
 

@@ -9,9 +9,6 @@ LD=${1:-linker.ld}
 I_COE=${2:-instructions.coe}
 D_COE=${3:-data_init.coe}
 
-#CHANGE THIS WHENEVER BRAM CHANGES
-RAM_WORDS=$((33000/4))
-
 # Output ELF
 ELF="program.elf"
 
@@ -19,12 +16,11 @@ ELF="program.elf"
 ARCH=rv32imf
 ABI=ilp32
 CC=riscv64-unknown-elf-gcc
-OBJCOPY=riscv64-unknown-elf-objcopy
 
 echo "→ Collecting sources in ${ASS_DIR}"
 mapfile -t SRC_LIST < <(find -maxdepth 1 \( -name '*.c' -o -name '*.s' \) | sort)
 if [ ${#SRC_LIST[@]} -eq 0 ]; then
-  echo "No sources (.c/.s) found in ${ASS_DIR}" >&2
+  echo -e "\033[31mNo sources (.c/.s) found in ${ASS_DIR}\033[0m" >&2
   exit 1
 fi
 
@@ -79,10 +75,11 @@ echo "→ Converting binaries to COE format"
   echo "memory_initialization_vector="
   xxd -p -c4 "${ASS_DIR}/data.bin" \
     | sed -E 's/^([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/\4\3\2\1/' \
-    | sed 's/$/,/'
-} | sed '$ s/,$/;/' > "${COE_DIR}/${D_COE}"
+    | sed 's/$/,/' \
+    | sed '$ s/,$/;/' 
+} > "${COE_DIR}/${D_COE}"
 
-echo "→ Done."
-echo "   - ${COE_DIR}/${I_COE} (instructions/rodata)"
+echo -e "→ \033[1;32m Successfully modified COE files.\033[0m"
+echo "   - ${COE_DIR}/${I_COE} (instructions)"
 echo "   - ${COE_DIR}/${D_COE} (initialized data)"
-echo "WARNING: Remember to regenerate the BRAM IP in Vivado with the new COEs." >&2
+echo -e "\033[33mWARNING: Remember to regenerate the BRAM IP in Vivado with the new COEs.\033[0m" >&2

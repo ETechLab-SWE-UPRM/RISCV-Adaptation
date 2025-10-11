@@ -21,7 +21,7 @@ SECTIONS
   .data : {
     __data_start = .;
     *(.data*)
-    *(.rodata)      /* read-only data */
+    *(.rodata*)      /* read-only data */
     *(.sdata*)      /* small data */
     *(.srodata*)    /* small read-only data */
     __data_end = .;
