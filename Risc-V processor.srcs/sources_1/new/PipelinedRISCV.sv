@@ -140,6 +140,7 @@ module RISCV_PIPELINED (
     logic ex_mem_fmat_type;
     logic [31:0] ex_mem_fp_mac_1, ex_mem_fp_mac_2, ex_mem_mac_result;
     logic ex_mem_fp_mac1_valid, ex_mem_fp_mac2_valid;
+    logic [31:0] final_mem_result [0:vector_length-1];
     logic [31:0] ex_mem_alu_result [0:vector_length-1], ex_mem_data_read2;
     logic [31:0] vec_ex_mem_data_read2 [0:vector_length-1];
     logic [4:0] ex_mem_reg_dest;
@@ -553,25 +554,25 @@ module RISCV_PIPELINED (
                 unique case (fp_forward_a)
                     2'b00: fp_alu_operand1 = fp_data_read1_id_ex;
                     2'b01: fp_alu_operand1 = mem_wb_write_data[0];
-                    2'b10: fp_alu_operand1 = ex_mem_alu_result[0];
+                    2'b10: fp_alu_operand1 = final_mem_result[0];
                 endcase
 
                 unique case (fp_forward_b)
                     2'b00: fp_alu_operand2 = fp_data_read2_id_ex;
                     2'b01: fp_alu_operand2 = mem_wb_write_data[0];
-                    2'b10: fp_alu_operand2 = ex_mem_alu_result[0];
+                    2'b10: fp_alu_operand2 = final_mem_result[0];
                 endcase
 
                 unique case (fp_forward_c)
                     2'b00: fp_alu_operand3 = fp_data_read3_id_ex;
                     2'b01: fp_alu_operand3 = mem_wb_write_data[0];
-                    2'b10: fp_alu_operand3 = ex_mem_alu_result[0];
+                    2'b10: fp_alu_operand3 = final_mem_result[0];
                 endcase
 
                 unique case (fp_forward_d)
                     2'b00: fp_alu_operand4 = fp_data_read4_id_ex;
                     2'b01: fp_alu_operand4 = mem_wb_write_data[0];
-                    2'b10: fp_alu_operand4 = ex_mem_alu_result[0];
+                    2'b10: fp_alu_operand4 = final_mem_result[0];
                     default: fp_alu_operand4 = fp_data_read4_id_ex;
                 endcase
             end
@@ -592,42 +593,42 @@ module RISCV_PIPELINED (
             unique case (forward_a)
                 2'b00: va_operand1 = vector_data_read1_id_ex;
                 2'b01: va_operand1 = mem_wb_write_data;
-                2'b10: va_operand1 = ex_mem_alu_result;
+                2'b10: va_operand1 = final_mem_result;
                 default: va_operand1 = vector_data_read1_id_ex;
             endcase
 
             unique case (forward_b)
                 2'b00: va_operand2 = vector_data_read2_id_ex;
                 2'b01: va_operand2 = mem_wb_write_data;
-                2'b10: va_operand2 = ex_mem_alu_result;
+                2'b10: va_operand2 = final_mem_result;
                 default: va_operand2 = vector_data_read2_id_ex;
             endcase
 
             unique case (forward_c)
                 2'b00: va_operand3 = vector_data_read3_id_ex;
                 2'b01: va_operand3 = mem_wb_write_data;
-                2'b10: va_operand3 = ex_mem_alu_result;
+                2'b10: va_operand3 = final_mem_result;
                 default: va_operand3 = vector_data_read3_id_ex;
             endcase
         end else begin
             unique case (forward_a)
                 2'b00: alu_operand1 = data_read1_id_ex;
                 2'b01: alu_operand1 = mem_wb_write_data[0];
-                2'b10: alu_operand1 = ex_mem_alu_result[0];
+                2'b10: alu_operand1 = final_mem_result[0];
                 default: alu_operand1 = data_read1_id_ex;
             endcase
 
             unique case (forward_b)
                 2'b00: alu_operand2 = data_read2_id_ex;
                 2'b01: alu_operand2 = mem_wb_write_data[0];
-                2'b10: alu_operand2 = ex_mem_alu_result[0];
+                2'b10: alu_operand2 = final_mem_result[0];
                 default: alu_operand2 = data_read2_id_ex;
             endcase
 
             unique case (forward_c)
                 2'b00: alu_operand3 = data_read3_id_ex;
                 2'b01: alu_operand3 = mem_wb_write_data[0];
-                2'b10: alu_operand3 = ex_mem_alu_result[0];
+                2'b10: alu_operand3 = final_mem_result[0];
                 default: alu_operand3 = data_read3_id_ex;
             endcase
         end
@@ -1068,8 +1069,9 @@ module RISCV_PIPELINED (
     end
 
     always_comb begin : mac_result_override
+        final_mem_result = ex_mem_alu_result;
         if(ex_mem_fmat_type == FMADD && ex_mem_mac_result_valid) begin
-            ex_mem_alu_result[0] = ex_mem_mac_result;
+            final_mem_result[0] = ex_mem_mac_result;
         end
     end
 
@@ -1086,7 +1088,7 @@ module RISCV_PIPELINED (
         .ex_mem_regwrite(ex_mem_regwrite),
         .ex_mem_jal(ex_mem_jal),
         .ex_mem_jalr(ex_mem_jalr),
-        .ex_mem_alu_result(ex_mem_alu_result),
+        .ex_mem_alu_result(final_mem_result),
         .memory_data_read((override_data_read) ? uart_memory : memory_data_read),
         .ex_mem_reg_dest(ex_mem_reg_dest),
         .ex_mem_link_address_reg(ex_mem_link_address_reg),
