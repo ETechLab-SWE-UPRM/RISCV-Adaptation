@@ -57,8 +57,6 @@ COMPONENT floating_point_add_sub
     s_axis_a_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
     s_axis_b_tvalid : IN STD_LOGIC;
     s_axis_b_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-    s_axis_operation_tvalid : IN STD_LOGIC;
-    s_axis_operation_tdata : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
     m_axis_result_tvalid : OUT STD_LOGIC;
     m_axis_result_tdata : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
     m_axis_result_tuser : OUT STD_LOGIC_VECTOR(2 DOWNTO 0) 
@@ -76,8 +74,6 @@ your_instance_name : floating_point_add_sub
     s_axis_a_tdata => s_axis_a_tdata,
     s_axis_b_tvalid => s_axis_b_tvalid,
     s_axis_b_tdata => s_axis_b_tdata,
-    s_axis_operation_tvalid => s_axis_operation_tvalid,
-    s_axis_operation_tdata => s_axis_operation_tdata,
     m_axis_result_tvalid => m_axis_result_tvalid,
     m_axis_result_tdata => m_axis_result_tdata,
     m_axis_result_tuser => m_axis_result_tuser

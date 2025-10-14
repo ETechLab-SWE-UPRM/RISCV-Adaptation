@@ -898,8 +898,6 @@ module RISCV_PIPELINED (
         .s_axis_b_tdata(ex_mem_fp_mac_2),
         .s_axis_a_tvalid(ex_mem_fmat_type == FMADD),
         .s_axis_b_tvalid(ex_mem_fmat_type == FMADD),
-        .s_axis_operation_tdata('0), // always add
-        .s_axis_operation_tvalid(ex_mem_fmat_type == FMADD),
 
         .m_axis_result_tdata(ex_mem_mac_result),
         .m_axis_result_tvalid(ex_mem_mac_result_valid)

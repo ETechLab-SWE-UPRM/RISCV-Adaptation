@@ -13,19 +13,20 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="305.100 ns"></ZoomStartTime>
-      <ZoomEndTime time="485.601 ns"></ZoomEndTime>
-      <Cursor1Time time="345.100 ns"></Cursor1Time>
+      <ZoomStartTime time="79.395 ns"></ZoomStartTime>
+      <ZoomEndTime time="485.467 ns"></ZoomEndTime>
+      <Cursor1Time time="435.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="195"></NameColumnWidth>
-      <ValueColumnWidth column_width="105"></ValueColumnWidth>
+      <ValueColumnWidth column_width="99"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="17" />
+   <WVObjectSize size="15" />
    <wave_markers>
       <marker time="285000" label="" />
       <marker time="185000" label="" />
       <marker time="375000" label="" />
+      <marker time="435000" label="" />
    </wave_markers>
    <wvobject fp_name="/PipelineTester/processor/pc_i/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
@@ -74,14 +75,6 @@
    <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_b_tdata" type="array">
       <obj_property name="ElementShortName">s_axis_b_tdata[31:0]</obj_property>
       <obj_property name="ObjectShortName">s_axis_b_tdata[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_operation_tvalid" type="logic">
-      <obj_property name="ElementShortName">s_axis_operation_tvalid</obj_property>
-      <obj_property name="ObjectShortName">s_axis_operation_tvalid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_operation_tdata" type="array">
-      <obj_property name="ElementShortName">s_axis_operation_tdata[7:0]</obj_property>
-      <obj_property name="ObjectShortName">s_axis_operation_tdata[7:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/PipelineTester/processor/mac_adder/m_axis_result_tvalid" type="logic">
       <obj_property name="ElementShortName">m_axis_result_tvalid</obj_property>
