@@ -137,7 +137,7 @@ module RISCV_PIPELINED (
     logic ex_mem_fp_instruction, ex_mem_fp_reg_write;
     logic ex_mem_single_load;
     logic ex_mem_memread, ex_mem_memwrite, ex_mem_memtoreg, ex_mem_regwrite, ex_mem_jal, ex_mem_jalr;
-    logic ex_mem_fmat_type;
+    fp_fma_t ex_mem_fmat_type;
     logic [31:0] ex_mem_fp_mac_1, ex_mem_fp_mac_2, ex_mem_mac_result;
     logic ex_mem_fp_mac1_valid, ex_mem_fp_mac2_valid;
     logic [31:0] final_mem_result [0:vector_length-1];
@@ -898,8 +898,6 @@ module RISCV_PIPELINED (
         .s_axis_b_tdata(ex_mem_fp_mac_2),
         .s_axis_a_tvalid(ex_mem_fmat_type == FMADD),
         .s_axis_b_tvalid(ex_mem_fmat_type == FMADD),
-        .s_axis_operation_tdata('0), // always add
-        .s_axis_operation_tvalid(ex_mem_fmat_type == FMADD),
 
         .m_axis_result_tdata(ex_mem_mac_result),
         .m_axis_result_tvalid(ex_mem_mac_result_valid)

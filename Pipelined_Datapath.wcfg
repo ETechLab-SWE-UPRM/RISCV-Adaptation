@@ -13,28 +13,20 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="305.100 ns"></ZoomStartTime>
-      <ZoomEndTime time="485.601 ns"></ZoomEndTime>
-      <Cursor1Time time="345.100 ns"></Cursor1Time>
+      <ZoomStartTime time="123.634 ns"></ZoomStartTime>
+      <ZoomEndTime time="399.435 ns"></ZoomEndTime>
+      <Cursor1Time time="375.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="195"></NameColumnWidth>
-      <ValueColumnWidth column_width="105"></ValueColumnWidth>
+      <NameColumnWidth column_width="174"></NameColumnWidth>
+      <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="17" />
+   <WVObjectSize size="41" />
    <wave_markers>
       <marker time="285000" label="" />
       <marker time="185000" label="" />
       <marker time="375000" label="" />
    </wave_markers>
-   <wvobject fp_name="/PipelineTester/processor/pc_i/clk" type="logic">
-      <obj_property name="ElementShortName">clk</obj_property>
-      <obj_property name="ObjectShortName">clk</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_regs/fp_regs" type="array">
-      <obj_property name="ElementShortName">fp_regs[0:31][31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_regs[0:31][31:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/PipelineTester/processor/mac_mult/s_axis_a_tvalid" type="logic">
       <obj_property name="ElementShortName">s_axis_a_tvalid</obj_property>
       <obj_property name="ObjectShortName">s_axis_a_tvalid</obj_property>
@@ -59,6 +51,22 @@
       <obj_property name="ElementShortName">m_axis_result_tdata[31:0]</obj_property>
       <obj_property name="ObjectShortName">m_axis_result_tdata[31:0]</obj_property>
    </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_mac_input_a" type="array">
+      <obj_property name="ElementShortName">fp_mac_input_a[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fp_mac_input_a[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_mac_input_b" type="array">
+      <obj_property name="ElementShortName">fp_mac_input_b[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fp_mac_input_b[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_mac_input_c" type="array">
+      <obj_property name="ElementShortName">fp_mac_input_c[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fp_mac_input_c[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/mem_wb_reg/ex_mem_alu_result" type="array">
+      <obj_property name="ElementShortName">ex_mem_alu_result[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">ex_mem_alu_result[0:1][31:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_a_tvalid" type="logic">
       <obj_property name="ElementShortName">s_axis_a_tvalid</obj_property>
       <obj_property name="ObjectShortName">s_axis_a_tvalid</obj_property>
@@ -75,14 +83,6 @@
       <obj_property name="ElementShortName">s_axis_b_tdata[31:0]</obj_property>
       <obj_property name="ObjectShortName">s_axis_b_tdata[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_operation_tvalid" type="logic">
-      <obj_property name="ElementShortName">s_axis_operation_tvalid</obj_property>
-      <obj_property name="ObjectShortName">s_axis_operation_tvalid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_operation_tdata" type="array">
-      <obj_property name="ElementShortName">s_axis_operation_tdata[7:0]</obj_property>
-      <obj_property name="ObjectShortName">s_axis_operation_tdata[7:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/PipelineTester/processor/mac_adder/m_axis_result_tvalid" type="logic">
       <obj_property name="ElementShortName">m_axis_result_tvalid</obj_property>
       <obj_property name="ObjectShortName">m_axis_result_tvalid</obj_property>
@@ -91,8 +91,104 @@
       <obj_property name="ElementShortName">m_axis_result_tdata[31:0]</obj_property>
       <obj_property name="ObjectShortName">m_axis_result_tdata[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/m_axis_result_tuser" type="array">
-      <obj_property name="ElementShortName">m_axis_result_tuser[2:0]</obj_property>
-      <obj_property name="ObjectShortName">m_axis_result_tuser[2:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/reset" type="logic">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/id_ex_busy" type="logic">
+      <obj_property name="ElementShortName">id_ex_busy</obj_property>
+      <obj_property name="ObjectShortName">id_ex_busy</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/id_ex_fmadd" type="logic">
+      <obj_property name="ElementShortName">id_ex_fmadd</obj_property>
+      <obj_property name="ObjectShortName">id_ex_fmadd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/id_ex_adder" type="logic">
+      <obj_property name="ElementShortName">id_ex_adder</obj_property>
+      <obj_property name="ObjectShortName">id_ex_adder</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/if_id_rs1" type="array">
+      <obj_property name="ElementShortName">if_id_rs1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">if_id_rs1[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/if_id_rs2" type="array">
+      <obj_property name="ElementShortName">if_id_rs2[4:0]</obj_property>
+      <obj_property name="ObjectShortName">if_id_rs2[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/if_id_rs3" type="array">
+      <obj_property name="ElementShortName">if_id_rs3[4:0]</obj_property>
+      <obj_property name="ObjectShortName">if_id_rs3[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/reg_dest_id_ex" type="array">
+      <obj_property name="ElementShortName">reg_dest_id_ex[4:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_dest_id_ex[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/id_ex_mem_read" type="logic">
+      <obj_property name="ElementShortName">id_ex_mem_read</obj_property>
+      <obj_property name="ObjectShortName">id_ex_mem_read</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/fp_fmadd_result_valid" type="logic">
+      <obj_property name="ElementShortName">fp_fmadd_result_valid</obj_property>
+      <obj_property name="ObjectShortName">fp_fmadd_result_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/fp_adder_result_valid" type="logic">
+      <obj_property name="ElementShortName">fp_adder_result_valid</obj_property>
+      <obj_property name="ObjectShortName">fp_adder_result_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/stall" type="logic">
+      <obj_property name="ElementShortName">stall</obj_property>
+      <obj_property name="ObjectShortName">stall</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/pc_write" type="logic">
+      <obj_property name="ElementShortName">pc_write</obj_property>
+      <obj_property name="ObjectShortName">pc_write</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/if_id_write" type="logic">
+      <obj_property name="ElementShortName">if_id_write</obj_property>
+      <obj_property name="ObjectShortName">if_id_write</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/busy" type="array">
+      <obj_property name="ElementShortName">busy[31:0][3:0]</obj_property>
+      <obj_property name="ObjectShortName">busy[31:0][3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/hazard1" type="logic">
+      <obj_property name="ElementShortName">hazard1</obj_property>
+      <obj_property name="ObjectShortName">hazard1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/hazard2" type="logic">
+      <obj_property name="ElementShortName">hazard2</obj_property>
+      <obj_property name="ObjectShortName">hazard2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/hazard3" type="logic">
+      <obj_property name="ElementShortName">hazard3</obj_property>
+      <obj_property name="ObjectShortName">hazard3</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/fp_hazard1" type="logic">
+      <obj_property name="ElementShortName">fp_hazard1</obj_property>
+      <obj_property name="ObjectShortName">fp_hazard1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/fp_hazard2" type="logic">
+      <obj_property name="ElementShortName">fp_hazard2</obj_property>
+      <obj_property name="ObjectShortName">fp_hazard2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/fp_hazard3" type="logic">
+      <obj_property name="ElementShortName">fp_hazard3</obj_property>
+      <obj_property name="ObjectShortName">fp_hazard3</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/FMADD_CYCLES" type="array">
+      <obj_property name="ElementShortName">FMADD_CYCLES[31:0]</obj_property>
+      <obj_property name="ObjectShortName">FMADD_CYCLES[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_hd_u/ADDER_CYCLES" type="array">
+      <obj_property name="ElementShortName">ADDER_CYCLES[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ADDER_CYCLES[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/fp_regs/fp_regs" type="array">
+      <obj_property name="ElementShortName">fp_regs[0:31][31:0]</obj_property>
+      <obj_property name="ObjectShortName">fp_regs[0:31][31:0]</obj_property>
    </wvobject>
 </wave_config>

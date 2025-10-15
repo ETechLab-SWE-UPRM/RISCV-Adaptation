@@ -1,3 +1,4 @@
+import fp_fma_pkg::*;
 
 module EX_MEM_reg #(
     parameter vec_length = 2
@@ -15,7 +16,7 @@ module EX_MEM_reg #(
     input logic id_ex_reg_write,
     input logic id_ex_jal,
     input logic id_ex_jalr,
-    input logic id_ex_fmat_type,
+    input fp_fma_t id_ex_fmat_type,
     input logic [31:0] id_ex_fp_mac_1,
     input logic [31:0] id_ex_fp_mac_2,
     input logic [31:0] alu_result [0:vec_length-1],
@@ -36,7 +37,7 @@ module EX_MEM_reg #(
     output logic ex_mem_regwrite,
     output logic ex_mem_jal,
     output logic ex_mem_jalr,
-    output logic ex_mem_fmat_type,
+    output fp_fma_t ex_mem_fmat_type,
     output logic [31:0] ex_mem_fp_mac_1,
     output logic [31:0] ex_mem_fp_mac_2,
     output logic [31:0] ex_mem_alu_result [0:vec_length-1],
@@ -61,7 +62,7 @@ module EX_MEM_reg #(
             ex_mem_regwrite <= 1'b0;
             ex_mem_jal <= 1'b0;
             ex_mem_jalr <= 1'b0;
-            ex_mem_fmat_type <= 1'b0;
+            ex_mem_fmat_type <= FM_NONE;
             ex_mem_fp_mac_1 <= 32'b0;
             ex_mem_fp_mac_2 <= 32'b0;
             ex_mem_alu_result <= '{default: 32'b0};

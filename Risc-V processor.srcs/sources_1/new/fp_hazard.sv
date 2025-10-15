@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
 
 module fp_hazard_detection #(
-    parameter FMADD_CYCLES = 7,
-    parameter ADDER_CYCLES = 3
+    parameter FMADD_CYCLES = 0,
+    parameter ADDER_CYCLES = 0
 ) (
     input logic clk,
     input logic reset,
