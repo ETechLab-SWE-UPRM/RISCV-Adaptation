@@ -73,19 +73,19 @@ module Data_memory #(
                 case (funct3)
                     3'b000: begin // SB
                         unique case (address[1:0])
-                            2'd0: begin write_word[i] = { bram_data[i][31:8], write_data[i][7:0] };    write_enable[i] = 4'b0001; end
-                            2'd1: begin write_word[i] = { bram_data[i][31:16], write_data[i][7:0], bram_data[i][7:0] }; write_enable[i] = 4'b0010; end
-                            2'd2: begin write_word[i] = { bram_data[i][31:24], write_data[i][7:0], bram_data[i][15:0] }; write_enable[i] = 4'b0100; end
-                            2'd3: begin write_word[i] = { write_data[i][7:0], bram_data[i][23:0] };              write_enable[i] = 4'b1000; end
+                            2'd0: begin write_word[i] = { write_data[i][7:0] }; write_enable[i] = 4'b0001; end
+                            2'd1: begin write_word[i] = { write_data[i][7:0] }; write_enable[i] = 4'b0010; end
+                            2'd2: begin write_word[i] = { write_data[i][7:0] }; write_enable[i] = 4'b0100; end
+                            2'd3: begin write_word[i] = { write_data[i][7:0] }; write_enable[i] = 4'b1000; end
                         endcase
                     end
 
                     3'b001: begin // SH
                         unique if (address[1:0] == 2'd0) begin
-                            write_word[i]   = { bram_data[i][31:16], write_data[i][15:0] };
+                            write_word[i]   = { write_data[i][15:0] };
                             write_enable[i] = 4'b0011;
                         end else if (address[1:0] == 2'b10) begin
-                            write_word[i]   = { write_data[i][15:0], bram_data[i][15:0] };
+                            write_word[i]   = { write_data[i][15:0] };
                             write_enable[i] = 4'b1100;
                         end
                     end
