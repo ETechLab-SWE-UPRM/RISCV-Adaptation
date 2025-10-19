@@ -20,6 +20,7 @@
         UART_transmit = data;
     }
 
+    // Mul 
     static inline int32_t vmac(int32_t acc, int32_t a, int32_t b){
         asm volatile (".insn r 0x5B, 0x00, 0x01, %0, %1, %2"
                     : "+r"(acc) : "r"(a), "r"(b));
@@ -76,6 +77,13 @@
     static inline int32_t mac(int32_t acc, int32_t a, int32_t b){
         asm volatile (".insn r 0x33, 0x00, 0x01, %0, %1, %2"
                     : "+r"(acc) : "r"(a), "r"(b));
+        return acc;
+    }
+
+    // FMADD rd, rs1, rs2, rs3, rm = rne, ties even
+    static inline float fmac(float acc, float a, float b, float c){
+        asm volatile (".insn r 0x43, 0x00, %0, %1, %2, %3"
+                    : "=f"(acc) : "f"(a), "f"(b), "f"(c));
         return acc;
     }
 

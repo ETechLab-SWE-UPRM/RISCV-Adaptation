@@ -15,7 +15,8 @@ ELF="program.elf"
 # Toolchain settings
 ARCH=rv32imf
 ABI=ilp32
-CC=riscv64-unknown-elf-gcc
+CC=$HOME/riscv/bin/riscv32-unknown-elf-gcc
+OBJCOPY=$HOME/riscv/bin/riscv32-unknown-elf-objcopy
 
 echo "→ Collecting sources in ${ASS_DIR}"
 mapfile -t SRC_LIST < <(find -maxdepth 1 \( -name '*.c' -o -name '*.s' \) | sort)
@@ -26,7 +27,7 @@ fi
 
 # Common flags
 CFLAGS="-O2 -ffreestanding -fno-pic -fno-builtin -march=${ARCH} -mabi=${ABI} -Wall -Wextra -ffunction-sections -fdata-sections"
-LDFLAGS="-nostdlib -Wl,--gc-sections -Wl,--no-relax -T ${LD} -march=${ARCH} -mabi=${ABI}"
+LDFLAGS="-nostdlib -Wl,--no-relax -T ${LD} -march=${ARCH} -mabi=${ABI}"
 
 OBJ_LIST=()
 for src in "${SRC_LIST[@]}"; do
@@ -37,25 +38,25 @@ for src in "${SRC_LIST[@]}"; do
 done
 
 echo "→ Linking -> ${ASS_DIR}/${ELF}"
-${CC} ${LDFLAGS} "${OBJ_LIST[@]}" -o "${ELF}"
+${CC} ${LDFLAGS} "${OBJ_LIST[@]}" -o "${ELF}" -lc -lm -lnosys
 
 echo "→ Extracting sections into raw binaries"
 # Instruction memory: include .init, .text, .rodata (if you keep consts in ROM)
-riscv64-unknown-elf-objcopy -O binary \
+${OBJCOPY} -O binary \
   --only-section .init \
   --only-section .text* \
   "${ELF}" "text.bin"
 
 # Data memory: include .data, .sdata
-riscv64-unknown-elf-objcopy -O binary \
+${OBJCOPY} -O binary \
   --only-section .data* \
   --only-section .sdata* \
   --only-section .bss* \
-  --only-section .stack* \
   --only-section .rodata* \
   --only-section .srodata* \
+  --only-section .stack* \
   "${ELF}" "data.bin"
-
+  
 cd ..
 
 echo "→ Converting binaries to COE format"
