@@ -4,77 +4,92 @@
 
     // MM addresses
     #define UART_address 0x100082A0u
-    #define UART_status (* (volatile int32_t *) (UART_address + 0x04u))
-    #define UART_receive (* (volatile int32_t *) (UART_address + 0x08u))
-    #define UART_transmit (* (volatile int32_t *) (UART_address + 0x0Cu))
+    #define UART_status (* (volatile int *) (UART_address + 0x04u))
+    #define UART_receive (* (volatile int *) (UART_address + 0x08u))
+    #define UART_transmit (* (volatile int *) (UART_address + 0x0Cu))
+    #define Conv_data_reg (* (volatile int *) (UART_address + 0x10u))
+    #define Conv_weights_reg (* (volatile int *) (UART_address + 0x14u))
+    #define Conv_output_reg (* (volatile int *) (UART_address + 0x18u))
 
-    static inline int32_t UART_read_status(void) {
+    static inline int UART_read_status(void) {
         return UART_status;
     }
-    
-    static inline int32_t UART_read(void) {
+
+    static inline int UART_read(void) {
         return UART_receive;
     }
 
-    static inline void UART_send(int32_t data) {
+    static inline void UART_send(int data) {
         UART_transmit = data;
     }
 
+    static inline void setup_data_conv(int *data) {
+        Conv_data_reg = (int) data;
+    }
+
+    static inline void setup_weights_conv(int *weights) {
+        Conv_weights_reg = (int) weights;
+    }
+
+    static inline void setup_output_conv(int *output) {
+        Conv_output_reg = (int) output;
+    }
+
     // Mul 
-    static inline int32_t vmac(int32_t acc, int32_t a, int32_t b){
+    static inline int vmac(int acc, int a, int b){
         asm volatile (".insn r 0x5B, 0x00, 0x01, %0, %1, %2"
                     : "+r"(acc) : "r"(a), "r"(b));
         return acc;
     }
 
-    static inline int32_t vadd(int32_t a, int32_t b){
-        int32_t rd;
+    static inline int vadd(int a, int b){
+        int rd;
         asm volatile (".insn r 0x5B, 0x00, 0x00, %0, %1, %2"
                     : "=r"(rd) : "r"(a), "r"(b));
         return rd;
     }
 
-    static inline int32_t vload(const void *base, int32_t offset){
-        int32_t rd; 
+    static inline int vload(const void *base, int offset){
+        int rd; 
         asm volatile (".insn i 0x0B, 0x02, %0, %1, %2"
                     : "=r"(rd) : "r"(base), "i"(offset));
         return rd;
     }
 
-    static inline int32_t vsload(const void *base, int32_t offset){
-        int32_t rd; 
+    static inline int vsload(const void *base, int offset){
+        int rd; 
         asm volatile (".insn i 0x0B, 0x06, %0, %1, %2"
                     : "=r"(rd) : "r"(base), "i"(offset));
         return rd;
     }
 
-    static inline int32_t vslli(int32_t a, int32_t b){
-        int32_t rd; 
+    static inline int vslli(int a, int b){
+        int rd; 
         asm volatile (".insn i 0x0B, 0x01, %0, %1, %2"
                     : "=r"(rd) : "r"(a), "i"(b));
         return rd;
     }
 
-    static inline void vstore(int32_t value, const void *base, int32_t offset){
+    static inline void vstore(int value, const void *base, int offset){
         asm volatile (".insn i 0x2B, 0x02, %0, %1, %2" : // no output
                     : "r"(value), "r"(base), "i"(offset) : "memory");
     }
 
-    static inline int32_t vcaddi(int32_t a, int32_t b){
-        int32_t rd;
+    static inline int vcaddi(int a, int b){
+        int rd;
         asm volatile (".insn i 0x0B, 0x03, %0, %1, %2"
                     : "=r"(rd) : "r"(a), "i"(b));
         return rd;
     }
-    
-    static inline int32_t vauipc(int32_t imm20){
-        int32_t rd; 
+
+    static inline int vauipc(int imm20){
+        int rd; 
         asm volatile (".insn u 0x7B, %0, %1"
                     : "=r"(rd) : "i"(imm20));
         return rd;
     }
 
-    static inline int32_t mac(int32_t acc, int32_t a, int32_t b){
+    static inline int mac(int acc, int a, int b){
         asm volatile (".insn r 0x33, 0x00, 0x01, %0, %1, %2"
                     : "+r"(acc) : "r"(a), "r"(b));
         return acc;
@@ -98,6 +113,14 @@
         @param output_length: length of the output array
     */
     static inline int convolution(int *data, int *weights, int *output, int data_length, int weights_length, int output_length) {
+        setup_data_conv(data);
+        setup_weights_conv(weights);
+        setup_output_conv(output);
+
+        for(int i = 0; i < output_length; i++) {
+            // Do nothing, for now >:) muejejej
+        }
+
         return 0;
     }
 

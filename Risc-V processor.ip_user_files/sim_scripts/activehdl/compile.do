@@ -76,4 +76,7 @@ vlog -work xil_defaultlib  -v2k5 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_uti
 "../../../Risc-V processor.srcs/sources_1/new/uart_top.v" \
 "../../../Risc-V processor.srcs/sources_1/new/uart_transmitter.v" \
 
-vlog -work xil_defaultlib  -sv2k12 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_
+vlog -work xil_defaultlib  -sv2k12 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+"../../../Risc-V processor.srcs/sources_1/new/ALU.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/ALU_Control.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/Control.sv" \
