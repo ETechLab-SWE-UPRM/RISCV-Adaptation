@@ -78,8 +78,8 @@ vlog -work xil_defaultlib  -incr -mfcu  -sv \
 "../../../Risc-V processor.srcs/sources_1/new/ALU_Control.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Control.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Data_memory.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/EX_MEM_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/PipelinedRISCV.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/EX_MEM_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/ID_EX_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/IF_ID_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Imm_gen.sv" \

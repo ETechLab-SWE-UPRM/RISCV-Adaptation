@@ -1,11 +1,11 @@
 #include <stdint.h>
 #include "asm_bridge.h"
 
-// Por ahora solamente hay suma, resta, y mac para floating point
+// Por ahora solamente hay mac para floating point
 volatile int data[1024];
 volatile int weights[3] = {1, 1, 1};
 volatile int output[1022];
-volatile int32_t tester = 5; // 0x00000005
+volatile int tester = 5; // 0x00000005
 volatile float a = 3.5; // 0x40600000
 volatile float b = 2.0; // 0x40000000
 volatile float c = 4.0; // 0x40800000
@@ -17,6 +17,7 @@ int main(void) {
         }
     
         volatile float result = a * b + c;
+        // volatile int success = convolution((int*) data, (int*) weights, (int*) output, 1024, 3, 1022);
 
     }
 }

@@ -81,8 +81,8 @@ vlog -work xil_defaultlib  -incr -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_uti
 "../../../Risc-V processor.srcs/sources_1/new/ALU_Control.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Control.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Data_memory.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/EX_MEM_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/PipelinedRISCV.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/EX_MEM_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/ID_EX_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/IF_ID_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Imm_gen.sv" \

@@ -356,7 +356,6 @@ module RISCV_PIPELINED (
     ) fp_hd_u (
         .clk(clk),
         .reset(reset),
-        .id_ex_busy(fp_instruction_id_ex),
         .id_ex_fmadd(id_ex_fmat_type == FMADD),
         .id_ex_adder(fp_alu_op == FADD || fp_alu_op == FSUB),
         .if_id_rs1(reg1),
@@ -541,7 +540,7 @@ module RISCV_PIPELINED (
         .rm(rm)
     );
 
-    logic [31:0] fp_alu_operand1, fp_alu_operand2, fp_alu_operand3, fp_alu_operand4;
+    logic [31:0] fp_alu_operand1, fp_alu_operand2, fp_alu_operand3;
     logic [31:0] fp_ex_result;
 
     always_comb begin
@@ -554,26 +553,19 @@ module RISCV_PIPELINED (
                 unique case (fp_forward_a)
                     2'b00: fp_alu_operand1 = fp_data_read1_id_ex;
                     2'b01: fp_alu_operand1 = mem_wb_write_data[0];
-                    2'b10: fp_alu_operand1 = final_mem_result[0];
+                    2'b10: fp_alu_operand1 = ex_mem_alu_result[0];
                 endcase
 
                 unique case (fp_forward_b)
                     2'b00: fp_alu_operand2 = fp_data_read2_id_ex;
                     2'b01: fp_alu_operand2 = mem_wb_write_data[0];
-                    2'b10: fp_alu_operand2 = final_mem_result[0];
+                    2'b10: fp_alu_operand2 = ex_mem_alu_result[0];
                 endcase
 
                 unique case (fp_forward_c)
                     2'b00: fp_alu_operand3 = fp_data_read3_id_ex;
                     2'b01: fp_alu_operand3 = mem_wb_write_data[0];
-                    2'b10: fp_alu_operand3 = final_mem_result[0];
-                endcase
-
-                unique case (fp_forward_d)
-                    2'b00: fp_alu_operand4 = fp_data_read4_id_ex;
-                    2'b01: fp_alu_operand4 = mem_wb_write_data[0];
-                    2'b10: fp_alu_operand4 = final_mem_result[0];
-                    default: fp_alu_operand4 = fp_data_read4_id_ex;
+                    2'b10: fp_alu_operand3 = ex_mem_alu_result[0];
                 endcase
             end
         end
@@ -593,7 +585,7 @@ module RISCV_PIPELINED (
             unique case (forward_a)
                 2'b00: va_operand1 = vector_data_read1_id_ex;
                 2'b01: va_operand1 = mem_wb_write_data;
-                2'b10: va_operand1 = final_mem_result;
+                2'b10: va_operand1 = ex_mem_alu_result;
                 default: va_operand1 = vector_data_read1_id_ex;
             endcase
 
@@ -607,28 +599,28 @@ module RISCV_PIPELINED (
             unique case (forward_c)
                 2'b00: va_operand3 = vector_data_read3_id_ex;
                 2'b01: va_operand3 = mem_wb_write_data;
-                2'b10: va_operand3 = final_mem_result;
+                2'b10: va_operand3 = ex_mem_alu_result;
                 default: va_operand3 = vector_data_read3_id_ex;
             endcase
         end else begin
             unique case (forward_a)
                 2'b00: alu_operand1 = data_read1_id_ex;
                 2'b01: alu_operand1 = mem_wb_write_data[0];
-                2'b10: alu_operand1 = final_mem_result[0];
+                2'b10: alu_operand1 = ex_mem_alu_result[0];
                 default: alu_operand1 = data_read1_id_ex;
             endcase
 
             unique case (forward_b)
                 2'b00: alu_operand2 = data_read2_id_ex;
                 2'b01: alu_operand2 = mem_wb_write_data[0];
-                2'b10: alu_operand2 = final_mem_result[0];
+                2'b10: alu_operand2 = ex_mem_alu_result[0];
                 default: alu_operand2 = data_read2_id_ex;
             endcase
 
             unique case (forward_c)
                 2'b00: alu_operand3 = data_read3_id_ex;
                 2'b01: alu_operand3 = mem_wb_write_data[0];
-                2'b10: alu_operand3 = final_mem_result[0];
+                2'b10: alu_operand3 = ex_mem_alu_result[0];
                 default: alu_operand3 = data_read3_id_ex;
             endcase
         end
@@ -891,11 +883,31 @@ module RISCV_PIPELINED (
     );
 
     logic ex_mem_mac_result_valid;
+    logic forward_mem_fp;
+
+    fp_mem_forward fp_mem_u (
+        .ex_mem_mac_dest(ex_mem_reg_dest), // c
+        .mem_wb_fp_mac(ex_mem_fmat_type == FMADD),
+        .mem_wb_rd(mem_wb_reg_dest),
+        .forward_mem_fp(forward_mem_fp)
+    );
+
+    logic [31:0] mac_c_operand; 
+
+    always_comb begin
+        if(reset) begin
+            mac_c_operand = '0;
+        end else if(forward_mem_fp) begin
+            mac_c_operand = mem_wb_write_data[0];
+        end else begin
+            mac_c_operand = ex_mem_fp_mac_2;
+        end
+    end
 
     //MAC adder operations 
     floating_point_add_sub mac_adder (
         .s_axis_a_tdata(ex_mem_fp_mac_1),
-        .s_axis_b_tdata(ex_mem_fp_mac_2),
+        .s_axis_b_tdata(mac_c_operand),
         .s_axis_a_tvalid(ex_mem_fmat_type == FMADD),
         .s_axis_b_tvalid(ex_mem_fmat_type == FMADD),
 

@@ -87,4 +87,18 @@
         return acc;
     }
 
+    /*
+        Convolution function with inline assembly implementation.
+
+        @param data: pointer to the input data array
+        @param weights: pointer to the weights array
+        @param output: pointer to the output array
+        @param data_length: length of the input data array
+        @param weights_length: length of the weights array
+        @param output_length: length of the output array
+    */
+    static inline int convolution(int *data, int *weights, int *output, int data_length, int weights_length, int output_length) {
+        return 0;
+    }
+
 #endif
