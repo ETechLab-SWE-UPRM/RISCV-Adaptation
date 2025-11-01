@@ -23,10 +23,6 @@ module Data_memory #(
     logic vec_op_enable [0:vec_length-1];
     logic [31:0] byte_address;
     logic in_range [0:vec_length-1];
-    logic read_result;
-    logic result_range [0:vec_length-1];
-    logic result_single_load;
-    logic [2:0] funct3_internal;
     
     assign byte_address = address - data_base;
     assign vec_op_enable[0] = 1'b1;
@@ -41,13 +37,6 @@ module Data_memory #(
             assign in_range[j] = addresses[j] < (data_addresses);
         end
     endgenerate
-
-    always_ff @(posedge clk) begin
-        read_result <= mem_read;
-        result_range <= in_range;
-        result_single_load <= single_load;
-        funct3_internal <= funct3;
-    end
 
     blk_mem_gen_0 mem_inst (
     .clka(clk),
@@ -108,8 +97,8 @@ module Data_memory #(
         for (int i = 0; i < vec_length; i++) begin
             read_data[i] = 32'h0;
 
-            if (read_result && result_range[i]) begin
-                unique case (funct3_internal)
+            if (mem_read && in_range[i]) begin
+                unique case (funct3)
                     3'b000: // LB (sign-extend)
                         case (address[1:0])
                             2'd0: read_data[i] = {{24{bram_data[i][7]}},  bram_data[i][7:0]};
@@ -147,7 +136,7 @@ module Data_memory #(
                 endcase
             end
 
-            if(read_result && result_single_load) begin
+            if(mem_read && single_load) begin
                 read_data[i] = bram_data[0]; // For single load, all read_data[i] should be the first address
             end
 
