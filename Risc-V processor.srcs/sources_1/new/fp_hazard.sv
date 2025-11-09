@@ -1,9 +1,6 @@
 `timescale 1ns/1ps
 
-module fp_hazard_detection #(
-    parameter FMADD_CYCLES = 0,
-    parameter ADDER_CYCLES = 0
-) (
+module fp_hazard_detection (
     input logic clk,
     input logic reset,
     input logic id_ex_fmadd,
