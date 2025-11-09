@@ -1,4 +1,4 @@
-
+import fp_fma_pkg::*;
 
 module MEM_WB_reg #(
     parameter vec_length = 2
@@ -7,6 +7,7 @@ module MEM_WB_reg #(
     input logic reset,
     input logic ex_mem_vec_op,
     input logic ex_mem_fp_instruction,
+    input fp_fma_t ex_mem_fmat_type,
     input logic ex_mem_fp_reg_write,
     input logic ex_mem_vec_reg_write,
     input logic ex_mem_memtoreg,
@@ -20,6 +21,7 @@ module MEM_WB_reg #(
 
     output logic mem_wb_vec_op,
     output logic mem_wb_fp_instruction,
+    output fp_fma_t mem_wb_fmat_type,
     output logic mem_wb_fp_reg_write,
     output logic mem_wb_vec_reg_write,
     output logic mem_wb_memtoreg,
@@ -37,6 +39,7 @@ module MEM_WB_reg #(
         if (reset) begin
             mem_wb_vec_op <= 1'b0;
             mem_wb_fp_instruction <= 1'b0;
+            mem_wb_fmat_type <= FM_NONE;
             mem_wb_fp_reg_write <= 1'b0;
             mem_wb_vec_reg_write <= 1'b0;
             mem_wb_memtoreg <= 1'b0;
@@ -51,6 +54,7 @@ module MEM_WB_reg #(
         end else begin
             mem_wb_vec_op <= ex_mem_vec_op;
             mem_wb_fp_instruction <= ex_mem_fp_instruction;
+            mem_wb_fmat_type <= ex_mem_fmat_type;
             mem_wb_fp_reg_write <= ex_mem_fp_reg_write;
             mem_wb_vec_reg_write <= ex_mem_vec_reg_write;
             mem_wb_memtoreg <= ex_mem_memtoreg;
@@ -71,7 +75,7 @@ module MEM_WB_reg #(
                 mem_wb_write_data[i] = 32'b0; // Other vector elements are not used in JAL/JALR
             end
         end else if(mem_wb_memtoreg) begin
-            mem_wb_write_data = memory_data_read; 
+            mem_wb_write_data = mem_wb_memory_data_read; 
         end else begin
             mem_wb_write_data = mem_wb_alu_result; 
         end
