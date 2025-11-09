@@ -36,10 +36,9 @@
     }
 
     // Mul 
-    static inline int vmac(int acc, int a, int b){
+    static inline void vmac(int acc, int a, int b){
         asm volatile (".insn r 0x5B, 0x00, 0x01, %0, %1, %2"
                     : "+r"(acc) : "r"(a), "r"(b));
-        return acc;
     }
 
     static inline int vadd(int a, int b){
@@ -89,17 +88,15 @@
         return rd;
     }
 
-    static inline int mac(int acc, int a, int b){
+    static inline void mac(int acc, int a, int b){
         asm volatile (".insn r 0x33, 0x00, 0x01, %0, %1, %2"
                     : "+r"(acc) : "r"(a), "r"(b));
-        return acc;
     }
 
     // FMADD rd, rs1, rs2, rs3, rm = rne, ties even
-    static inline float fmac(float acc, float a, float b, float c){
-        asm volatile (".insn r 0x43, 0x00, %0, %1, %2, %3"
-                    : "=f"(acc) : "f"(a), "f"(b), "f"(c));
-        return acc;
+    static inline void fmac(float acc, float a, float b, float c){
+        asm volatile (".insn r4 0x43, 0x00, %0, %1, %2, %3"
+                    : "+f"(acc) : "f"(a), "f"(b), "f"(c));
     }
 
     /*
@@ -112,15 +109,15 @@
         @param weights_length: length of the weights array
         @param output_length: length of the output array
     */
-    static inline int convolution(int *data, int *weights, int *output, int data_length, int weights_length, int output_length) {
-        setup_data_conv(data);
-        setup_weights_conv(weights);
-        setup_output_conv(output);
+    static inline int convolution1D(int *data, int *weights, int *output, int data_length, int weights_length, int output_length) {
 
-        for(int i = 0; i < output_length; i++) {
-            // Do nothing, for now >:) muejejej
+        for(int i = 0; i < output_length; i++){
+            int sum = 0;
+            for(int j = 0; j < weights_length; j++){
+                sum += data[i + j] * weights[j];
+            }
+            output[i] = sum;
         }
-
         return 0;
     }
 
