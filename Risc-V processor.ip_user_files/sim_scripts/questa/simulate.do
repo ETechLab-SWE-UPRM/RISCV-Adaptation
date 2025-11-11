@@ -1,7 +1,7 @@
 onbreak {quit -f}
 onerror {quit -f}
 
-vsim  -lib xil_defaultlib PipelineTester_opt
+vsim  -lib xil_defaultlib dm_tester_opt
 
 set NumericStdNoWarnings 1
 set StdArithNoWarnings 1
@@ -12,7 +12,7 @@ view wave
 view structure
 view signals
 
-do {PipelineTester.udo}
+do {dm_tester.udo}
 
 run 1000ns
 

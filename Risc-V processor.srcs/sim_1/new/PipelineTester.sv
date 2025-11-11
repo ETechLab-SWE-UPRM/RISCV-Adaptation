@@ -21,24 +21,7 @@ module PipelineTester;
         .led(led)
     );
 
-    always #5 clk = ~clk; // Clock period of 10 time units
-
-    task automatic uart_send_byte(input byte b);
-    int i;
-    begin
-      // Start bit
-      rx = 1'b0; #(BIT_TIME_NS);
-
-      // Data bits (LSB first)
-      for (i = 0; i < 8; i++) begin
-        rx = b[i];
-        #(BIT_TIME_NS);
-      end
-
-      // Stop bit
-      rx = 1'b1; #(BIT_TIME_NS);
-    end
-  endtask
+    always #7.25 clk = ~clk; // Clock period of 14.5 time units
     
     initial begin
     // Initialize
@@ -46,7 +29,7 @@ module PipelineTester;
     rst = 1'b1;
     #100;
     rst = 1'b0;
-    #100000;
+    #300000;
 
     $display("Dumping data memory to data_tester_dump.hex");
         $writememh(

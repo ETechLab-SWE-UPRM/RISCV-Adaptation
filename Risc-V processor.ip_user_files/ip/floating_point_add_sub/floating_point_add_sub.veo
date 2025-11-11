@@ -55,6 +55,7 @@
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
 floating_point_add_sub your_instance_name (
+  .aclk(aclk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid),            // input wire s_axis_a_tvalid
   .s_axis_a_tdata(s_axis_a_tdata),              // input wire [31 : 0] s_axis_a_tdata
   .s_axis_b_tvalid(s_axis_b_tvalid),            // input wire s_axis_b_tvalid

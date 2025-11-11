@@ -6,7 +6,8 @@ module Data_memory #(
 ) (
     input  logic clk,
     input  logic single_load,
-    input  logic [31:0] address,
+    input  logic fmac,
+    input  logic [31:0] address [0:vec_length-1],
     input  logic [31:0] write_data [0:vec_length-1],
     input  logic [2:0] funct3,
     input  logic mem_write,
@@ -21,36 +22,37 @@ module Data_memory #(
     logic [3:0]  write_enable [0:vec_length-1];
     logic [13:0] addresses [0:vec_length-1];
     logic vec_op_enable [0:vec_length-1];
-    logic [31:0] byte_address;
+    logic [31:0] byte_address [0: vec_length-1];
     logic in_range [0:vec_length-1];
     
-    assign byte_address = address - data_base;
+    assign byte_address[0] = address[0] - data_base;
     assign vec_op_enable[0] = 1'b1;
-    assign addresses[0] = byte_address[15:2];
+    assign addresses[0] = byte_address[0][15:2];
     assign in_range[0] = (addresses[0] < data_addresses);
     // Calculate next addresses based on the current address and vector length
     genvar j;
     generate
         for (j = 1; j < vec_length; j++) begin
-            assign addresses[j] = addresses[j-1] + 1;
-            assign vec_op_enable[j] = vec_op;
+            assign byte_address[j] = address[j] - data_base;
+            assign addresses[j] = byte_address[j][15:2];
+            assign vec_op_enable[j] = vec_op || fmac;
             assign in_range[j] = addresses[j] < (data_addresses);
         end
     endgenerate
 
     blk_mem_gen_0 mem_inst (
-    .clka(clk),
-    .ena(1'b1),
-    .wea(write_enable[0]),
-    .addra(addresses[0]),
-    .dina(write_word[0]),
-    .douta(bram_data[0]),
-    .clkb(clk),
-    .enb(vec_op_enable[1]),
-    .web(write_enable[1]),
-    .addrb(addresses[1]),
-    .dinb(write_word[1]),
-    .doutb(bram_data[1])
+        .clka(clk),
+        .ena(1'b1),
+        .wea(write_enable[0]),
+        .addra(addresses[0]),
+        .dina(write_word[0]),
+        .douta(bram_data[0]),
+        .clkb(clk),
+        .enb(vec_op_enable[1]),
+        .web(write_enable[1]),
+        .addrb(addresses[1]),
+        .dinb(write_word[1]),
+        .doutb(bram_data[1])
     );
 
     always_comb begin
@@ -61,7 +63,7 @@ module Data_memory #(
             if (mem_write && in_range[i]) begin
                 case (funct3)
                     3'b000: begin // SB
-                        unique case (address[1:0])
+                        unique case (address[i][1:0])
                             2'd0: begin write_word[i] = {24'b0, write_data[i][7:0] }; write_enable[i] = 4'b0001; end
                             2'd1: begin write_word[i] = {16'b0, write_data[i][7:0], 8'b0}; write_enable[i] = 4'b0010; end
                             2'd2: begin write_word[i] = {8'b0, write_data[i][7:0], 16'b0}; write_enable[i] = 4'b0100; end
@@ -70,10 +72,10 @@ module Data_memory #(
                     end
 
                     3'b001: begin // SH
-                        unique if (address[1:0] == 2'd0) begin
+                        unique if (address[i][1:0] == 2'd0) begin
                             write_word[i]   = {16'b0, write_data[i][15:0] };
                             write_enable[i] = 4'b0011;
-                        end else if (address[1:0] == 2'b10) begin
+                        end else if (address[i][1:0] == 2'b10) begin
                             write_word[i]   = {write_data[i][15:0], 16'b0};
                             write_enable[i] = 4'b1100;
                         end
@@ -97,10 +99,10 @@ module Data_memory #(
         for (int i = 0; i < vec_length; i++) begin
             read_data[i] = 32'h0;
 
-            if (mem_read && in_range[i]) begin
+            if ((mem_read && in_range[i]) || (fmac && in_range[i])) begin
                 unique case (funct3)
                     3'b000: // LB (sign-extend)
-                        case (address[1:0])
+                        case (address[i][1:0])
                             2'd0: read_data[i] = {{24{bram_data[i][7]}},  bram_data[i][7:0]};
                             2'd1: read_data[i] = {{24{bram_data[i][15]}}, bram_data[i][15:8]};
                             2'd2: read_data[i] = {{24{bram_data[i][23]}}, bram_data[i][23:16]};
@@ -108,9 +110,9 @@ module Data_memory #(
                         endcase
 
                     3'b001: // LH (sign-extend)
-                        if (address[1:0] == 2'd0)
+                        if (address[i][1:0] == 2'd0)
                             read_data[i] = {{16{bram_data[i][15]}}, bram_data[i][15:0]};
-                        else if (address[1:0] == 2'b10)
+                        else if (address[i][1:0] == 2'b10)
                             read_data[i] = {{16{bram_data[i][31]}}, bram_data[i][31:16]};
 
                     3'b110, // LSW (vector)
@@ -118,7 +120,7 @@ module Data_memory #(
                         read_data[i] = bram_data[i];
 
                     3'b100: // LBU (zero-extend)
-                        case (address[1:0])
+                        case (address[i][1:0])
                             2'd0: read_data[i] = {24'd0, bram_data[i][7:0]};
                             2'd1: read_data[i] = {24'd0, bram_data[i][15:8]};
                             2'd2: read_data[i] = {24'd0, bram_data[i][23:16]};
@@ -126,7 +128,7 @@ module Data_memory #(
                         endcase
 
                     3'b101: // LHU (zero-extend)
-                        if (address[1:0] == 2'd0)
+                        if (address[i][1:0] == 2'd0)
                             read_data[i] = {16'd0, bram_data[i][15:0]};
                         else
                             read_data[i] = {16'd0, bram_data[i][31:16]};
