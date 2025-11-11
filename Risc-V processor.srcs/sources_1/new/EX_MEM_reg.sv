@@ -17,6 +17,8 @@ module EX_MEM_reg #(
     input logic id_ex_jal,
     input logic id_ex_jalr,
     input fp_fma_t id_ex_fmat_type,
+    input logic [31:0] conv_data_read_id_ex,
+    input logic [31:0] weights_data_read_id_ex,
     input logic [31:0] id_ex_fp_mac_1,
     input logic [31:0] id_ex_fp_mac_2,
     input logic [31:0] alu_result [0:vec_length-1],
@@ -38,6 +40,8 @@ module EX_MEM_reg #(
     output logic ex_mem_jal,
     output logic ex_mem_jalr,
     output fp_fma_t ex_mem_fmat_type,
+    output logic [31:0] ex_mem_conv_data_read,
+    output logic [31:0] ex_mem_weights_data_read,
     output logic [31:0] ex_mem_fp_mac_1,
     output logic [31:0] ex_mem_fp_mac_2,
     output logic [31:0] ex_mem_alu_result [0:vec_length-1],
@@ -63,6 +67,8 @@ module EX_MEM_reg #(
             ex_mem_jal <= 1'b0;
             ex_mem_jalr <= 1'b0;
             ex_mem_fmat_type <= FM_NONE;
+            ex_mem_conv_data_read <= 32'b0;
+            ex_mem_weights_data_read <= 32'b0;
             ex_mem_fp_mac_1 <= 32'b0;
             ex_mem_fp_mac_2 <= 32'b0;
             ex_mem_alu_result <= '{default: 32'b0};
@@ -86,6 +92,8 @@ module EX_MEM_reg #(
             ex_mem_jal <= id_ex_jal; 
             ex_mem_jalr <= id_ex_jalr;
             ex_mem_fmat_type <= id_ex_fmat_type;
+            ex_mem_conv_data_read <= conv_data_read_id_ex;
+            ex_mem_weights_data_read <= weights_data_read_id_ex;
             ex_mem_fp_mac_1 <= id_ex_fp_mac_1;
             ex_mem_fp_mac_2 <= id_ex_fp_mac_2;
             ex_mem_alu_result <= alu_result; 
