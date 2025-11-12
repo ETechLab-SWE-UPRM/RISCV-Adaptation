@@ -14,6 +14,7 @@ _start:
     .insn r OP_FP, 0x00, \rd, \rs1, \rs2, \rs3
 .endm
 
+#addresses where the lengths are stored
 .set data_addr, 0x10008370
 .set weights_addr, 0x10008374
 .set output_addr, 0x10008378
@@ -40,7 +41,8 @@ init_loop:
     addi t3, t1, 1  #i + 1
     slli t4, t1, 2  # (i + 1) * 4
     add t5, a0, t4  # &data[i + 1]
-    sw t3, 0(t5)    # data[i] = i + 1
+    fcvt.s.w f0, t3   # convert to float
+    fsw f0, 0(t5)    # data[i] = i + 1
     addi t1, t1, 1
     blt t1, t0, init_loop
 
@@ -58,7 +60,7 @@ convolution1D:
 
 outer_loop:
     li t2, 0 # j = 0
-    li t3, 0 # sum = 0 
+    fmv.w.x f2, x0 # sum = 0 
 
 inner_loop:
     # when entering the loop, s1 = data[i + j], s2 = weights[j]

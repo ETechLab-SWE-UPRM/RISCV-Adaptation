@@ -20,6 +20,9 @@ module fp_alu (
     logic [7:0] comp_result;
     logic comp_result_valid;
 
+    logic [31:0] itf_result;
+    logic itf_a_valid, itf_result_valid;
+
     floating_point_branching fpbranch (
         .s_axis_a_tdata(a),
         .s_axis_b_tdata(b),
@@ -31,11 +34,19 @@ module fp_alu (
         .m_axis_result_tvalid(comp_result_valid)
     );
 
+    int_to_float_ip itf_inst (
+        .s_axis_a_tdata(a),
+        .s_axis_a_tvalid(itf_a_valid),
+        .m_axis_result_tdata(itf_result),
+        .m_axis_result_tvalid(itf_result_valid)
+    );
+
     always_comb begin
         comp_a_valid = 1'b0;
         comp_b_valid = 1'b0;
         comp_op_valid = 1'b0;
         comp_op = 8'd64; // Default to NaN
+        itf_a_valid = 1'b0;
         result = 32'd0;
         result_valid = 1'b0;
 
@@ -64,12 +75,25 @@ module fp_alu (
                 comp_op = 8'd2;
             end
 
+            FMVWX : begin
+                result = a;
+            end
+
+            FCVTSW : begin
+                itf_a_valid = 1'b1;
+            end
+
             FMEM : result = $signed(a) + $signed(b); 
             
         endcase
 
         if (comp_result_valid) begin
             result[7:0] = comp_result;
+            result_valid = 1'b1;
+        end
+
+        if (itf_result_valid) begin
+            result = itf_result;
             result_valid = 1'b1;
         end
     end

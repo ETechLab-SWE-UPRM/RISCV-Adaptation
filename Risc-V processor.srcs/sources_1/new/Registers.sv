@@ -42,35 +42,40 @@ module Registers(
     end
 
     always_comb begin
-        if(reg_write_enable && (read_reg1 == write_reg)) begin
-            read_data1 = write_data;
+        if(reset) begin
+            conv_data_read = 32'b0;
+            conv_weights_read = 32'b0;
         end else begin
-            read_data1 = regs[read_reg1];
-        end
-
-        if(reg_write_enable && (read_reg2 == write_reg)) begin
-            read_data2 = write_data;
-        end else begin
-            read_data2 = regs[read_reg2];
-        end
-
-        if(reg_write_enable && (read_reg3 == write_reg)) begin
-            read_data3 = write_data;
-        end else begin
-            read_data3 = regs[read_reg3];
-        end
-
-        if(fp_mac == FMADD) begin
-            if(reg_write_enable && (a0 == write_reg)) begin
-                conv_data_read = write_data;
+            if(reg_write_enable && (read_reg1 == write_reg)) begin
+                read_data1 = write_data;
             end else begin
-                conv_data_read = regs[a0];
+                read_data1 = regs[read_reg1];
             end
 
-            if(reg_write_enable && (a1 == write_reg)) begin
-                conv_weights_read = write_data;
+            if(reg_write_enable && (read_reg2 == write_reg)) begin
+                read_data2 = write_data;
             end else begin
-                conv_weights_read = regs[a1];
+                read_data2 = regs[read_reg2];
+            end
+
+            if(reg_write_enable && (read_reg3 == write_reg)) begin
+                read_data3 = write_data;
+            end else begin
+                read_data3 = regs[read_reg3];
+            end
+
+            if(fp_mac == FMADD) begin
+                if(reg_write_enable && (a0 == write_reg)) begin
+                    conv_data_read = write_data;
+                end else begin
+                    conv_data_read = regs[a0];
+                end
+
+                if(reg_write_enable && (a1 == write_reg)) begin
+                    conv_weights_read = write_data;
+                end else begin
+                    conv_weights_read = regs[a1];
+                end
             end
         end
     end
