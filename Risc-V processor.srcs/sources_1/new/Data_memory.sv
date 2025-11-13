@@ -99,7 +99,7 @@ module Data_memory #(
         for (int i = 0; i < vec_length; i++) begin
             read_data[i] = 32'h0;
 
-            if ((mem_read && in_range[i]) || (fmac && in_range[i])) begin
+            if ((mem_read && in_range[i])) begin
                 unique case (funct3)
                     3'b000: // LB (sign-extend)
                         case (address[i][1:0])
@@ -136,6 +136,8 @@ module Data_memory #(
                     default:
                         read_data[i] = 32'd0;
                 endcase
+            end else if (fmac && in_range[i]) begin
+                read_data[i] = bram_data[i]; // LW
             end
 
             if(mem_read && single_load) begin

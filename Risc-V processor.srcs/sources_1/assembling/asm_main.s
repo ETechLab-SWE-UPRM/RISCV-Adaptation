@@ -15,19 +15,23 @@ _start:
 .endm
 
 #addresses where the lengths are stored
-.set data_addr, 0x10008370
-.set weights_addr, 0x10008374
-.set output_addr, 0x10008378
+.set data_addr, 0x100082B0
+.set weights_addr, 0x100082B4
+.set output_addr, 0x100082B8
 
 .data
     data: .zero 4096 #1024 spaces * 4 bytes
-    weights: .word 1,1,1
+    weights: .float 1.0,1.0,1.0
     output: .zero 4088 #1022 spaces * 4 bytes
 
 .section .text.main, "ax"
 .globl main
 
 main:
+    # Register contracts:
+    # a0 -> data address
+    # a1 -> weights address
+    # a2 -> output address
     la a0, data
     la a1, weights
     la a2, output

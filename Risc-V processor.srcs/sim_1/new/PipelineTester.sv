@@ -29,7 +29,7 @@ module PipelineTester;
     rst = 1'b1;
     #100;
     rst = 1'b0;
-    #300000;
+    #600000;
 
     $display("Dumping data memory to data_tester_dump.hex");
         $writememh(

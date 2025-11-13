@@ -13,69 +13,41 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="134,715.083 ns"></ZoomStartTime>
-      <ZoomEndTime time="134,967.884 ns"></ZoomEndTime>
-      <Cursor1Time time="134,929.750 ns"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="159.009 ns"></ZoomEndTime>
+      <Cursor1Time time="0.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="257"></NameColumnWidth>
-      <ValueColumnWidth column_width="98"></ValueColumnWidth>
+      <NameColumnWidth column_width="253"></NameColumnWidth>
+      <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="13" />
+   <WVObjectSize size="6" />
    <wave_markers>
       <marker time="92395000" label="" />
       <marker time="135016750" label="" />
    </wave_markers>
-   <wvobject fp_name="/PipelineTester/processor/mac_mult/s_axis_a_tvalid" type="logic">
-      <obj_property name="ElementShortName">s_axis_a_tvalid</obj_property>
-      <obj_property name="ObjectShortName">s_axis_a_tvalid</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/conv_data_length" type="array">
+      <obj_property name="ElementShortName">conv_data_length[31:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_data_length[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_mult/s_axis_a_tdata" type="array">
-      <obj_property name="ElementShortName">s_axis_a_tdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">s_axis_a_tdata[31:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/conv_weights_length" type="array">
+      <obj_property name="ElementShortName">conv_weights_length[31:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_weights_length[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_mult/s_axis_b_tvalid" type="logic">
-      <obj_property name="ElementShortName">s_axis_b_tvalid</obj_property>
-      <obj_property name="ObjectShortName">s_axis_b_tvalid</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/conv_output_length" type="array">
+      <obj_property name="ElementShortName">conv_output_length[31:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_output_length[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_mult/s_axis_b_tdata" type="array">
-      <obj_property name="ElementShortName">s_axis_b_tdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">s_axis_b_tdata[31:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/regs/conv_data_write" type="array">
+      <obj_property name="ElementShortName">conv_data_write[31:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_data_write[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_mult/m_axis_result_tvalid" type="logic">
-      <obj_property name="ElementShortName">m_axis_result_tvalid</obj_property>
-      <obj_property name="ObjectShortName">m_axis_result_tvalid</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/regs/conv_weights_write" type="array">
+      <obj_property name="ElementShortName">conv_weights_write[31:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_weights_write[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_mult/m_axis_result_tdata" type="array">
-      <obj_property name="ElementShortName">m_axis_result_tdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">m_axis_result_tdata[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/aclk" type="logic">
-      <obj_property name="ElementShortName">aclk</obj_property>
-      <obj_property name="ObjectShortName">aclk</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_a_tvalid" type="logic">
-      <obj_property name="ElementShortName">s_axis_a_tvalid</obj_property>
-      <obj_property name="ObjectShortName">s_axis_a_tvalid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_a_tdata" type="array">
-      <obj_property name="ElementShortName">s_axis_a_tdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">s_axis_a_tdata[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_b_tvalid" type="logic">
-      <obj_property name="ElementShortName">s_axis_b_tvalid</obj_property>
-      <obj_property name="ObjectShortName">s_axis_b_tvalid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_b_tdata" type="array">
-      <obj_property name="ElementShortName">s_axis_b_tdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">s_axis_b_tdata[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/m_axis_result_tvalid" type="logic">
-      <obj_property name="ElementShortName">m_axis_result_tvalid</obj_property>
-      <obj_property name="ObjectShortName">m_axis_result_tvalid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/m_axis_result_tdata" type="array">
-      <obj_property name="ElementShortName">m_axis_result_tdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">m_axis_result_tdata[31:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_counter" type="array">
+      <obj_property name="ElementShortName">data_counter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_counter[31:0]</obj_property>
    </wvobject>
 </wave_config>

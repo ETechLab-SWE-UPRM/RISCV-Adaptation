@@ -16,6 +16,8 @@ module MEM_WB_reg #(
     input logic ex_mem_jalr,
     input logic [31:0] ex_mem_alu_result [0:vec_length-1],
     input logic [31:0] memory_data_read [0:vec_length-1],
+    input logic [4:0] ex_mem_rs1,
+    input logic [4:0] ex_mem_rs2,
     input logic [4:0] ex_mem_reg_dest,
     input logic [31:0] ex_mem_link_address_reg,
 
@@ -30,6 +32,8 @@ module MEM_WB_reg #(
     output logic mem_wb_jalr,
     output logic [31:0] mem_wb_alu_result [0:vec_length-1],
     output logic [31:0] mem_wb_memory_data_read [0:vec_length-1],
+    output logic [4:0] mem_wb_rs1,
+    output logic [4:0] mem_wb_rs2,
     output logic [4:0] mem_wb_reg_dest,
     output logic [31:0] mem_wb_link_address,
     output logic [31:0] mem_wb_write_data [0:vec_length-1]
@@ -48,6 +52,8 @@ module MEM_WB_reg #(
             mem_wb_jalr <= 1'b0;
             mem_wb_alu_result <= '{default: 32'b0};
             mem_wb_memory_data_read <= '{default: 32'b0};
+            mem_wb_rs1 <= 5'b0;
+            mem_wb_rs2 <= 5'b0;
             mem_wb_reg_dest <= 5'b0;
             mem_wb_link_address <= 32'b0;
 
@@ -63,6 +69,8 @@ module MEM_WB_reg #(
             mem_wb_jalr <= ex_mem_jalr;
             mem_wb_alu_result <= ex_mem_alu_result;
             mem_wb_memory_data_read <= memory_data_read;
+            mem_wb_rs1 <= ex_mem_rs1;
+            mem_wb_rs2 <= ex_mem_rs2;
             mem_wb_reg_dest <= ex_mem_reg_dest;
             mem_wb_link_address <= ex_mem_link_address_reg; 
         end

@@ -24,6 +24,8 @@ module EX_MEM_reg #(
     input logic [31:0] alu_result [0:vec_length-1],
     input logic [31:0] data_read2_id_ex,
     input logic [31:0] vec_data_read2_id_ex [0:vec_length-1], 
+    input logic [4:0] id_ex_rs1,
+    input logic [4:0] id_ex_rs2,
     input logic [4:0] reg_dest_id_ex,
     input logic [31:0] ex_link_address,
     input logic [2:0] funct3, 
@@ -47,6 +49,8 @@ module EX_MEM_reg #(
     output logic [31:0] ex_mem_alu_result [0:vec_length-1],
     output logic [31:0] ex_mem_data_read2,
     output logic [31:0] vec_ex_mem_data_read2 [0:vec_length-1],
+    output logic [4:0] ex_mem_rs1,
+    output logic [4:0] ex_mem_rs2,
     output logic [4:0] ex_mem_reg_dest,
     output logic [31:0] ex_mem_link_address_reg,
     output logic [2:0] ex_mem_funct3 
@@ -74,6 +78,8 @@ module EX_MEM_reg #(
             ex_mem_alu_result <= '{default: 32'b0};
             ex_mem_data_read2 <= 32'b0;
             vec_ex_mem_data_read2 <= '{default: 32'b0};
+            ex_mem_rs1 <= 5'b0;
+            ex_mem_rs2 <= 5'b0;
             ex_mem_reg_dest <= 5'b0;
             ex_mem_link_address_reg <= 32'b0;
             ex_mem_funct3 <= 3'b0; 
@@ -98,6 +104,8 @@ module EX_MEM_reg #(
             ex_mem_fp_mac_2 <= id_ex_fp_mac_2;
             ex_mem_alu_result <= alu_result; 
             ex_mem_data_read2 <= data_read2_id_ex;
+            ex_mem_rs1 <= id_ex_rs1;
+            ex_mem_rs2 <= id_ex_rs2;
             ex_mem_reg_dest <= reg_dest_id_ex; 
             ex_mem_link_address_reg <= ex_link_address;
             ex_mem_funct3 <= funct3; 
