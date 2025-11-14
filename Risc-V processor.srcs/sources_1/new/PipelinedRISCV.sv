@@ -149,7 +149,6 @@ module RISCV_PIPELINED (
     rm_t rm;
     logic fp_alu_result_valid;
     logic fp_mac_result_valid;
-    logic a_ready, b_ready, c_ready;
 
     assign id_ex_flush = ex_taken || stall || fp_stall;
     
@@ -163,7 +162,6 @@ module RISCV_PIPELINED (
     fp_fma_t ex_mem_fmat_type;
     logic [31:0] ex_mem_conv_data_read, ex_mem_weights_data_read;
     logic [31:0] ex_mem_fp_mac_1, ex_mem_fp_mac_2, ex_mem_mac_result;
-    logic ex_mem_fp_mac1_valid, ex_mem_fp_mac2_valid;
     logic [31:0] final_mem_result [0:vector_length-1];
     logic [31:0] ex_mem_alu_result [0:vector_length-1], ex_mem_data_read2;
     logic [31:0] vec_ex_mem_data_read2 [0:vector_length-1];
@@ -551,19 +549,18 @@ module RISCV_PIPELINED (
         end else begin
             if(id_ex_fmat_type == FMADD) begin
                 conv_write_enable = 1'b1;
-                if(conv_data_length == data_counter) begin
-                    conv_data_plus4 = conv_data_read_id_ex - (conv_data_length << 2);
-                    data_counter = 32'd0;
-                end else begin
-                    conv_data_plus4 = conv_data_read_id_ex + 4;
-                    data_counter = data_counter + 32'd1;
-                end
                 if(conv_weights_length == weights_counter) begin
                     weights_data_plus4 = weights_data_read_id_ex - (conv_weights_length << 2);
+                    conv_data_plus4 = ((conv_data_read_id_ex - (conv_weights_length << 2)) + 32'd4);
                     weights_counter = 32'd0;
+                end else if (conv_data_length == data_counter) begin
+                        conv_data_plus4 = conv_data_read_id_ex - (conv_data_length << 2);
+                        data_counter = 32'd0;
                 end else begin
                     weights_data_plus4 = weights_data_read_id_ex + 4;
                     weights_counter = weights_counter + 32'd1;
+                    conv_data_plus4 = conv_data_read_id_ex + 4;
+                    data_counter = data_counter + 32'd1;
                 end
             end 
         end
@@ -589,7 +586,6 @@ module RISCV_PIPELINED (
     );
 
     logic [31:0] fp_alu_operand1, fp_alu_operand2, fp_alu_operand3;
-    logic [31:0] fp_ex_result;
 
     always_comb begin
         if(reset) begin
@@ -1006,7 +1002,7 @@ module RISCV_PIPELINED (
         if(data_length_store) begin
             conv_data_length = write_data[0];
         end else if(weights_length_store) begin
-            conv_weights_length = write_data[0];
+            conv_weights_length = write_data[0] - 32'd1;
         end else if(output_length_store) begin
             conv_output_length = write_data[0];
         end
