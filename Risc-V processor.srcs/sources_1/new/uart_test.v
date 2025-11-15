@@ -62,7 +62,7 @@ module uart_test(
             .db_tick(btn_tick)
         );
 
-    always @(posedge clk or posedge reset) begin
+    always @(posedge clk) begin
         if(reset) begin
             led_timer <= 28'b0;
         end else if(rx_full) begin
@@ -72,7 +72,7 @@ module uart_test(
         end
     end
 
-    always @(posedge clk or posedge reset) begin
+    always @(posedge clk) begin
         if(reset) begin
             write_counter <= 1'b0;
         end else if(rx_full) begin

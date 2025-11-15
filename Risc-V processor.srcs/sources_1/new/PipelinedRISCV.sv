@@ -1058,7 +1058,7 @@ module RISCV_PIPELINED (
         .read_data(uart_read_data)
     );
 
-    always_ff @(posedge clk or posedge reset) begin : uart_write_control
+    always_ff @(posedge clk) begin : uart_write_control
         if(reset) begin
             uart_write_to_mem <= 1'b0;
         end else if(uart_rx_full) begin
@@ -1068,7 +1068,7 @@ module RISCV_PIPELINED (
         end
     end
 
-    always_ff @(posedge clk or posedge reset) begin : uart_rx_tx_process
+    always_ff @(posedge clk) begin : uart_rx_tx_process
         if(reset) begin
             data_send <= 2'b00;
             ready_to_send <= 1'b0;

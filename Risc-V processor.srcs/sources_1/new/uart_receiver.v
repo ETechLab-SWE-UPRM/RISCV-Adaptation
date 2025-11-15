@@ -39,7 +39,7 @@ module uart_receiver
     reg [7:0] data_reg, data_next;      // reassembled data word
     
     // Register Logic
-    always @(posedge clk_100MHz, posedge reset)
+    always @(posedge clk_100MHz)
         if(reset) begin
             state <= idle;
             tick_reg <= 0;

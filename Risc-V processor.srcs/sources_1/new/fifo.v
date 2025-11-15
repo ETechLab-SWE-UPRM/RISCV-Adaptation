@@ -51,7 +51,7 @@ module fifo
 	
 	// FIFO control logic
 	// register logic
-	always @(posedge clk or posedge reset)
+	always @(posedge clk)
 		if(reset) begin
 			current_write_addr 	<= 0;
 			current_read_addr 	<= 0;

@@ -26,7 +26,7 @@ vmap axi_utils_v2_0_10 activehdl/axi_utils_v2_0_10
 vmap mult_gen_v12_0_22 activehdl/mult_gen_v12_0_22
 vmap floating_point_v7_1_19 activehdl/floating_point_v7_1_19
 
-vlog -work xpm  -sv2k12 "+incdir+../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work xpm  -sv2k12 "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
 "C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
 "C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
 
@@ -48,10 +48,10 @@ vcom -work dsp_macro_v1_0_7 -93  \
 vcom -work xil_defaultlib -93  \
 "../../../Risc-V processor.gen/sources_1/ip/MAC_dsp/sim/MAC_dsp.vhd" \
 
-vlog -work blk_mem_gen_v8_4_9  -v2k5 "+incdir+../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work blk_mem_gen_v8_4_9  -v2k5 "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
 "../../ipstatic/simulation/blk_mem_gen_v8_4.v" \
 
-vlog -work xil_defaultlib  -v2k5 "+incdir+../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work xil_defaultlib  -v2k5 "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
 "../../../Risc-V processor.gen/sources_1/ip/blk_mem_gen_0_1/sim/blk_mem_gen_0.v" \
 "../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0/clk_wiz_0_clk_wiz.v" \
 "../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0/clk_wiz_0.v" \
@@ -65,10 +65,10 @@ vcom -work mult_gen_v12_0_22 -93  \
 vcom -work floating_point_v7_1_19 -93  \
 "../../ipstatic/hdl/floating_point_v7_1_rfs.vhd" \
 
-vlog -work floating_point_v7_1_19  -v2k5 "+incdir+../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work floating_point_v7_1_19  -v2k5 "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
 "../../ipstatic/hdl/floating_point_v7_1_rfs.v" \
 
-vlog -work xil_defaultlib  -v2k5 "+incdir+../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work xil_defaultlib  -v2k5 "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_add_sub/sim/floating_point_add_sub.v" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_multiplier/sim/floating_point_multiplier.v" \
 "../../../Risc-V processor.gen/sources_1/ip/int_to_float_ip/sim/int_to_float_ip.v" \
@@ -80,7 +80,7 @@ vlog -work xil_defaultlib  -v2k5 "+incdir+../../../Risc-V processor.gen/sources_
 "../../../Risc-V processor.srcs/sources_1/new/uart_top.v" \
 "../../../Risc-V processor.srcs/sources_1/new/uart_transmitter.v" \
 
-vlog -work xil_defaultlib  -sv2k12 "+incdir+../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work xil_defaultlib  -sv2k12 "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
 "../../../Risc-V processor.srcs/sources_1/new/ALU.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/ALU_Control.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Control.sv" \

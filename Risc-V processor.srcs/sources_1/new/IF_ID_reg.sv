@@ -16,7 +16,7 @@ module IF_ID_reg (
     // So double flush to fix this problem.
     logic double_flush;
 
-    always_ff @(posedge clk or posedge reset) begin
+    always_ff @(posedge clk) begin
         if (reset) begin
             pc_if_id <= 32'b0;
             instruction_if_id <= 32'b0;

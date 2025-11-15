@@ -8,7 +8,7 @@ module ProgramCounter(
     output logic [31:0] pc    
 );
 
-    always_ff @(posedge clk or posedge reset) begin
+    always_ff @(posedge clk) begin
         if (reset) begin
             pc <= 32'b0; // Reset PC to 0
         end  else if (pc_write) begin

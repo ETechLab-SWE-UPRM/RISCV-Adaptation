@@ -33,7 +33,7 @@ module branch_predictor #(
         end
     end
 
-    always_ff @(posedge clk or posedge rst) begin
+    always_ff @(posedge clk) begin
         if (rst) begin
             for (int i = 0; i < BHT_SIZE; i++) begin
                 bht[i] <= 2'b01;

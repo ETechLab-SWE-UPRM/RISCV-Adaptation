@@ -17,7 +17,7 @@ module vector_registers #(
 
 logic [31:0] v_regs [0:31][0:vec_length-1];
 
-always_ff @(posedge clk or posedge reset) begin
+always_ff @(posedge clk) begin
     for(int i = 0; i < vec_length; i++) begin
         if(reset) begin
             for (int j = 0; j < 32; j++) begin

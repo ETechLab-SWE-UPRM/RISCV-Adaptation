@@ -23,7 +23,7 @@ module Registers(
     localparam a0 = 5'd10;
     localparam a1 = 5'd11;
 
-    always_ff @(posedge clk or posedge reset) begin
+    always_ff @(posedge clk) begin
         if(reset) begin
             for (int i = 0; i < 32; i++) begin
                 regs[i] <= 32'b0;

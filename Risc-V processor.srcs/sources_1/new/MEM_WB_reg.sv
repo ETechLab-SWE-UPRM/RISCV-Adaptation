@@ -39,7 +39,7 @@ module MEM_WB_reg #(
     output logic [31:0] mem_wb_write_data [0:vec_length-1]
 );
 
-    always_ff @(posedge clk or posedge reset) begin
+    always_ff @(posedge clk) begin
         if (reset) begin
             mem_wb_vec_op <= 1'b0;
             mem_wb_fp_instruction <= 1'b0;

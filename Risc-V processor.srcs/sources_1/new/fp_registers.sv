@@ -26,7 +26,7 @@ module Floating_Point_registers #(
 
     logic [data_width-1:0] fp_regs [0:31];
 
-    always_ff @(posedge clk or posedge reset) begin
+    always_ff @(posedge clk) begin
         if (reset) begin
             for (int i = 0; i < 32; i++) begin
                 fp_regs[i] <= 0;

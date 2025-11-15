@@ -41,7 +41,7 @@ module debounce_explicit(
     
     // body
     // FSMD state and data registers
-    always @(posedge clk_100MHz or posedge reset) 
+    always @(posedge clk_100MHz) 
         if(reset) begin
             state_reg <= zero;
             q_reg <= 0;
