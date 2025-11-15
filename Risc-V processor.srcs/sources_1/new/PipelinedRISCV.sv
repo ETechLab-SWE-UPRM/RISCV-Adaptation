@@ -553,9 +553,6 @@ module RISCV_PIPELINED (
                     weights_data_plus4 = weights_data_read_id_ex - (conv_weights_length << 2);
                     conv_data_plus4 = ((conv_data_read_id_ex - (conv_weights_length << 2)) + 32'd4);
                     weights_counter = 32'd0;
-                end else if (conv_data_length == data_counter) begin
-                        conv_data_plus4 = conv_data_read_id_ex - (conv_data_length << 2);
-                        data_counter = 32'd0;
                 end else begin
                     weights_data_plus4 = weights_data_read_id_ex + 4;
                     weights_counter = weights_counter + 32'd1;
@@ -955,7 +952,6 @@ module RISCV_PIPELINED (
 
     //MAC adder operations 
     floating_point_add_sub mac_adder (
-        .aclk(neg_clk),
         .s_axis_a_tdata(ex_mem_fp_mac_1),
         .s_axis_b_tdata(mac_c_operand),
         .s_axis_a_tvalid(ex_mem_fmat_type == FMADD),
