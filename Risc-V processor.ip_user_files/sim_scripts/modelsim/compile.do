@@ -23,7 +23,7 @@ vmap axi_utils_v2_0_10 modelsim_lib/msim/axi_utils_v2_0_10
 vmap mult_gen_v12_0_22 modelsim_lib/msim/mult_gen_v12_0_22
 vmap floating_point_v7_1_19 modelsim_lib/msim/floating_point_v7_1_19
 
-vlog -work xpm  -incr -mfcu  -sv "+incdir+../../ipstatic" \
+vlog -work xpm  -incr -mfcu  -sv "+incdir+../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" \
 "C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
 "C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
 
@@ -45,10 +45,10 @@ vcom -work dsp_macro_v1_0_7  -93  \
 vcom -work xil_defaultlib  -93  \
 "../../../Risc-V processor.gen/sources_1/ip/MAC_dsp/sim/MAC_dsp.vhd" \
 
-vlog -work blk_mem_gen_v8_4_9  -incr -mfcu  "+incdir+../../ipstatic" \
+vlog -work blk_mem_gen_v8_4_9  -incr -mfcu  "+incdir+../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" \
 "../../ipstatic/simulation/blk_mem_gen_v8_4.v" \
 
-vlog -work xil_defaultlib  -incr -mfcu  "+incdir+../../ipstatic" \
+vlog -work xil_defaultlib  -incr -mfcu  "+incdir+../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" \
 "../../../Risc-V processor.gen/sources_1/ip/blk_mem_gen_0_1/sim/blk_mem_gen_0.v" \
 "../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0/clk_wiz_0_clk_wiz.v" \
 "../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0/clk_wiz_0.v" \
@@ -62,14 +62,14 @@ vcom -work mult_gen_v12_0_22  -93  \
 vcom -work floating_point_v7_1_19  -93  \
 "../../ipstatic/hdl/floating_point_v7_1_rfs.vhd" \
 
-vlog -work floating_point_v7_1_19  -incr -mfcu  "+incdir+../../ipstatic" \
+vlog -work floating_point_v7_1_19  -incr -mfcu  "+incdir+../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" \
 "../../ipstatic/hdl/floating_point_v7_1_rfs.v" \
 
-vlog -work xil_defaultlib  -incr -mfcu  "+incdir+../../ipstatic" \
+vlog -work xil_defaultlib  -incr -mfcu  "+incdir+../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_add_sub/sim/floating_point_add_sub.v" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_multiplier/sim/floating_point_multiplier.v" \
-"../../../Risc-V processor.gen/sources_1/ip/int_to_float_ip/sim/int_to_float_ip.v" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_branching/sim/floating_point_branching.v" \
+"../../../Risc-V processor.gen/sources_1/ip/int_to_float_ip/sim/int_to_float_ip.v" \
 "../../../Risc-V processor.gen/sources_1/ip/Instruction_Memory/sim/Instruction_Memory.v" \
 "../../../Risc-V processor.srcs/sources_1/new/baud_rate_generator.v" \
 "../../../Risc-V processor.srcs/sources_1/new/fifo.v" \
@@ -77,7 +77,7 @@ vlog -work xil_defaultlib  -incr -mfcu  "+incdir+../../ipstatic" \
 "../../../Risc-V processor.srcs/sources_1/new/uart_top.v" \
 "../../../Risc-V processor.srcs/sources_1/new/uart_transmitter.v" \
 
-vlog -work xil_defaultlib  -incr -mfcu  -sv "+incdir+../../ipstatic" \
+vlog -work xil_defaultlib  -incr -mfcu  -sv "+incdir+../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" \
 "../../../Risc-V processor.srcs/sources_1/new/ALU.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/ALU_Control.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Control.sv" \

@@ -15,6 +15,9 @@ _start:
 .endm
 
 #addresses where the lengths are stored
+.set uart_status, 0x100082A4
+.set uart_receive, 0x100082A8
+.set uart_send, 0x100082AC
 .set data_addr, 0x100082B0
 .set weights_addr, 0x100082B4
 .set output_addr, 0x100082B8
@@ -28,7 +31,7 @@ _start:
 .globl main
 
 main:
-    # Register contracts:
+    # The mac operations expect the addresses to be in these registers:
     # a0 -> data address
     # a1 -> weights address
     # a2 -> output address
@@ -38,6 +41,7 @@ main:
     li t0, 1024 #inputs length
     lui t1, %hi(data_addr)
     sw t0, %lo(data_addr)(t1)
+    lui s1, %hi(uart_send)
     li t1, 0 # i = 0
     li t2, 1
 
@@ -67,9 +71,8 @@ outer_loop:
     fmv.w.x f2, x0 # sum = 0 
 
 inner_loop:
-    # when entering the loop, s1 = data[i + j], s2 = weights[j]
-      # The idea is, since the fmadd is in the mem stage, forward the result and keep acumulating
-      # on the same register (f2) until the end of the inner loop
+    # f2 used as accumulator, dual issue will use the registers specified on the instruction
+    # any register can be changed in this instruction if you wish so.
     fmadd.s f2, f0, f1, f2 # sum += data[i + j] * weights[j]
 
     addi t2, t2, 1
@@ -78,6 +81,7 @@ inner_loop:
 inner_loop_finished:
     # Store the result
     fsw f2, 0(a2)
+    fsw f2, %lo(uart_send)(s1) # send output to uart
     addi a2, a2, 4 # output address increment
     addi t1, t1, 1
     blt t1, a4, outer_loop

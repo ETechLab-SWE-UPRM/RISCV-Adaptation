@@ -782,10 +782,20 @@ module RISCV_PIPELINED (
             alu_fp_1 = 32'b0;
             alu_fp_2 = 32'b0;
         end else begin
-            alu_fp_1 = id_ex_fp_store || id_ex_fp_load  || fp_alu_op == FMVWX || fp_alu_op == FCVTSW ? alu_operand1 : fp_alu_operand1;
+            alu_fp_1 = id_ex_fp_store || id_ex_fp_load  || fp_alu_op == FMVWX ? alu_operand1 : fp_alu_operand1;
             alu_fp_2 = id_ex_fp_alu_src ? big_immediate_id_ex : fp_alu_operand2;
         end
     end
+
+    logic [31:0] itf_result;
+    logic itf_result_valid;
+
+    int_to_float_ip itf_inst (
+        .s_axis_a_tdata(alu_operand1),
+        .s_axis_a_tvalid(fp_alu_op == FCVTSW),
+        .m_axis_result_tdata(itf_result),
+        .m_axis_result_tvalid(itf_result_valid)
+    );
 
     fp_alu fp_alu (
         .clk(clk),
@@ -831,7 +841,7 @@ module RISCV_PIPELINED (
         if(vec_op_id_ex) begin
             complete_alu_result = vec_ex_result;
         end else if (fp_instruction_id_ex) begin
-            complete_alu_result[0] = fp_alu_result;
+            complete_alu_result[0] = fp_alu_op == FCVTSW ? itf_result : fp_alu_result;
             for(int i = 1; i < vector_length; i++) begin
                 complete_alu_result[i] = 32'b0;
             end
@@ -931,29 +941,10 @@ module RISCV_PIPELINED (
         .ex_mem_funct3(ex_mem_funct3)
     );
 
-    logic ex_mem_mac_result_valid;
-    logic forward_mem_fp;
-
-    fp_mem_forward fp_mem_u (
-        .ex_mem_mac_dest(ex_mem_fp_mac_2), // c
-        .mem_wb_fp_mac(mem_wb_fmat_type == FMADD),
-        .mem_wb_rd(mem_wb_reg_dest),
-        .forward_mem_fp(forward_mem_fp)
-    );
-
-    logic [31:0] mac_c_operand; 
-
-    always_comb begin
-        unique case (forward_mem_fp)
-            1'b0: mac_c_operand = ex_mem_fp_mac_2;
-            1'b1: mac_c_operand = mem_wb_write_data[0];
-        endcase
-    end
-
     //MAC adder operations 
     floating_point_add_sub mac_adder (
         .s_axis_a_tdata(ex_mem_fp_mac_1),
-        .s_axis_b_tdata(mac_c_operand),
+        .s_axis_b_tdata(ex_mem_fp_mac_2),
         .s_axis_a_tvalid(ex_mem_fmat_type == FMADD),
         .s_axis_b_tvalid(ex_mem_fmat_type == FMADD),
 

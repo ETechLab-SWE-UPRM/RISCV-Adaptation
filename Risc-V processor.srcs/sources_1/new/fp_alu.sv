@@ -34,13 +34,6 @@ module fp_alu (
         .m_axis_result_tvalid(comp_result_valid)
     );
 
-    int_to_float_ip itf_inst (
-        .s_axis_a_tdata(a),
-        .s_axis_a_tvalid(itf_a_valid),
-        .m_axis_result_tdata(itf_result),
-        .m_axis_result_tvalid(itf_result_valid)
-    );
-
     always_comb begin
         comp_a_valid = 1'b0;
         comp_b_valid = 1'b0;
@@ -79,10 +72,6 @@ module fp_alu (
                 result = a;
             end
 
-            FCVTSW : begin
-                itf_a_valid = 1'b1;
-            end
-
             FMEM : result = $signed(a) + $signed(b); 
             
         endcase
@@ -92,9 +81,5 @@ module fp_alu (
             result_valid = 1'b1;
         end
 
-        if (itf_result_valid) begin
-            result = itf_result;
-            result_valid = 1'b1;
-        end
     end
 endmodule
