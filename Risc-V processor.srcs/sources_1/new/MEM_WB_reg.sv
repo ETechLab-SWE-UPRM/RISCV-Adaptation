@@ -1,4 +1,4 @@
-
+import fp_fma_pkg::*;
 
 module MEM_WB_reg #(
     parameter vec_length = 2
@@ -6,6 +6,9 @@ module MEM_WB_reg #(
     input logic clk,
     input logic reset,
     input logic ex_mem_vec_op,
+    input logic ex_mem_fp_instruction,
+    input fp_fma_t ex_mem_fmat_type,
+    input logic ex_mem_fp_reg_write,
     input logic ex_mem_vec_reg_write,
     input logic ex_mem_memtoreg,
     input logic ex_mem_regwrite,
@@ -13,10 +16,15 @@ module MEM_WB_reg #(
     input logic ex_mem_jalr,
     input logic [31:0] ex_mem_alu_result [0:vec_length-1],
     input logic [31:0] memory_data_read [0:vec_length-1],
+    input logic [4:0] ex_mem_rs1,
+    input logic [4:0] ex_mem_rs2,
     input logic [4:0] ex_mem_reg_dest,
     input logic [31:0] ex_mem_link_address_reg,
 
     output logic mem_wb_vec_op,
+    output logic mem_wb_fp_instruction,
+    output fp_fma_t mem_wb_fmat_type,
+    output logic mem_wb_fp_reg_write,
     output logic mem_wb_vec_reg_write,
     output logic mem_wb_memtoreg,
     output logic mem_wb_regwrite,
@@ -24,14 +32,19 @@ module MEM_WB_reg #(
     output logic mem_wb_jalr,
     output logic [31:0] mem_wb_alu_result [0:vec_length-1],
     output logic [31:0] mem_wb_memory_data_read [0:vec_length-1],
+    output logic [4:0] mem_wb_rs1,
+    output logic [4:0] mem_wb_rs2,
     output logic [4:0] mem_wb_reg_dest,
     output logic [31:0] mem_wb_link_address,
     output logic [31:0] mem_wb_write_data [0:vec_length-1]
 );
 
-    always_ff @(posedge clk or posedge reset) begin
+    always_ff @(posedge clk) begin
         if (reset) begin
             mem_wb_vec_op <= 1'b0;
+            mem_wb_fp_instruction <= 1'b0;
+            mem_wb_fmat_type <= FM_NONE;
+            mem_wb_fp_reg_write <= 1'b0;
             mem_wb_vec_reg_write <= 1'b0;
             mem_wb_memtoreg <= 1'b0;
             mem_wb_regwrite <= 1'b0;
@@ -39,11 +52,16 @@ module MEM_WB_reg #(
             mem_wb_jalr <= 1'b0;
             mem_wb_alu_result <= '{default: 32'b0};
             mem_wb_memory_data_read <= '{default: 32'b0};
+            mem_wb_rs1 <= 5'b0;
+            mem_wb_rs2 <= 5'b0;
             mem_wb_reg_dest <= 5'b0;
             mem_wb_link_address <= 32'b0;
 
         end else begin
             mem_wb_vec_op <= ex_mem_vec_op;
+            mem_wb_fp_instruction <= ex_mem_fp_instruction;
+            mem_wb_fmat_type <= ex_mem_fmat_type;
+            mem_wb_fp_reg_write <= ex_mem_fp_reg_write;
             mem_wb_vec_reg_write <= ex_mem_vec_reg_write;
             mem_wb_memtoreg <= ex_mem_memtoreg;
             mem_wb_regwrite <= ex_mem_regwrite;
@@ -51,11 +69,12 @@ module MEM_WB_reg #(
             mem_wb_jalr <= ex_mem_jalr;
             mem_wb_alu_result <= ex_mem_alu_result;
             mem_wb_memory_data_read <= memory_data_read;
+            mem_wb_rs1 <= ex_mem_rs1;
+            mem_wb_rs2 <= ex_mem_rs2;
             mem_wb_reg_dest <= ex_mem_reg_dest;
             mem_wb_link_address <= ex_mem_link_address_reg; 
         end
     end
-
 
     always_comb begin 
         if (mem_wb_jal || mem_wb_jalr) begin

@@ -16,5 +16,14 @@ vhdl dsp_macro_v1_0_7  \
 vhdl xil_defaultlib  \
 "../../../Risc-V processor.gen/sources_1/ip/MAC_dsp/sim/MAC_dsp.vhd" \
 
+vhdl axi_utils_v2_0_10  \
+"../../ipstatic/hdl/axi_utils_v2_0_vh_rfs.vhd" \
+
+vhdl mult_gen_v12_0_22  \
+"../../ipstatic/hdl/mult_gen_v12_0_vh_rfs.vhd" \
+
+vhdl floating_point_v7_1_19  \
+"../../ipstatic/hdl/floating_point_v7_1_rfs.vhd" \
+
 # Do not sort compile order
 nosort

@@ -28,7 +28,7 @@ module baud_rate_generator
     wire [N-1:0] next;          // next counter value
     
     // Register Logic
-    always @(posedge clk_100MHz, posedge reset)
+    always @(posedge clk_100MHz)
         if(reset)
             counter <= 0;
         else

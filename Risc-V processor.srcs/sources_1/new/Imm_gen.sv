@@ -46,6 +46,16 @@ module Immediate_generator #(
                      instruction[30:21],            // imm[10:1]
                      1'b0};                         // imm[0] = 0
 
+      // FLW
+      7'b0000111:
+        immediate = {{(XLEN-32){instruction[31]}},
+                     instruction[31:20]};
+
+      // FSW
+      7'b0100111:
+        immediate = {{(XLEN-32){instruction[31]}},
+                     instruction[31:25], instruction[11:7]};
+
       default:
         immediate = '0;
     endcase
