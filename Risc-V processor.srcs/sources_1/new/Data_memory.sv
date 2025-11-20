@@ -26,16 +26,19 @@ module Data_memory #(
     logic in_range [0:vec_length-1];
 
     logic mem_read_internal;
+    logic single_load_internal;
+    logic fmac_internal;
     logic in_range_internal [0:vec_length-1];
     logic [2:0] funct3_internal;
 
     always_ff @(posedge clk) begin
         mem_read_internal <= mem_read;
+        single_load_internal <= single_load;
+        fmac_internal <= fmac;
         funct3_internal <= funct3;
         for (int i = 0; i < vec_length; i++) begin
             in_range_internal[i] <= in_range[i];
         end
-    
     end
     
     assign byte_address[0] = address[0] - data_base;
@@ -149,11 +152,11 @@ module Data_memory #(
                     default:
                         read_data[i] = 32'd0;
                 endcase
-            end else if (fmac && in_range[i]) begin
+            end else if (fmac_internal && in_range_internal[i]) begin
                 read_data[i] = bram_data[i]; // LW
             end
 
-            if(mem_read && single_load) begin
+            if(mem_read_internal && single_load_internal) begin
                 read_data[i] = bram_data[0]; // For single load, all read_data[i] should be the first address
             end
 

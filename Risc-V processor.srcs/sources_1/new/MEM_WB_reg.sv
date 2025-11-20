@@ -51,7 +51,6 @@ module MEM_WB_reg #(
             mem_wb_jal <= 1'b0;
             mem_wb_jalr <= 1'b0;
             mem_wb_alu_result <= '{default: 32'b0};
-            mem_wb_memory_data_read <= '{default: 32'b0};
             mem_wb_rs1 <= 5'b0;
             mem_wb_rs2 <= 5'b0;
             mem_wb_reg_dest <= 5'b0;
@@ -68,12 +67,15 @@ module MEM_WB_reg #(
             mem_wb_jal <= ex_mem_jal;
             mem_wb_jalr <= ex_mem_jalr;
             mem_wb_alu_result <= ex_mem_alu_result;
-            mem_wb_memory_data_read <= memory_data_read;
             mem_wb_rs1 <= ex_mem_rs1;
             mem_wb_rs2 <= ex_mem_rs2;
             mem_wb_reg_dest <= ex_mem_reg_dest;
             mem_wb_link_address <= ex_mem_link_address_reg; 
         end
+    end
+
+    always_comb begin
+        mem_wb_memory_data_read = memory_data_read;
     end
 
     always_comb begin 
