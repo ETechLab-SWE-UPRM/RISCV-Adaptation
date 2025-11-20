@@ -24,6 +24,19 @@ module Data_memory #(
     logic vec_op_enable [0:vec_length-1];
     logic [31:0] byte_address [0: vec_length-1];
     logic in_range [0:vec_length-1];
+
+    logic mem_read_internal;
+    logic in_range_internal [0:vec_length-1];
+    logic [2:0] funct3_internal;
+
+    always_ff @(posedge clk) begin
+        mem_read_internal <= mem_read;
+        funct3_internal <= funct3;
+        for (int i = 0; i < vec_length; i++) begin
+            in_range_internal[i] <= in_range[i];
+        end
+    
+    end
     
     assign byte_address[0] = address[0] - data_base;
     assign vec_op_enable[0] = 1'b1;
@@ -99,8 +112,8 @@ module Data_memory #(
         for (int i = 0; i < vec_length; i++) begin
             read_data[i] = 32'h0;
 
-            if ((mem_read && in_range[i])) begin
-                unique case (funct3)
+            if ((mem_read_internal && in_range_internal[i])) begin
+                unique case (funct3_internal)
                     3'b000: // LB (sign-extend)
                         case (address[i][1:0])
                             2'd0: read_data[i] = {{24{bram_data[i][7]}},  bram_data[i][7:0]};

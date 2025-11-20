@@ -13,22 +13,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,656.921 ns"></ZoomEndTime>
-      <Cursor1Time time="7.250 ns"></Cursor1Time>
+      <ZoomStartTime time="519,250.117 ns"></ZoomStartTime>
+      <ZoomEndTime time="519,610.918 ns"></ZoomEndTime>
+      <Cursor1Time time="519,324.750 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="217"></NameColumnWidth>
+      <NameColumnWidth column_width="211"></NameColumnWidth>
       <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="43" />
-   <wave_markers>
-      <marker time="92395000" label="" />
-      <marker time="135016750" label="" />
-      <marker time="150169250" label="" />
-      <marker time="329650250" label="" />
-      <marker time="329577750" label="" />
-   </wave_markers>
+   <WVObjectSize size="39" />
    <wvobject fp_name="/PipelineTester/processor/data_mem/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -186,21 +179,5 @@
    <wvobject fp_name="/PipelineTester/processor/weights_counter" type="array">
       <obj_property name="ElementShortName">weights_counter[31:0]</obj_property>
       <obj_property name="ObjectShortName">weights_counter[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_mem_u/ex_mem_mac_dest" type="array">
-      <obj_property name="ElementShortName">ex_mem_mac_dest[4:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_mac_dest[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_mem_u/mem_wb_fp_mac" type="logic">
-      <obj_property name="ElementShortName">mem_wb_fp_mac</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_fp_mac</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_mem_u/mem_wb_rd" type="array">
-      <obj_property name="ElementShortName">mem_wb_rd[4:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_rd[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_mem_u/forward_mem_fp" type="logic">
-      <obj_property name="ElementShortName">forward_mem_fp</obj_property>
-      <obj_property name="ObjectShortName">forward_mem_fp</obj_property>
    </wvobject>
 </wave_config>

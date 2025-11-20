@@ -69,9 +69,6 @@ module RISCV_PIPELINED (
     import fp_fma_pkg::*;
     import fp_alu_pkg::*;
 
-    // Phase Shifted Clock for neg edge operations
-    logic neg_clk, locked;
-
     // Keep this number even, because data memory is organized in pairs of words
     localparam vector_length = 2;
 
@@ -201,14 +198,14 @@ module RISCV_PIPELINED (
     ProgramCounter pc_i (
         .clk(clk),
         .reset(reset),
-        .pc_write(pc_write && fp_pc_write && locked),
+        .pc_write(pc_write && fp_pc_write),
         .next_pc(next_pc), 
         .pc(pc)
     );
 
     InstructionMemory im (
         .clk(clk),
-        .stall(stall || fp_stall || !locked),
+        .stall(stall || fp_stall),
         .instruction_address(pc), 
         .instruction(instruction)
     );
@@ -232,7 +229,7 @@ module RISCV_PIPELINED (
         .clk(clk), 
         .reset(reset), 
         .flush(ex_taken), 
-        .if_id_write(if_id_write && fp_if_id_write && locked),
+        .if_id_write(if_id_write && fp_if_id_write),
         .pc(fetch_pc), 
         .instruction(instruction), 
         .pc_if_id(pc_if_id), 
@@ -972,13 +969,6 @@ module RISCV_PIPELINED (
             end
         end
     end
-
-    clk_wiz_0 LeWizard (
-        .clk_in1(clk),
-        .reset(reset),
-        .locked(locked),
-        .neg_clk(neg_clk)     
-    );
 
     logic data_length_store, weights_length_store, output_length_store;
     assign data_length_store = (memory_address[0] == data_length_addr) && ex_mem_memwrite;
