@@ -1,0 +1,1 @@
+/usr/bin/cc  -O3 -march=native -Wall -Wextra CMakeFiles/floating_point_convolution.dir/floating_point_convolution.c.o -o floating_point_convolution 

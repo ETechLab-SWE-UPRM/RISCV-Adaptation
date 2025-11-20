@@ -1001,7 +1001,7 @@ module RISCV_PIPELINED (
         .data_addresses(data_word_space),
         .UART_base(data_base + data_word_space)
     ) data_mem(
-        .clk(neg_clk), // phase shifted clock for memory
+        .clk(clk), // phase shifted clock for memory
         .single_load(ex_mem_single_load),
         .fmac(ex_mem_fmat_type == FMADD),
         .address(memory_address),
