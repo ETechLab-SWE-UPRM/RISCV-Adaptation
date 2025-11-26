@@ -53,6 +53,7 @@
 ------------- Begin Cut here for COMPONENT Declaration ------ COMP_TAG
 COMPONENT floating_point_add_sub
   PORT (
+    aclk : IN STD_LOGIC;
     s_axis_a_tvalid : IN STD_LOGIC;
     s_axis_a_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
     s_axis_b_tvalid : IN STD_LOGIC;
@@ -69,6 +70,7 @@ END COMPONENT;
 ------------- Begin Cut here for INSTANTIATION Template ----- INST_TAG
 your_instance_name : floating_point_add_sub
   PORT MAP (
+    aclk => aclk,
     s_axis_a_tvalid => s_axis_a_tvalid,
     s_axis_a_tdata => s_axis_a_tdata,
     s_axis_b_tvalid => s_axis_b_tvalid,

@@ -74,8 +74,8 @@ module RISCV_PIPELINED (
 
     // Memory Mapping
     localparam data_base = 32'h1000_0000;
-    localparam data_word_space = 8360 * 4; // 33,440 bytes
-    localparam uart_status = data_base + data_word_space + 4; // 8361 in memory
+    localparam data_word_space = 8360 * 4; // 33,440 bytes, change this if data size changes
+    localparam uart_status = data_base + data_word_space + 4; // Max + 1 in memory
     localparam uart_receive = uart_status + 4;
     localparam uart_send = uart_receive + 4;
     localparam data_length_addr = uart_send + 4;
@@ -86,10 +86,15 @@ module RISCV_PIPELINED (
     localparam data_bits = 8;
     localparam stop_tick = 16; // Stop bit / Oversampling ticks
     localparam fifo_exp = 2; // 2^2 = 4 entries in the FIFO's
+    localparam baud_rate = 115200;
+    localparam br_limit = 54; // 100 MHz / (115200 * 16)
+    localparam br_bits = 6; // ceil(log2(br_limit))
 
     logic [data_bits-1:0] uart_write_data;
     logic [data_bits-1:0] uart_read_data;
     logic uart_rx_full, uart_rx_empty;
+
+    localparam fp_adder_delay = 2; 
 
     // IF/ID pipeline registers
     logic [31:0] instruction_if_id;
@@ -114,6 +119,7 @@ module RISCV_PIPELINED (
     // Hazard detection unit to handle stalls
     logic stall, pc_write, if_id_write;
     logic fp_stall, fp_pc_write, fp_if_id_write;
+    logic mac_stall;
     
     // ID/EX pipeline registers
     logic [31:0] pc_id_ex, instruction_id_ex;
@@ -205,7 +211,7 @@ module RISCV_PIPELINED (
 
     InstructionMemory im (
         .clk(clk),
-        .stall(stall || fp_stall),
+        .stall(stall || fp_stall || mac_stall),
         .instruction_address(pc), 
         .instruction(instruction)
     );
@@ -366,9 +372,13 @@ module RISCV_PIPELINED (
         .if_id_write(if_id_write)
     );
 
-    fp_hazard_detection fp_hd_u (
+    fp_hazard_detection #(
+        .fp_adder_delay(fp_adder_delay)
+    ) fp_hd_u (
         .clk(clk),
         .reset(reset),
+        .ex_mem_fmadd(ex_mem_fmat_type == FMADD),
+        .fp_result_valid(ex_mem_mac_result_valid),
         .id_ex_fmadd(id_ex_fmat_type == FMADD),
         .id_ex_adder(fp_alu_op == FADD || fp_alu_op == FSUB),
         .if_id_rs1(reg1),
@@ -379,6 +389,7 @@ module RISCV_PIPELINED (
         .fp_fmadd_result_valid(fp_mac_result_valid),
         .fp_adder_result_valid(fp_alu_result_valid),
 
+        .mac_stall(mac_stall),
         .stall(fp_stall),
         .pc_write(fp_pc_write),
         .if_id_write(fp_if_id_write)
@@ -392,6 +403,7 @@ module RISCV_PIPELINED (
         .clk(clk), 
         .reset(reset), 
         .flush(id_ex_flush),
+        .stall(mac_stall),
         .vec_op(vec_op),
         .fp_instruction(fp_instruction),
         .fp_reg_write(fp_reg_write),
@@ -886,7 +898,8 @@ module RISCV_PIPELINED (
         .vec_length(vector_length)
     ) ex_mem_reg (
         .clk(clk), 
-        .reset(reset), 
+        .reset(reset),
+        .stall(mac_stall),
         .vec_op(vec_op_id_ex),
         .id_ex_fp_instruction(fp_instruction_id_ex),
         .id_ex_fp_reg_write(fp_reg_write_id_ex),
@@ -940,6 +953,7 @@ module RISCV_PIPELINED (
 
     //MAC adder operations 
     floating_point_add_sub mac_adder (
+        .aclk(clk),
         .s_axis_a_tdata(ex_mem_fp_mac_1),
         .s_axis_b_tdata(ex_mem_fp_mac_2),
         .s_axis_a_tvalid(ex_mem_fmat_type == FMADD),
@@ -1020,6 +1034,8 @@ module RISCV_PIPELINED (
     uart_top #(
         .DBITS(data_bits),
         .SB_TICK(stop_tick),
+        .BR_LIMIT(br_limit),
+        .BR_BITS(br_bits),
         .FIFO_EXP(fifo_exp)
     ) uart (
         .clk_100MHz(clk),
@@ -1034,6 +1050,9 @@ module RISCV_PIPELINED (
         .tx_done(tx_done_tick),
         .read_data(uart_read_data)
     );
+
+    logic receive_send;
+    assign receive_send = (memory_address[0] == uart_send) && ex_mem_memwrite;
 
     always_ff @(posedge clk) begin : uart_write_control
         if(reset) begin
@@ -1060,7 +1079,7 @@ module RISCV_PIPELINED (
             send_byte <= 1'b0;
 
             // TX
-            if((memory_address[0] == uart_send) && ex_mem_memwrite && data_word_complete && !word_in_progress) begin
+            if(receive_send && !word_in_progress) begin
                 uart_send_data <= write_data[0];
                 ready_to_send <= 1'b1;
                 data_send <= 2'd1;

@@ -81,10 +81,12 @@ inner_loop:
 inner_loop_finished:
     # Store the result
     fsw f2, 0(a2)
-    fsw f2, %lo(uart_send)(s1) # send output to uart
     addi a2, a2, 4 # output address increment
     addi t1, t1, 1
     blt t1, a4, outer_loop
 
+    li s2, 0x4F4B0D0A # "OK\r\n"
+
 forever:
+    sw s2, %lo(uart_send)(s1)
     jal forever

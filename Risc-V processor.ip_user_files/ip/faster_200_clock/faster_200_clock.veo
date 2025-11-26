@@ -1,10 +1,10 @@
-// (c) Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
-// (c) Copyright 2022-2025 Advanced Micro Devices, Inc. All rights reserved.
-// 
+
+// (c) Copyright 2017-2018, 2023 Advanced Micro Devices, Inc. All rights reserved.
+//
 // This file contains confidential and proprietary information
 // of AMD and is protected under U.S. and international copyright
 // and other intellectual property laws.
-// 
+//
 // DISCLAIMER
 // This disclaimer is not a license and does not grant any
 // rights to the materials distributed herewith. Except as
@@ -26,7 +26,7 @@
 // by a third party) even if such damage or loss was
 // reasonably foreseeable or AMD had been advised of the
 // possibility of the same.
-// 
+//
 // CRITICAL APPLICATIONS
 // AMD products are not designed or intended to be fail-
 // safe, or for use in any application requiring fail-safe
@@ -40,32 +40,40 @@
 // liability of any use of AMD products in Critical
 // Applications, subject only to applicable laws and
 // regulations governing limitations on product liability.
-// 
+//
 // THIS COPYRIGHT NOTICE AND DISCLAIMER MUST BE RETAINED AS
 // PART OF THIS FILE AT ALL TIMES.
-// 
-// DO NOT MODIFY THIS FILE.
-
-// IP VLNV: xilinx.com:ip:floating_point:7.1
-// IP Revision: 19
+//----------------------------------------------------------------------------
+// User entered comments
+//----------------------------------------------------------------------------
+// None
+//
+//----------------------------------------------------------------------------
+//  Output     Output      Phase    Duty Cycle   Pk-to-Pk     Phase
+//   Clock     Freq (MHz)  (degrees)    (%)     Jitter (ps)  Error (ps)
+//----------------------------------------------------------------------------
+// clk_out1__200.00000______0.000______50.0______114.829_____98.575
+//
+//----------------------------------------------------------------------------
+// Input Clock   Freq (MHz)    Input Jitter (UI)
+//----------------------------------------------------------------------------
+// __primary_________100.000____________0.010
 
 // The following must be inserted into your Verilog file for this
 // core to be instantiated. Change the instance name and port connections
 // (in parentheses) to your own signal names.
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
-floating_point_add_sub your_instance_name (
-  .aclk(aclk),                                  // input wire aclk
-  .s_axis_a_tvalid(s_axis_a_tvalid),            // input wire s_axis_a_tvalid
-  .s_axis_a_tdata(s_axis_a_tdata),              // input wire [31 : 0] s_axis_a_tdata
-  .s_axis_b_tvalid(s_axis_b_tvalid),            // input wire s_axis_b_tvalid
-  .s_axis_b_tdata(s_axis_b_tdata),              // input wire [31 : 0] s_axis_b_tdata
-  .m_axis_result_tvalid(m_axis_result_tvalid),  // output wire m_axis_result_tvalid
-  .m_axis_result_tdata(m_axis_result_tdata)    // output wire [31 : 0] m_axis_result_tdata
+
+  faster_200_clock instance_name
+   (
+    // Clock out ports
+    .clk_out1(clk_out1),     // output clk_out1
+    // Status and control signals
+    .reset(reset), // input reset
+    .locked(locked),       // output locked
+   // Clock in ports
+    .clk_in1(clk_in1)      // input clk_in1
 );
+
 // INST_TAG_END ------ End INSTANTIATION Template ---------
-
-// You must compile the wrapper file floating_point_add_sub.v when simulating
-// the core, floating_point_add_sub. When compiling the wrapper file, be sure to
-// reference the Verilog simulation library.
-

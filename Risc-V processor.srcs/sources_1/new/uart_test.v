@@ -38,8 +38,13 @@ module uart_test(
     (* MARK_DEBUG = "TRUE" *) reg [31:0] uart_data;
 
     // Complete UART Core
-    uart_top UART_UNIT
-        (
+    uart_top #(
+        .DBITS(8),          // number of data bits in a word
+        .SB_TICK(16),       // number of stop bit / oversampling ticks
+        .BR_LIMIT(54),     // baud rate generator counter limit
+        .BR_BITS(6),       // number of baud rate generator counter bits
+        .FIFO_EXP(2) 
+    ) UART_UNIT (
             .clk_100MHz(clk),
             .reset(reset),
             .read_uart(write_counter),

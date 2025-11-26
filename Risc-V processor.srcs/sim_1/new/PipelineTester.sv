@@ -21,7 +21,7 @@ module PipelineTester;
         .led(led)
     );
 
-    always #7.25 clk = ~clk; // Clock period of 14.5 time units
+    always #5 clk = ~clk; // Clock period of 10 time units
     
     initial begin
     // Initialize
@@ -29,7 +29,7 @@ module PipelineTester;
     rst = 1'b1;
     #100;
     rst = 1'b0;
-    #600000;
+    #800000;
 
     $display("Dumping data memory to data_tester_dump.hex");
         $writememh(

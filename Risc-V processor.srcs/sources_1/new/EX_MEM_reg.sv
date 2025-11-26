@@ -5,6 +5,7 @@ module EX_MEM_reg #(
 ) (
     input logic clk,
     input logic reset,
+    input logic stall,
     input logic vec_op, 
     input logic id_ex_fp_instruction,
     input logic id_ex_fp_reg_write,
@@ -84,7 +85,7 @@ module EX_MEM_reg #(
             ex_mem_link_address_reg <= 32'b0;
             ex_mem_funct3 <= 3'b0; 
 
-        end else begin
+        end else if (!stall) begin
             ex_mem_vec_op <= vec_op; 
             ex_mem_fp_instruction <= id_ex_fp_instruction;
             ex_mem_fp_reg_write <= id_ex_fp_reg_write;

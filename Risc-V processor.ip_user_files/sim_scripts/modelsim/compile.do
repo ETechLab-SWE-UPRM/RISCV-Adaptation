@@ -50,8 +50,6 @@ vlog -work blk_mem_gen_v8_4_9  -incr -mfcu  "+incdir+../../ipstatic" \
 
 vlog -work xil_defaultlib  -incr -mfcu  "+incdir+../../ipstatic" \
 "../../../Risc-V processor.gen/sources_1/ip/blk_mem_gen_0_1/sim/blk_mem_gen_0.v" \
-"../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0/clk_wiz_0_clk_wiz.v" \
-"../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0/clk_wiz_0.v" \
 
 vcom -work axi_utils_v2_0_10  -93  \
 "../../ipstatic/hdl/axi_utils_v2_0_vh_rfs.vhd" \
@@ -71,6 +69,8 @@ vlog -work xil_defaultlib  -incr -mfcu  "+incdir+../../ipstatic" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_branching/sim/floating_point_branching.v" \
 "../../../Risc-V processor.gen/sources_1/ip/int_to_float_ip/sim/int_to_float_ip.v" \
 "../../../Risc-V processor.gen/sources_1/ip/Instruction_Memory/sim/Instruction_Memory.v" \
+"../../../Risc-V processor.gen/sources_1/ip/faster_200_clock/faster_200_clock_clk_wiz.v" \
+"../../../Risc-V processor.gen/sources_1/ip/faster_200_clock/faster_200_clock.v" \
 "../../../Risc-V processor.srcs/sources_1/new/baud_rate_generator.v" \
 "../../../Risc-V processor.srcs/sources_1/new/fifo.v" \
 "../../../Risc-V processor.srcs/sources_1/new/uart_receiver.v" \

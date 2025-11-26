@@ -6,6 +6,7 @@ module ID_EX_reg #(
     input logic clk, 
     input logic reset, 
     input logic flush,
+    input logic stall,
     input logic vec_op,
     input logic fp_instruction,
     input logic fp_reg_write,
@@ -153,7 +154,7 @@ module ID_EX_reg #(
             funct3_id_ex <= 3'b0;
             funct7_id_ex <= 7'b0;
 
-        end else begin
+        end else if (!stall) begin
 
             pc_id_ex <= pc_if_id; 
             instruction_id_ex <= instruction_if_id;
