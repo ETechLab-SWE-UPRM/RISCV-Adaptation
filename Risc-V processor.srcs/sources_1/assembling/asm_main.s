@@ -86,7 +86,7 @@ inner_loop_finished:
     blt t1, a4, outer_loop
 
     li s2, 0x4F4B0D0A # "OK\r\n"
+    sw s2, %lo(uart_send)(s1)
 
 forever:
-    sw s2, %lo(uart_send)(s1)
     jal forever

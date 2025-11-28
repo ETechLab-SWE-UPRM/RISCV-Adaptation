@@ -701,9 +701,6 @@ module RISCV_PIPELINED (
     logic [43:0] vector_mac_result [0:vector_length-1];
     logic [31:0] vector_mac_input_c [0:vector_length-1], vec_ex_result [0:vector_length-1];
 
-    logic [31:0] fp_mac_input_a;
-    logic [31:0] fp_mac_input_b;
-    logic [31:0] fp_mac_input_c;
     logic [31:0] fp_mac_mul_result;
 
     // Prepare inputs if MAC
@@ -733,18 +730,6 @@ module RISCV_PIPELINED (
                 vector_mac_input_c[i] = 32'b0;
             end
         end
-    end
-
-    always_comb begin
-        if(fp_instruction_id_ex && id_ex_fmat_type == FMADD) begin
-            fp_mac_input_a = fp_alu_operand1;
-            fp_mac_input_b = fp_alu_operand2;
-            fp_mac_input_c = fp_alu_operand3;
-        end else begin
-            fp_mac_input_a = 25'b0;
-            fp_mac_input_b = 18'b0;
-            fp_mac_input_c = 32'b0;
-        end 
     end
 
     genvar mac_num;
@@ -819,8 +804,8 @@ module RISCV_PIPELINED (
 
     // MAC multiply operations
     floating_point_multiplier mac_mult (
-        .s_axis_a_tdata(fp_mac_input_a),
-        .s_axis_b_tdata(fp_mac_input_b),
+        .s_axis_a_tdata(fp_alu_operand1),
+        .s_axis_b_tdata(fp_alu_operand2),
         .s_axis_a_tvalid(id_ex_fmat_type == FMADD),
         .s_axis_b_tvalid(id_ex_fmat_type == FMADD),
 
@@ -915,7 +900,7 @@ module RISCV_PIPELINED (
         .conv_data_read_id_ex(conv_data_plus4),
         .weights_data_read_id_ex(weights_data_plus4),
         .id_ex_fp_mac_1(fp_mac_mul_result),
-        .id_ex_fp_mac_2(fp_mac_input_c),
+        .id_ex_fp_mac_2(fp_alu_operand3),
         .alu_result(complete_alu_result),
         .data_read2_id_ex(data_to_memory), 
         .vec_data_read2_id_ex(va_operand3),
