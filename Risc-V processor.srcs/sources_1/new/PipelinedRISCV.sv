@@ -1017,11 +1017,11 @@ module RISCV_PIPELINED (
     logic uart_write_to_mem, send_byte, ready_to_send;
 
     uart_top #(
-        .DBITS(data_bits),
-        .SB_TICK(stop_tick),
-        .BR_LIMIT(br_limit),
-        .BR_BITS(br_bits),
-        .FIFO_EXP(fifo_exp)
+        .DBITS(8),
+        .SB_TICK(16),
+        .BR_LIMIT(54),
+        .BR_BITS(6),
+        .FIFO_EXP(2)
     ) uart (
         .clk_100MHz(clk),
         .reset(reset),
