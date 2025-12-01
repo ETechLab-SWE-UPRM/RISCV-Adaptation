@@ -3,191 +3,157 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="PipelineTester_behav.wdb" id="1">
+      <db_ref path="MicroBlaze_test_behav.wdb" id="1">
          <top_modules>
-            <top_module name="PipelineTester" />
-            <top_module name="fp_alu_pkg" />
-            <top_module name="fp_fma_pkg" />
+            <top_module name="MicroBlaze_test" />
             <top_module name="glbl" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="102,763.634 ns"></ZoomStartTime>
-      <ZoomEndTime time="102,866.935 ns"></ZoomEndTime>
-      <Cursor1Time time="102,805.000 ns"></Cursor1Time>
+      <ZoomStartTime time="999,613.301 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,000,101.340 ns"></ZoomEndTime>
+      <Cursor1Time time="1,000,020.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="133"></NameColumnWidth>
+      <NameColumnWidth column_width="121"></NameColumnWidth>
       <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="40" />
+   <WVObjectSize size="33" />
    <wave_markers>
       <marker time="102835100" label="" />
       <marker time="102985000" label="" />
    </wave_markers>
-   <wvobject fp_name="/PipelineTester/processor/clk" type="logic">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">clk</obj_property>
-      <obj_property name="ObjectShortName">clk</obj_property>
-      <obj_property name="label">100MHz</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Clk" type="logic">
+      <obj_property name="ElementShortName">Clk</obj_property>
+      <obj_property name="ObjectShortName">Clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_mult/s_axis_a_tvalid" type="logic">
-      <obj_property name="ElementShortName">s_axis_a_tvalid</obj_property>
-      <obj_property name="ObjectShortName">s_axis_a_tvalid</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Reset" type="logic">
+      <obj_property name="ElementShortName">Reset</obj_property>
+      <obj_property name="ObjectShortName">Reset</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_mult/s_axis_a_tdata" type="array">
-      <obj_property name="ElementShortName">s_axis_a_tdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">s_axis_a_tdata[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Interrupt" type="logic">
+      <obj_property name="ElementShortName">Interrupt</obj_property>
+      <obj_property name="ObjectShortName">Interrupt</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_mult/s_axis_b_tvalid" type="logic">
-      <obj_property name="ElementShortName">s_axis_b_tvalid</obj_property>
-      <obj_property name="ObjectShortName">s_axis_b_tvalid</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Interrupt_Address" type="array">
+      <obj_property name="ElementShortName">Interrupt_Address[0:31]</obj_property>
+      <obj_property name="ObjectShortName">Interrupt_Address[0:31]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_mult/s_axis_b_tdata" type="array">
-      <obj_property name="ElementShortName">s_axis_b_tdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">s_axis_b_tdata[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Interrupt_Ack" type="array">
+      <obj_property name="ElementShortName">Interrupt_Ack[0:1]</obj_property>
+      <obj_property name="ObjectShortName">Interrupt_Ack[0:1]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_mult/m_axis_result_tvalid" type="logic">
-      <obj_property name="ElementShortName">m_axis_result_tvalid</obj_property>
-      <obj_property name="ObjectShortName">m_axis_result_tvalid</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Instr_Addr" type="array">
+      <obj_property name="ElementShortName">Instr_Addr[0:31]</obj_property>
+      <obj_property name="ObjectShortName">Instr_Addr[0:31]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_mult/m_axis_result_tdata" type="array">
-      <obj_property name="ElementShortName">m_axis_result_tdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">m_axis_result_tdata[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Instr" type="array">
+      <obj_property name="ElementShortName">Instr[0:31]</obj_property>
+      <obj_property name="ObjectShortName">Instr[0:31]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/aclk" type="logic">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">aclk</obj_property>
-      <obj_property name="ObjectShortName">aclk</obj_property>
-      <obj_property name="label">200MHz</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/IFetch" type="logic">
+      <obj_property name="ElementShortName">IFetch</obj_property>
+      <obj_property name="ObjectShortName">IFetch</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_a_tvalid" type="logic">
-      <obj_property name="ElementShortName">s_axis_a_tvalid</obj_property>
-      <obj_property name="ObjectShortName">s_axis_a_tvalid</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/I_AS" type="logic">
+      <obj_property name="ElementShortName">I_AS</obj_property>
+      <obj_property name="ObjectShortName">I_AS</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_a_tdata" type="array">
-      <obj_property name="ElementShortName">s_axis_a_tdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">s_axis_a_tdata[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/IReady" type="logic">
+      <obj_property name="ElementShortName">IReady</obj_property>
+      <obj_property name="ObjectShortName">IReady</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_b_tvalid" type="logic">
-      <obj_property name="ElementShortName">s_axis_b_tvalid</obj_property>
-      <obj_property name="ObjectShortName">s_axis_b_tvalid</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/IWAIT" type="logic">
+      <obj_property name="ElementShortName">IWAIT</obj_property>
+      <obj_property name="ObjectShortName">IWAIT</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/s_axis_b_tdata" type="array">
-      <obj_property name="ElementShortName">s_axis_b_tdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">s_axis_b_tdata[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/ICE" type="logic">
+      <obj_property name="ElementShortName">ICE</obj_property>
+      <obj_property name="ObjectShortName">ICE</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/m_axis_result_tvalid" type="logic">
-      <obj_property name="ElementShortName">m_axis_result_tvalid</obj_property>
-      <obj_property name="ObjectShortName">m_axis_result_tvalid</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/IUE" type="logic">
+      <obj_property name="ElementShortName">IUE</obj_property>
+      <obj_property name="ObjectShortName">IUE</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_adder/m_axis_result_tdata" type="array">
-      <obj_property name="ElementShortName">m_axis_result_tdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">m_axis_result_tdata[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Data_Addr" type="array">
+      <obj_property name="ElementShortName">Data_Addr[0:31]</obj_property>
+      <obj_property name="ObjectShortName">Data_Addr[0:31]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_reg/pc_if_id" type="array">
-      <obj_property name="ElementShortName">pc_if_id[31:0]</obj_property>
-      <obj_property name="ObjectShortName">pc_if_id[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Data_Read" type="array">
+      <obj_property name="ElementShortName">Data_Read[0:31]</obj_property>
+      <obj_property name="ObjectShortName">Data_Read[0:31]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_reg/instruction_if_id" type="array">
-      <obj_property name="ElementShortName">instruction_if_id[31:0]</obj_property>
-      <obj_property name="ObjectShortName">instruction_if_id[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Data_Write" type="array">
+      <obj_property name="ElementShortName">Data_Write[0:31]</obj_property>
+      <obj_property name="ObjectShortName">Data_Write[0:31]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_reg/pc_id_ex" type="array">
-      <obj_property name="ElementShortName">pc_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">pc_id_ex[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/D_AS" type="logic">
+      <obj_property name="ElementShortName">D_AS</obj_property>
+      <obj_property name="ObjectShortName">D_AS</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_reg/instruction_id_ex" type="array">
-      <obj_property name="ElementShortName">instruction_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">instruction_id_ex[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Read_Strobe" type="logic">
+      <obj_property name="ElementShortName">Read_Strobe</obj_property>
+      <obj_property name="ObjectShortName">Read_Strobe</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/im/clk" type="logic">
-      <obj_property name="ElementShortName">clk</obj_property>
-      <obj_property name="ObjectShortName">clk</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Write_Strobe" type="logic">
+      <obj_property name="ElementShortName">Write_Strobe</obj_property>
+      <obj_property name="ObjectShortName">Write_Strobe</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/im/stall" type="logic">
-      <obj_property name="ElementShortName">stall</obj_property>
-      <obj_property name="ObjectShortName">stall</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/DReady" type="logic">
+      <obj_property name="ElementShortName">DReady</obj_property>
+      <obj_property name="ObjectShortName">DReady</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/im/instruction_address" type="array">
-      <obj_property name="ElementShortName">instruction_address[31:0]</obj_property>
-      <obj_property name="ObjectShortName">instruction_address[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/DWait" type="logic">
+      <obj_property name="ElementShortName">DWait</obj_property>
+      <obj_property name="ObjectShortName">DWait</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/im/instruction" type="array">
-      <obj_property name="ElementShortName">instruction[31:0]</obj_property>
-      <obj_property name="ObjectShortName">instruction[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/DCE" type="logic">
+      <obj_property name="ElementShortName">DCE</obj_property>
+      <obj_property name="ObjectShortName">DCE</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/im/instruction_reg" type="array">
-      <obj_property name="ElementShortName">instruction_reg[31:0]</obj_property>
-      <obj_property name="ObjectShortName">instruction_reg[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/DUE" type="logic">
+      <obj_property name="ElementShortName">DUE</obj_property>
+      <obj_property name="ObjectShortName">DUE</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/im/stall_memory" type="logic">
-      <obj_property name="ElementShortName">stall_memory</obj_property>
-      <obj_property name="ObjectShortName">stall_memory</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Byte_Enable" type="array">
+      <obj_property name="ElementShortName">Byte_Enable[0:3]</obj_property>
+      <obj_property name="ObjectShortName">Byte_Enable[0:3]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/if_id_reg/clk" type="logic">
-      <obj_property name="ElementShortName">clk</obj_property>
-      <obj_property name="ObjectShortName">clk</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_Clk" type="logic">
+      <obj_property name="ElementShortName">Dbg_Clk</obj_property>
+      <obj_property name="ObjectShortName">Dbg_Clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/if_id_reg/reset" type="logic">
-      <obj_property name="ElementShortName">reset</obj_property>
-      <obj_property name="ObjectShortName">reset</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_TDI" type="logic">
+      <obj_property name="ElementShortName">Dbg_TDI</obj_property>
+      <obj_property name="ObjectShortName">Dbg_TDI</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/if_id_reg/flush" type="logic">
-      <obj_property name="ElementShortName">flush</obj_property>
-      <obj_property name="ObjectShortName">flush</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_TDO" type="logic">
+      <obj_property name="ElementShortName">Dbg_TDO</obj_property>
+      <obj_property name="ObjectShortName">Dbg_TDO</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/if_id_reg/if_id_write" type="logic">
-      <obj_property name="ElementShortName">if_id_write</obj_property>
-      <obj_property name="ObjectShortName">if_id_write</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_Reg_En" type="array">
+      <obj_property name="ElementShortName">Dbg_Reg_En[0:7]</obj_property>
+      <obj_property name="ObjectShortName">Dbg_Reg_En[0:7]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/if_id_reg/instruction" type="array">
-      <obj_property name="ElementShortName">instruction[31:0]</obj_property>
-      <obj_property name="ObjectShortName">instruction[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_Shift" type="logic">
+      <obj_property name="ElementShortName">Dbg_Shift</obj_property>
+      <obj_property name="ObjectShortName">Dbg_Shift</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/if_id_reg/pc" type="array">
-      <obj_property name="ElementShortName">pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">pc[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_Capture" type="logic">
+      <obj_property name="ElementShortName">Dbg_Capture</obj_property>
+      <obj_property name="ObjectShortName">Dbg_Capture</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/if_id_reg/pc_if_id" type="array">
-      <obj_property name="ElementShortName">pc_if_id[31:0]</obj_property>
-      <obj_property name="ObjectShortName">pc_if_id[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_Update" type="logic">
+      <obj_property name="ElementShortName">Dbg_Update</obj_property>
+      <obj_property name="ObjectShortName">Dbg_Update</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/if_id_reg/instruction_if_id" type="array">
-      <obj_property name="ElementShortName">instruction_if_id[31:0]</obj_property>
-      <obj_property name="ObjectShortName">instruction_if_id[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Debug_Rst" type="logic">
+      <obj_property name="ElementShortName">Debug_Rst</obj_property>
+      <obj_property name="ObjectShortName">Debug_Rst</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/if_id_reg/double_flush" type="logic">
-      <obj_property name="ElementShortName">double_flush</obj_property>
-      <obj_property name="ObjectShortName">double_flush</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/pc_i/clk" type="logic">
-      <obj_property name="ElementShortName">clk</obj_property>
-      <obj_property name="ObjectShortName">clk</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/pc_i/reset" type="logic">
-      <obj_property name="ElementShortName">reset</obj_property>
-      <obj_property name="ObjectShortName">reset</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/pc_i/pc_write" type="logic">
-      <obj_property name="ElementShortName">pc_write</obj_property>
-      <obj_property name="ObjectShortName">pc_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/pc_i/next_pc" type="array">
-      <obj_property name="ElementShortName">next_pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">next_pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/pc_i/pc" type="array">
-      <obj_property name="ElementShortName">pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/next_pc" type="array">
-      <obj_property name="ElementShortName">next_pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">next_pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fetch_pc" type="array">
-      <obj_property name="ElementShortName">fetch_pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fetch_pc[31:0]</obj_property>
+   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_Disable" type="logic">
+      <obj_property name="ElementShortName">Dbg_Disable</obj_property>
+      <obj_property name="ObjectShortName">Dbg_Disable</obj_property>
    </wvobject>
 </wave_config>

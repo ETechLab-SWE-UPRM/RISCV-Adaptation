@@ -1,0 +1,26 @@
+{
+   "ActiveEmotionalView":"Default View",
+   "Default View_ScaleFactor":"1.5",
+   "Default View_TopLeft":"-199,-250",
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 7.8.0 2024-04-26 e1825d835c VDI=44 GEI=38 GUI=JA:21.0
+#  -string -flagsOSRD
+preplace port port-id_Clk -pg 1 -lvl 0 -x 0 -y 90 -defaultsOSRD
+preplace port port-id_reset -pg 1 -lvl 0 -x 0 -y 170 -defaultsOSRD
+preplace inst microblaze_riscv_0 -pg 1 -lvl 2 -x 630 -y 80 -defaultsOSRD
+preplace inst microblaze_riscv_0_local_memory -pg 1 -lvl 3 -x 990 -y 90 -defaultsOSRD
+preplace inst rst_Clk_100M -pg 1 -lvl 1 -x 190 -y 190 -defaultsOSRD
+preplace netloc microblaze_riscv_0_Clk 1 0 3 20 90 360 160 890J
+preplace netloc reset_1 1 0 1 NJ 170
+preplace netloc rst_Clk_100M_bus_struct_reset 1 1 2 N 170 900J
+preplace netloc rst_Clk_100M_mb_reset 1 1 1 370 100n
+preplace netloc microblaze_riscv_0_dlmb_1 1 2 1 N 60
+preplace netloc microblaze_riscv_0_ilmb_1 1 2 1 N 80
+levelinfo -pg 1 0 190 630 990 1080
+pagesize -pg 1 -db -bbox -sgen -80 0 1080 290
+"
+}
+{
+   "da_board_cnt":"1",
+   "da_microblaze_riscv_cnt":"1"
+}

@@ -11,6 +11,11 @@
 *.log
 *.str
 
+# Ignore generate Vitis stuff
+_ide/
+.rigel_lopper/
+.vscode/
+
 # Keep important files
 !*.xpr
 !*.wcfg

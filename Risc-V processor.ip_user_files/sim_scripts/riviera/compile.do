@@ -5,104 +5,75 @@ transcript on
 
 vlib work
 vlib riviera/xpm
-vlib riviera/xbip_dsp48_wrapper_v3_0_6
-vlib riviera/xbip_utils_v3_0_14
-vlib riviera/xbip_pipe_v3_0_10
-vlib riviera/dsp_macro_v1_0_7
+vlib riviera/microblaze_v11_0_14
+vlib riviera/microblaze_riscv_v1_0_3
 vlib riviera/xil_defaultlib
+vlib riviera/lmb_v10_v3_0_14
+vlib riviera/lmb_bram_if_cntlr_v4_0_25
 vlib riviera/blk_mem_gen_v8_4_9
-vlib riviera/axi_utils_v2_0_10
-vlib riviera/mult_gen_v12_0_22
-vlib riviera/floating_point_v7_1_19
+vlib riviera/lib_cdc_v1_0_3
+vlib riviera/proc_sys_reset_v5_0_16
 
 vmap xpm riviera/xpm
-vmap xbip_dsp48_wrapper_v3_0_6 riviera/xbip_dsp48_wrapper_v3_0_6
-vmap xbip_utils_v3_0_14 riviera/xbip_utils_v3_0_14
-vmap xbip_pipe_v3_0_10 riviera/xbip_pipe_v3_0_10
-vmap dsp_macro_v1_0_7 riviera/dsp_macro_v1_0_7
+vmap microblaze_v11_0_14 riviera/microblaze_v11_0_14
+vmap microblaze_riscv_v1_0_3 riviera/microblaze_riscv_v1_0_3
 vmap xil_defaultlib riviera/xil_defaultlib
+vmap lmb_v10_v3_0_14 riviera/lmb_v10_v3_0_14
+vmap lmb_bram_if_cntlr_v4_0_25 riviera/lmb_bram_if_cntlr_v4_0_25
 vmap blk_mem_gen_v8_4_9 riviera/blk_mem_gen_v8_4_9
-vmap axi_utils_v2_0_10 riviera/axi_utils_v2_0_10
-vmap mult_gen_v12_0_22 riviera/mult_gen_v12_0_22
-vmap floating_point_v7_1_19 riviera/floating_point_v7_1_19
+vmap lib_cdc_v1_0_3 riviera/lib_cdc_v1_0_3
+vmap proc_sys_reset_v5_0_16 riviera/proc_sys_reset_v5_0_16
 
-vlog -work xpm  -incr "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work xpm  -incr -l xpm -l microblaze_v11_0_14 -l microblaze_riscv_v1_0_3 -l xil_defaultlib -l lmb_v10_v3_0_14 -l lmb_bram_if_cntlr_v4_0_25 -l blk_mem_gen_v8_4_9 -l lib_cdc_v1_0_3 -l proc_sys_reset_v5_0_16 \
 "C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
 
 vcom -work xpm -93  -incr \
 "C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_VCOMP.vhd" \
 
-vcom -work xbip_dsp48_wrapper_v3_0_6 -93  -incr \
-"../../ipstatic/hdl/xbip_dsp48_wrapper_v3_0_vh_rfs.vhd" \
+vcom -work microblaze_v11_0_14 -93  -incr \
+"../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/a243/hdl/microblaze_v11_0_vh_rfs.vhd" \
 
-vcom -work xbip_utils_v3_0_14 -93  -incr \
-"../../ipstatic/hdl/xbip_utils_v3_0_vh_rfs.vhd" \
-
-vcom -work xbip_pipe_v3_0_10 -93  -incr \
-"../../ipstatic/hdl/xbip_pipe_v3_0_vh_rfs.vhd" \
-
-vcom -work dsp_macro_v1_0_7 -93  -incr \
-"../../ipstatic/hdl/dsp_macro_v1_0_rfs.vhd" \
+vcom -work microblaze_riscv_v1_0_3 -93  -incr \
+"../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/f9dd/hdl/microblaze_riscv_v1_0_vh_rfs.vhd" \
 
 vcom -work xil_defaultlib -93  -incr \
-"../../../Risc-V processor.gen/sources_1/ip/MAC_dsp/sim/MAC_dsp.vhd" \
+"../../bd/MB_CPU/ip/MB_CPU_microblaze_riscv_0_0/sim/MB_CPU_microblaze_riscv_0_0.vhd" \
 
-vlog -work blk_mem_gen_v8_4_9  -incr -v2k5 "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
-"../../ipstatic/simulation/blk_mem_gen_v8_4.v" \
+vcom -work lmb_v10_v3_0_14 -93  -incr \
+"../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/7495/hdl/lmb_v10_v3_0_vh_rfs.vhd" \
 
-vlog -work xil_defaultlib  -incr -v2k5 "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
-"../../../Risc-V processor.gen/sources_1/ip/blk_mem_gen_0_1/sim/blk_mem_gen_0.v" \
+vcom -work xil_defaultlib -93  -incr \
+"../../bd/MB_CPU/ip/MB_CPU_dlmb_v10_0/sim/MB_CPU_dlmb_v10_0.vhd" \
+"../../bd/MB_CPU/ip/MB_CPU_ilmb_v10_0/sim/MB_CPU_ilmb_v10_0.vhd" \
 
-vcom -work axi_utils_v2_0_10 -93  -incr \
-"../../ipstatic/hdl/axi_utils_v2_0_vh_rfs.vhd" \
+vcom -work lmb_bram_if_cntlr_v4_0_25 -93  -incr \
+"../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/73e9/hdl/lmb_bram_if_cntlr_v4_0_vh_rfs.vhd" \
 
-vcom -work mult_gen_v12_0_22 -93  -incr \
-"../../ipstatic/hdl/mult_gen_v12_0_vh_rfs.vhd" \
+vcom -work xil_defaultlib -93  -incr \
+"../../bd/MB_CPU/ip/MB_CPU_dlmb_bram_if_cntlr_0/sim/MB_CPU_dlmb_bram_if_cntlr_0.vhd" \
+"../../bd/MB_CPU/ip/MB_CPU_ilmb_bram_if_cntlr_0/sim/MB_CPU_ilmb_bram_if_cntlr_0.vhd" \
 
-vcom -work floating_point_v7_1_19 -93  -incr \
-"../../ipstatic/hdl/floating_point_v7_1_rfs.vhd" \
+vlog -work blk_mem_gen_v8_4_9  -incr -v2k5 -l xpm -l microblaze_v11_0_14 -l microblaze_riscv_v1_0_3 -l xil_defaultlib -l lmb_v10_v3_0_14 -l lmb_bram_if_cntlr_v4_0_25 -l blk_mem_gen_v8_4_9 -l lib_cdc_v1_0_3 -l proc_sys_reset_v5_0_16 \
+"../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/5ec1/simulation/blk_mem_gen_v8_4.v" \
 
-vlog -work floating_point_v7_1_19  -incr -v2k5 "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
-"../../ipstatic/hdl/floating_point_v7_1_rfs.v" \
+vlog -work xil_defaultlib  -incr -v2k5 -l xpm -l microblaze_v11_0_14 -l microblaze_riscv_v1_0_3 -l xil_defaultlib -l lmb_v10_v3_0_14 -l lmb_bram_if_cntlr_v4_0_25 -l blk_mem_gen_v8_4_9 -l lib_cdc_v1_0_3 -l proc_sys_reset_v5_0_16 \
+"../../bd/MB_CPU/ip/MB_CPU_lmb_bram_0/sim/MB_CPU_lmb_bram_0.v" \
 
-vlog -work xil_defaultlib  -incr -v2k5 "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
-"../../../Risc-V processor.gen/sources_1/ip/floating_point_add_sub/sim/floating_point_add_sub.v" \
-"../../../Risc-V processor.gen/sources_1/ip/floating_point_multiplier/sim/floating_point_multiplier.v" \
-"../../../Risc-V processor.gen/sources_1/ip/floating_point_branching/sim/floating_point_branching.v" \
-"../../../Risc-V processor.gen/sources_1/ip/int_to_float_ip/sim/int_to_float_ip.v" \
-"../../../Risc-V processor.gen/sources_1/ip/Instruction_Memory/sim/Instruction_Memory.v" \
-"../../../Risc-V processor.srcs/sources_1/new/baud_rate_generator.v" \
-"../../../Risc-V processor.srcs/sources_1/new/fifo.v" \
-"../../../Risc-V processor.srcs/sources_1/new/uart_receiver.v" \
-"../../../Risc-V processor.srcs/sources_1/new/uart_top.v" \
-"../../../Risc-V processor.srcs/sources_1/new/uart_transmitter.v" \
+vcom -work lib_cdc_v1_0_3 -93  -incr \
+"../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/2a4f/hdl/lib_cdc_v1_0_rfs.vhd" \
 
-vlog -work xil_defaultlib  -incr "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
-"../../../Risc-V processor.srcs/sources_1/new/ALU.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/ALU_Control.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/Control.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/Data_memory.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/PipelinedRISCV.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/EX_MEM_reg.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/ID_EX_reg.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/IF_ID_reg.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/Imm_gen.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/InstructionMemory.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/MEM_WB_reg.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/ProgramCounter.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/Registers.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/branch.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/forwarding_unit.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/fp_alu.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/fp_alu_control.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/fp_control.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/fp_forward.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/fp_hazard.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/fp_registers.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/hazard_detection.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/vector_ALU.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/vector_registers.sv" \
-"../../../Risc-V processor.srcs/sim_1/new/PipelineTester.sv" \
+vcom -work proc_sys_reset_v5_0_16 -93  -incr \
+"../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/0831/hdl/proc_sys_reset_v5_0_vh_rfs.vhd" \
+
+vcom -work xil_defaultlib -93  -incr \
+"../../bd/MB_CPU/ip/MB_CPU_rst_Clk_100M_0/sim/MB_CPU_rst_Clk_100M_0.vhd" \
+
+vlog -work xil_defaultlib  -incr -v2k5 -l xpm -l microblaze_v11_0_14 -l microblaze_riscv_v1_0_3 -l xil_defaultlib -l lmb_v10_v3_0_14 -l lmb_bram_if_cntlr_v4_0_25 -l blk_mem_gen_v8_4_9 -l lib_cdc_v1_0_3 -l proc_sys_reset_v5_0_16 \
+"../../bd/MB_CPU/sim/MB_CPU.v" \
+"../../../Risc-V processor.gen/sources_1/bd/MB_CPU/hdl/MB_CPU_wrapper.v" \
+
+vlog -work xil_defaultlib  -incr -l xpm -l microblaze_v11_0_14 -l microblaze_riscv_v1_0_3 -l xil_defaultlib -l lmb_v10_v3_0_14 -l lmb_bram_if_cntlr_v4_0_25 -l blk_mem_gen_v8_4_9 -l lib_cdc_v1_0_3 -l proc_sys_reset_v5_0_16 \
+"../../../Risc-V processor.srcs/sim_1/new/MB_tester.sv" \
 
 vlog -work xil_defaultlib \
 "glbl.v"
