@@ -865,7 +865,7 @@ BEGIN
       C_USE_COUNTERS => 1,
       C_USE_BRANCH_TARGET_CACHE => 0,
       C_BRANCH_TARGET_CACHE_SIZE => 0,
-      C_PC_WIDTH => 14,
+      C_PC_WIDTH => 16,
       C_DEBUG_ENABLED => 0,
       C_DEBUG_INTERFACE => 0,
       C_NUMBER_OF_PC_BRK => 1,

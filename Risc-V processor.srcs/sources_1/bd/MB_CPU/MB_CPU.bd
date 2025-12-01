@@ -368,7 +368,7 @@
               "SEG_dlmb_bram_if_cntlr_Mem": {
                 "address_block": "/microblaze_riscv_0_local_memory/dlmb_bram_if_cntlr/SLMB/Mem",
                 "offset": "0x00000000",
-                "range": "16K",
+                "range": "64K",
                 "offset_high_param": "C_HIGHADDR"
               }
             }
@@ -378,7 +378,7 @@
               "SEG_ilmb_bram_if_cntlr_Mem": {
                 "address_block": "/microblaze_riscv_0_local_memory/ilmb_bram_if_cntlr/SLMB/Mem",
                 "offset": "0x00000000",
-                "range": "16K",
+                "range": "64K",
                 "offset_high_param": "C_HIGHADDR"
               }
             }
@@ -390,7 +390,7 @@
       "file": {
         "name": "..\\..\\..\\..\\CPU_tester\\build\\CPU_tester.elf",
         "type": "ELF",
-        "checksum": "2298147912",
+        "checksum": "1842325202",
         "IsVisible": "1",
         "ScopedToRef": "MB_CPU",
         "ScopedToCell": [
@@ -403,7 +403,7 @@
       "file": {
         "name": "..\\..\\..\\..\\Risc-V processor.gen\\sources_1\\bd\\MB_CPU\\ip\\MB_CPU_microblaze_riscv_0_0\\data\\CPU_tester.elf",
         "type": "ELF",
-        "checksum": "2298147912",
+        "checksum": "1842325202",
         "IsVisible": "1",
         "ScopedToRef": "MB_CPU",
         "ScopedToCell": [
