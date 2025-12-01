@@ -3,157 +3,198 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="MicroBlaze_test_behav.wdb" id="1">
+      <db_ref path="MB_tester_behav.wdb" id="1">
          <top_modules>
-            <top_module name="MicroBlaze_test" />
+            <top_module name="MB_tester" />
             <top_module name="glbl" />
+            <top_module name="lmb_bram_if_funcs" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="999,613.301 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,000,101.340 ns"></ZoomEndTime>
-      <Cursor1Time time="1,000,020.000 ns"></Cursor1Time>
+      <ZoomStartTime time="1,999,918.600 ns"></ZoomStartTime>
+      <ZoomEndTime time="2,000,040.401 ns"></ZoomEndTime>
+      <Cursor1Time time="1,999,971.400 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="121"></NameColumnWidth>
+      <NameColumnWidth column_width="115"></NameColumnWidth>
       <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="33" />
+   <WVObjectSize size="43" />
    <wave_markers>
       <marker time="102835100" label="" />
       <marker time="102985000" label="" />
    </wave_markers>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Clk" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Clk" type="logic">
       <obj_property name="ElementShortName">Clk</obj_property>
       <obj_property name="ObjectShortName">Clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Reset" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Reset" type="logic">
       <obj_property name="ElementShortName">Reset</obj_property>
       <obj_property name="ObjectShortName">Reset</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Interrupt" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Interrupt" type="logic">
       <obj_property name="ElementShortName">Interrupt</obj_property>
       <obj_property name="ObjectShortName">Interrupt</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Interrupt_Address" type="array">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Interrupt_Address" type="array">
       <obj_property name="ElementShortName">Interrupt_Address[0:31]</obj_property>
       <obj_property name="ObjectShortName">Interrupt_Address[0:31]</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Interrupt_Ack" type="array">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Interrupt_Ack" type="array">
       <obj_property name="ElementShortName">Interrupt_Ack[0:1]</obj_property>
       <obj_property name="ObjectShortName">Interrupt_Ack[0:1]</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Instr_Addr" type="array">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Instr_Addr" type="array">
       <obj_property name="ElementShortName">Instr_Addr[0:31]</obj_property>
       <obj_property name="ObjectShortName">Instr_Addr[0:31]</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Instr" type="array">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Instr" type="array">
       <obj_property name="ElementShortName">Instr[0:31]</obj_property>
       <obj_property name="ObjectShortName">Instr[0:31]</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/IFetch" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/IFetch" type="logic">
       <obj_property name="ElementShortName">IFetch</obj_property>
       <obj_property name="ObjectShortName">IFetch</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/I_AS" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/I_AS" type="logic">
       <obj_property name="ElementShortName">I_AS</obj_property>
       <obj_property name="ObjectShortName">I_AS</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/IReady" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/IReady" type="logic">
       <obj_property name="ElementShortName">IReady</obj_property>
       <obj_property name="ObjectShortName">IReady</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/IWAIT" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/IWAIT" type="logic">
       <obj_property name="ElementShortName">IWAIT</obj_property>
       <obj_property name="ObjectShortName">IWAIT</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/ICE" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/ICE" type="logic">
       <obj_property name="ElementShortName">ICE</obj_property>
       <obj_property name="ObjectShortName">ICE</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/IUE" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/IUE" type="logic">
       <obj_property name="ElementShortName">IUE</obj_property>
       <obj_property name="ObjectShortName">IUE</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Data_Addr" type="array">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Data_Addr" type="array">
       <obj_property name="ElementShortName">Data_Addr[0:31]</obj_property>
       <obj_property name="ObjectShortName">Data_Addr[0:31]</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Data_Read" type="array">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Data_Read" type="array">
       <obj_property name="ElementShortName">Data_Read[0:31]</obj_property>
       <obj_property name="ObjectShortName">Data_Read[0:31]</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Data_Write" type="array">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Data_Write" type="array">
       <obj_property name="ElementShortName">Data_Write[0:31]</obj_property>
       <obj_property name="ObjectShortName">Data_Write[0:31]</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/D_AS" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/D_AS" type="logic">
       <obj_property name="ElementShortName">D_AS</obj_property>
       <obj_property name="ObjectShortName">D_AS</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Read_Strobe" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Read_Strobe" type="logic">
       <obj_property name="ElementShortName">Read_Strobe</obj_property>
       <obj_property name="ObjectShortName">Read_Strobe</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Write_Strobe" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Write_Strobe" type="logic">
       <obj_property name="ElementShortName">Write_Strobe</obj_property>
       <obj_property name="ObjectShortName">Write_Strobe</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/DReady" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/DReady" type="logic">
       <obj_property name="ElementShortName">DReady</obj_property>
       <obj_property name="ObjectShortName">DReady</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/DWait" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/DWait" type="logic">
       <obj_property name="ElementShortName">DWait</obj_property>
       <obj_property name="ObjectShortName">DWait</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/DCE" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/DCE" type="logic">
       <obj_property name="ElementShortName">DCE</obj_property>
       <obj_property name="ObjectShortName">DCE</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/DUE" type="logic">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/DUE" type="logic">
       <obj_property name="ElementShortName">DUE</obj_property>
       <obj_property name="ObjectShortName">DUE</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Byte_Enable" type="array">
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Byte_Enable" type="array">
       <obj_property name="ElementShortName">Byte_Enable[0:3]</obj_property>
       <obj_property name="ObjectShortName">Byte_Enable[0:3]</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_Clk" type="logic">
-      <obj_property name="ElementShortName">Dbg_Clk</obj_property>
-      <obj_property name="ObjectShortName">Dbg_Clk</obj_property>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_AWADDR" type="array">
+      <obj_property name="ElementShortName">M_AXI_DP_AWADDR[31:0]</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_AWADDR[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_TDI" type="logic">
-      <obj_property name="ElementShortName">Dbg_TDI</obj_property>
-      <obj_property name="ObjectShortName">Dbg_TDI</obj_property>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_AWPROT" type="array">
+      <obj_property name="ElementShortName">M_AXI_DP_AWPROT[2:0]</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_AWPROT[2:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_TDO" type="logic">
-      <obj_property name="ElementShortName">Dbg_TDO</obj_property>
-      <obj_property name="ObjectShortName">Dbg_TDO</obj_property>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_AWVALID" type="logic">
+      <obj_property name="ElementShortName">M_AXI_DP_AWVALID</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_AWVALID</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_Reg_En" type="array">
-      <obj_property name="ElementShortName">Dbg_Reg_En[0:7]</obj_property>
-      <obj_property name="ObjectShortName">Dbg_Reg_En[0:7]</obj_property>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_AWREADY" type="logic">
+      <obj_property name="ElementShortName">M_AXI_DP_AWREADY</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_AWREADY</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_Shift" type="logic">
-      <obj_property name="ElementShortName">Dbg_Shift</obj_property>
-      <obj_property name="ObjectShortName">Dbg_Shift</obj_property>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_WDATA" type="array">
+      <obj_property name="ElementShortName">M_AXI_DP_WDATA[31:0]</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_WDATA[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_Capture" type="logic">
-      <obj_property name="ElementShortName">Dbg_Capture</obj_property>
-      <obj_property name="ObjectShortName">Dbg_Capture</obj_property>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_WSTRB" type="array">
+      <obj_property name="ElementShortName">M_AXI_DP_WSTRB[3:0]</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_WSTRB[3:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_Update" type="logic">
-      <obj_property name="ElementShortName">Dbg_Update</obj_property>
-      <obj_property name="ObjectShortName">Dbg_Update</obj_property>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_WVALID" type="logic">
+      <obj_property name="ElementShortName">M_AXI_DP_WVALID</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_WVALID</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Debug_Rst" type="logic">
-      <obj_property name="ElementShortName">Debug_Rst</obj_property>
-      <obj_property name="ObjectShortName">Debug_Rst</obj_property>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_WREADY" type="logic">
+      <obj_property name="ElementShortName">M_AXI_DP_WREADY</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_WREADY</obj_property>
    </wvobject>
-   <wvobject fp_name="/MicroBlaze_test/riscv_cpu/Dbg_Disable" type="logic">
-      <obj_property name="ElementShortName">Dbg_Disable</obj_property>
-      <obj_property name="ObjectShortName">Dbg_Disable</obj_property>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_BRESP" type="array">
+      <obj_property name="ElementShortName">M_AXI_DP_BRESP[1:0]</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_BRESP[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_BVALID" type="logic">
+      <obj_property name="ElementShortName">M_AXI_DP_BVALID</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_BVALID</obj_property>
+   </wvobject>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_BREADY" type="logic">
+      <obj_property name="ElementShortName">M_AXI_DP_BREADY</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_BREADY</obj_property>
+   </wvobject>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_ARADDR" type="array">
+      <obj_property name="ElementShortName">M_AXI_DP_ARADDR[31:0]</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_ARADDR[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_ARPROT" type="array">
+      <obj_property name="ElementShortName">M_AXI_DP_ARPROT[2:0]</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_ARPROT[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_ARVALID" type="logic">
+      <obj_property name="ElementShortName">M_AXI_DP_ARVALID</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_ARVALID</obj_property>
+   </wvobject>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_ARREADY" type="logic">
+      <obj_property name="ElementShortName">M_AXI_DP_ARREADY</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_ARREADY</obj_property>
+   </wvobject>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_RDATA" type="array">
+      <obj_property name="ElementShortName">M_AXI_DP_RDATA[31:0]</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_RDATA[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_RRESP" type="array">
+      <obj_property name="ElementShortName">M_AXI_DP_RRESP[1:0]</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_RRESP[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_RVALID" type="logic">
+      <obj_property name="ElementShortName">M_AXI_DP_RVALID</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_RVALID</obj_property>
+   </wvobject>
+   <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/M_AXI_DP_RREADY" type="logic">
+      <obj_property name="ElementShortName">M_AXI_DP_RREADY</obj_property>
+      <obj_property name="ObjectShortName">M_AXI_DP_RREADY</obj_property>
    </wvobject>
 </wave_config>

@@ -390,7 +390,7 @@
       "file": {
         "name": "..\\..\\..\\..\\CPU_tester\\build\\CPU_tester.elf",
         "type": "ELF",
-        "checksum": "3524905933",
+        "checksum": "2298147912",
         "IsVisible": "1",
         "ScopedToRef": "MB_CPU",
         "ScopedToCell": [
@@ -403,7 +403,7 @@
       "file": {
         "name": "..\\..\\..\\..\\Risc-V processor.gen\\sources_1\\bd\\MB_CPU\\ip\\MB_CPU_microblaze_riscv_0_0\\data\\CPU_tester.elf",
         "type": "ELF",
-        "checksum": "3524905933",
+        "checksum": "2298147912",
         "IsVisible": "1",
         "ScopedToRef": "MB_CPU",
         "ScopedToCell": [

@@ -2,6 +2,8 @@
 #include <time.h>
 
 int main() {
+    int done = 0;
+    while (!done) {
         volatile float signal[1024];
         volatile float kernel[3] = {1.0, 1.0, 1.0};
         volatile int result_length = 1024 - 3 + 1;
@@ -18,6 +20,13 @@ int main() {
             }
             result[i] = sum;
         }
-    
+        
+        done = 1;
+    }    
+
+    while(1){
+
+    }
+
     return 0;
 }
