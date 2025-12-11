@@ -11,6 +11,9 @@
     #define Conv_weights_reg (* (volatile int *) (UART_address + 0x14u))
     #define Conv_output_reg (* (volatile int *) (UART_address + 0x18u))
 
+    int Convolution(int *data, int *weights, int *output,
+                      int data_length, int weights_length, int output_length);
+
     static inline int UART_read_status(void) {
         return UART_status;
     }
@@ -36,7 +39,7 @@
     }
 
     // Mul 
-    static inline void vmac(int acc, int a, int b){
+    static inline void vmac(int acc, int a, int b) {
         asm volatile (".insn r 0x5B, 0x00, 0x01, %0, %1, %2"
                     : "+r"(acc) : "r"(a), "r"(b));
     }
@@ -48,53 +51,53 @@
         return rd;
     }
 
-    static inline int vload(const void *base, int offset){
+    static inline int vload(const void *base, int offset) {
         int rd; 
         asm volatile (".insn i 0x0B, 0x02, %0, %1, %2"
                     : "=r"(rd) : "r"(base), "i"(offset));
         return rd;
     }
 
-    static inline int vsload(const void *base, int offset){
+    static inline int vsload(const void *base, int offset) {
         int rd; 
         asm volatile (".insn i 0x0B, 0x06, %0, %1, %2"
                     : "=r"(rd) : "r"(base), "i"(offset));
         return rd;
     }
 
-    static inline int vslli(int a, int b){
+    static inline int vslli(int a, int b) {
         int rd; 
         asm volatile (".insn i 0x0B, 0x01, %0, %1, %2"
                     : "=r"(rd) : "r"(a), "i"(b));
         return rd;
     }
 
-    static inline void vstore(int value, const void *base, int offset){
-        asm volatile (".insn i 0x2B, 0x02, %0, %1, %2" : // no output
-                    : "r"(value), "r"(base), "i"(offset) : "memory");
+    static inline void vstore(int value, const void *base, int offset) {
+        asm volatile (".insn i 0x2B, 0x02, %0, %1, %2"
+                    : : "r"(value), "r"(base), "i"(offset) : "memory");
     }
 
-    static inline int vcaddi(int a, int b){
+    static inline int vcaddi(int a, int b) {
         int rd;
         asm volatile (".insn i 0x0B, 0x03, %0, %1, %2"
                     : "=r"(rd) : "r"(a), "i"(b));
         return rd;
     }
 
-    static inline int vauipc(int imm20){
+    static inline int vauipc(int imm20) {
         int rd; 
         asm volatile (".insn u 0x7B, %0, %1"
                     : "=r"(rd) : "i"(imm20));
         return rd;
     }
 
-    static inline void mac(int acc, int a, int b){
+    static inline void mac(int acc, int a, int b) {
         asm volatile (".insn r 0x33, 0x00, 0x01, %0, %1, %2"
                     : "+r"(acc) : "r"(a), "r"(b));
     }
 
     // FMADD rd, rs1, rs2, rs3, rm = rne, ties even
-    static inline void fmac(float acc, float a, float b, float c){
+    static inline void fmac(float acc, float a, float b, float c) {
         asm volatile (".insn r4 0x43, 0x00, %0, %1, %2, %3"
                     : "+f"(acc) : "f"(a), "f"(b), "f"(c));
     }
@@ -110,15 +113,7 @@
         @param output_length: length of the output array
     */
     static inline int convolution1D(int *data, int *weights, int *output, int data_length, int weights_length, int output_length) {
-
-        for(int i = 0; i < output_length; i++){
-            int sum = 0;
-            for(int j = 0; j < weights_length; j++){
-                sum += data[i + j] * weights[j];
-            }
-            output[i] = sum;
-        }
-        return 0;
+        return Convolution(data, weights, output, data_length, weights_length, output_length);
     }
 
 #endif

@@ -13,7 +13,7 @@ SECTIONS
 {
   /* all .text go into ROM starting at 0x0 */
   .text : {
-    *(init)
+    *(.init)
     *(.text)        /* every input section named .text */
   } > ROM
 
