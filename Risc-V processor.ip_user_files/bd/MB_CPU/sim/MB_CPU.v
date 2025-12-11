@@ -2,7 +2,7 @@
 //Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2024.2 (win64) Build 5239630 Fri Nov 08 22:35:27 MST 2024
-//Date        : Mon Dec  1 14:31:35 2025
+//Date        : Thu Dec 11 11:59:29 2025
 //Host        : Louises running 64-bit major release  (build 9200)
 //Command     : generate_target MB_CPU.bd
 //Design      : MB_CPU
@@ -54,6 +54,14 @@ module MB_CPU
         .Data_Addr(microblaze_riscv_0_dlmb_1_ABUS),
         .Data_Read(microblaze_riscv_0_dlmb_1_READDBUS),
         .Data_Write(microblaze_riscv_0_dlmb_1_WRITEDBUS),
+        .Dbg_Capture(1'b0),
+        .Dbg_Clk(1'b0),
+        .Dbg_Disable(1'b0),
+        .Dbg_Reg_En({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
+        .Dbg_Shift(1'b0),
+        .Dbg_TDI(1'b0),
+        .Dbg_Update(1'b0),
+        .Debug_Rst(1'b0),
         .ICE(microblaze_riscv_0_ilmb_1_CE),
         .IFetch(microblaze_riscv_0_ilmb_1_READSTROBE),
         .IReady(microblaze_riscv_0_ilmb_1_READY),

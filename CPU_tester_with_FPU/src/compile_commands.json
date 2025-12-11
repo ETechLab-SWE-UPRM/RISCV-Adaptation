@@ -1,0 +1,7 @@
+[
+{
+  "directory": "C:/Users/pizar/RISCV-Adaptation/CPU_tester_with_FPU/build",
+  "command": "C:\\Xilinx\\Vitis\\2024.2\\gnu\\riscv\\nt\\riscv64-unknown-elf\\bin\\riscv64-unknown-elf-gcc.exe -isystem C:/Users/pizar/RISCV-Adaptation/MicroBlazeCPU_with_FPU/export/MicroBlazeCPU_with_FPU/sw/standalone_microblaze_riscv_0/include -isystem C:/Xilinx/Vitis/2024.2/gnu/riscv/nt/riscv64-unknown-elf/x86_64-w64-mingw32/usr/lib/riscv32-xilinx-elf/gcc/riscv32-xilinx-elf/13.3.0/include -isystem C:/Xilinx/Vitis/2024.2/gnu/riscv/nt/riscv64-unknown-elf/x86_64-w64-mingw32/usr/lib/riscv32-xilinx-elf/gcc/riscv32-xilinx-elf/13.3.0/include-fixed -isystem C:/Xilinx/Vitis/2024.2/gnu/riscv/nt/riscv64-unknown-elf/riscv32-xilinx-elf/usr/include  -O2 -march=rv32imafc_zicsr_zifencei -mabi=ilp32f -DSDT  -MMD -MP  -specs=C:/Users/pizar/RISCV-Adaptation/MicroBlazeCPU_with_FPU/export/MicroBlazeCPU_with_FPU/sw/standalone_microblaze_riscv_0/Xilinx.spec -IC:/Users/pizar/RISCV-Adaptation/MicroBlazeCPU_with_FPU/export/MicroBlazeCPU_with_FPU/sw/standalone_microblaze_riscv_0/include -Wall -Wextra      -O0  -g3     -U__clang__ \"-D__FILENAME__='__FILE__'\" -o CMakeFiles\\CPU_tester_with_FPU.elf.dir\\C_\\Users\\pizar\\RISCV-Adaptation\\CPU_tester_with_FPU\\floating_point_convolution.c.obj -c C:\\Users\\pizar\\RISCV-Adaptation\\CPU_tester_with_FPU\\floating_point_convolution.c",
+  "file": "C:\\Users\\pizar\\RISCV-Adaptation\\CPU_tester_with_FPU\\floating_point_convolution.c"
+}
+]

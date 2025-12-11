@@ -27,7 +27,6 @@ vmap mult_gen_v12_0_22 riviera/mult_gen_v12_0_22
 vmap floating_point_v7_1_19 riviera/floating_point_v7_1_19
 
 vlog -work xpm  -incr "+incdir+../../ipstatic" -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
-"C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
 "C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
 
 vcom -work xpm -93  -incr \
@@ -72,8 +71,6 @@ vlog -work xil_defaultlib  -incr -v2k5 "+incdir+../../ipstatic" -l xpm -l xbip_d
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_branching/sim/floating_point_branching.v" \
 "../../../Risc-V processor.gen/sources_1/ip/int_to_float_ip/sim/int_to_float_ip.v" \
 "../../../Risc-V processor.gen/sources_1/ip/Instruction_Memory/sim/Instruction_Memory.v" \
-"../../../Risc-V processor.gen/sources_1/ip/new_clock/new_clock_clk_wiz.v" \
-"../../../Risc-V processor.gen/sources_1/ip/new_clock/new_clock.v" \
 "../../../Risc-V processor.srcs/sources_1/new/baud_rate_generator.v" \
 "../../../Risc-V processor.srcs/sources_1/new/fifo.v" \
 "../../../Risc-V processor.srcs/sources_1/new/uart_receiver.v" \

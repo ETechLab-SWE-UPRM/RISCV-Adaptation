@@ -100,7 +100,16 @@ ENTITY MB_CPU_microblaze_riscv_0_0 IS
     M_AXI_DP_RDATA : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
     M_AXI_DP_RRESP : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
     M_AXI_DP_RVALID : IN STD_LOGIC;
-    M_AXI_DP_RREADY : OUT STD_LOGIC
+    M_AXI_DP_RREADY : OUT STD_LOGIC;
+    Dbg_Clk : IN STD_LOGIC;
+    Dbg_TDI : IN STD_LOGIC;
+    Dbg_TDO : OUT STD_LOGIC;
+    Dbg_Reg_En : IN STD_LOGIC_VECTOR(0 TO 7);
+    Dbg_Shift : IN STD_LOGIC;
+    Dbg_Capture : IN STD_LOGIC;
+    Dbg_Update : IN STD_LOGIC;
+    Debug_Rst : IN STD_LOGIC;
+    Dbg_Disable : IN STD_LOGIC
   );
 END MB_CPU_microblaze_riscv_0_0;
 
@@ -751,6 +760,16 @@ ARCHITECTURE MB_CPU_microblaze_riscv_0_0_arch OF MB_CPU_microblaze_riscv_0_0 IS
   ATTRIBUTE X_INTERFACE_PARAMETER OF Data_Addr: SIGNAL IS "XIL_INTERFACENAME DLMB, ADDR_WIDTH 32, DATA_WIDTH 32, PROTOCOL STANDARD, READ_WRITE_MODE READ_WRITE";
   ATTRIBUTE X_INTERFACE_INFO OF Data_Read: SIGNAL IS "xilinx.com:interface:lmb:1.0 DLMB READDBUS";
   ATTRIBUTE X_INTERFACE_INFO OF Data_Write: SIGNAL IS "xilinx.com:interface:lmb:1.0 DLMB WRITEDBUS";
+  ATTRIBUTE X_INTERFACE_INFO OF Dbg_Capture: SIGNAL IS "xilinx.com:interface:mbdebug:3.0 DEBUG CAPTURE";
+  ATTRIBUTE X_INTERFACE_INFO OF Dbg_Clk: SIGNAL IS "xilinx.com:interface:mbdebug:3.0 DEBUG CLK";
+  ATTRIBUTE X_INTERFACE_MODE OF Dbg_Clk: SIGNAL IS "slave DEBUG";
+  ATTRIBUTE X_INTERFACE_INFO OF Dbg_Disable: SIGNAL IS "xilinx.com:interface:mbdebug:3.0 DEBUG DISABLE";
+  ATTRIBUTE X_INTERFACE_INFO OF Dbg_Reg_En: SIGNAL IS "xilinx.com:interface:mbdebug:3.0 DEBUG REG_EN";
+  ATTRIBUTE X_INTERFACE_INFO OF Dbg_Shift: SIGNAL IS "xilinx.com:interface:mbdebug:3.0 DEBUG SHIFT";
+  ATTRIBUTE X_INTERFACE_INFO OF Dbg_TDI: SIGNAL IS "xilinx.com:interface:mbdebug:3.0 DEBUG TDI";
+  ATTRIBUTE X_INTERFACE_INFO OF Dbg_TDO: SIGNAL IS "xilinx.com:interface:mbdebug:3.0 DEBUG TDO";
+  ATTRIBUTE X_INTERFACE_INFO OF Dbg_Update: SIGNAL IS "xilinx.com:interface:mbdebug:3.0 DEBUG UPDATE";
+  ATTRIBUTE X_INTERFACE_INFO OF Debug_Rst: SIGNAL IS "xilinx.com:interface:mbdebug:3.0 DEBUG RST";
   ATTRIBUTE X_INTERFACE_INFO OF ICE: SIGNAL IS "xilinx.com:interface:lmb:1.0 ILMB CE";
   ATTRIBUTE X_INTERFACE_INFO OF IFetch: SIGNAL IS "xilinx.com:interface:lmb:1.0 ILMB READSTROBE";
   ATTRIBUTE X_INTERFACE_INFO OF IReady: SIGNAL IS "xilinx.com:interface:lmb:1.0 ILMB READY";
@@ -841,10 +860,10 @@ BEGIN
       C_I_LMB_PROTOCOL => 0,
       C_I_AXI => 0,
       C_S_AXI => 0,
-      C_USE_MULDIV => 0,
-      C_USE_ATOMIC => 0,
-      C_USE_FPU => 0,
-      C_USE_COMPRESSION => 0,
+      C_USE_MULDIV => 2,
+      C_USE_ATOMIC => 1,
+      C_USE_FPU => 1,
+      C_USE_COMPRESSION => 1,
       C_USE_BITMAN => 0,
       C_FSL_LINKS => 0,
       C_USE_EXTENDED_FSL_INSTR => 0,
@@ -852,7 +871,7 @@ BEGIN
       C_FSL_EXCEPTION => 0,
       C_IMPRECISE_EXCEPTIONS => 0,
       C_MISALIGNED_EXCEPTIONS => 1,
-      C_ILL_INSTR_EXCEPTION => 2,
+      C_ILL_INSTR_EXCEPTION => 1,
       C_PMP_ENTRIES => 0,
       C_PMP_GRANULARITY => 2,
       C_USE_INTERRUPT => 0,
@@ -866,7 +885,7 @@ BEGIN
       C_USE_BRANCH_TARGET_CACHE => 0,
       C_BRANCH_TARGET_CACHE_SIZE => 0,
       C_PC_WIDTH => 16,
-      C_DEBUG_ENABLED => 0,
+      C_DEBUG_ENABLED => 1,
       C_DEBUG_INTERFACE => 0,
       C_NUMBER_OF_PC_BRK => 1,
       C_NUMBER_OF_RD_ADDR_BRK => 0,
@@ -1027,18 +1046,19 @@ BEGIN
       M_AXI_DP_RLAST => '0',
       M_AXI_DP_RVALID => M_AXI_DP_RVALID,
       M_AXI_DP_RREADY => M_AXI_DP_RREADY,
-      Dbg_Clk => '0',
-      Dbg_TDI => '0',
-      Dbg_Reg_En => STD_LOGIC_VECTOR(TO_UNSIGNED(0, 8)),
-      Dbg_Shift => '0',
-      Dbg_Capture => '0',
-      Dbg_Update => '0',
+      Dbg_Clk => Dbg_Clk,
+      Dbg_TDI => Dbg_TDI,
+      Dbg_TDO => Dbg_TDO,
+      Dbg_Reg_En => Dbg_Reg_En,
+      Dbg_Shift => Dbg_Shift,
+      Dbg_Capture => Dbg_Capture,
+      Dbg_Update => Dbg_Update,
       Dbg_Trig_Ack_In => STD_LOGIC_VECTOR(TO_UNSIGNED(0, 8)),
       Dbg_Trig_Out => STD_LOGIC_VECTOR(TO_UNSIGNED(0, 8)),
       Dbg_Trace_Clk => '0',
       Dbg_Trace_Ready => '0',
-      Debug_Rst => '0',
-      Dbg_Disable => '0',
+      Debug_Rst => Debug_Rst,
+      Dbg_Disable => Dbg_Disable,
       Dbg_AWADDR => STD_LOGIC_VECTOR(TO_UNSIGNED(0, 13)),
       Dbg_AWVALID => '0',
       Dbg_WDATA => STD_LOGIC_VECTOR(TO_UNSIGNED(0, 32)),

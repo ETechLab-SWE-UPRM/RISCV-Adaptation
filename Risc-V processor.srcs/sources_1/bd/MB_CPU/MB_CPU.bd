@@ -70,7 +70,7 @@
         "inst_hier_path": "microblaze_riscv_0",
         "parameters": {
           "C_DEBUG_ENABLED": {
-            "value": "0"
+            "value": "1"
           },
           "C_D_AXI": {
             "value": "1"
@@ -80,6 +80,9 @@
           },
           "C_I_LMB": {
             "value": "1"
+          },
+          "G_TEMPLATE_LIST": {
+            "value": "6"
           }
         },
         "interface_ports": {
@@ -390,7 +393,7 @@
       "file": {
         "name": "..\\..\\..\\..\\CPU_tester\\build\\CPU_tester.elf",
         "type": "ELF",
-        "checksum": "1842325202",
+        "checksum": "3000143264",
         "IsVisible": "1",
         "ScopedToRef": "MB_CPU",
         "ScopedToCell": [
@@ -401,9 +404,9 @@
         ]
       },
       "file": {
-        "name": "..\\..\\..\\..\\Risc-V processor.gen\\sources_1\\bd\\MB_CPU\\ip\\MB_CPU_microblaze_riscv_0_0\\data\\CPU_tester.elf",
+        "name": "..\\..\\..\\..\\CPU_tester_with_FPU\\build\\CPU_tester_with_FPU.elf",
         "type": "ELF",
-        "checksum": "1842325202",
+        "checksum": "2943949029",
         "IsVisible": "1",
         "ScopedToRef": "MB_CPU",
         "ScopedToCell": [

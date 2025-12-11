@@ -188,15 +188,6 @@ module RISCV_PIPELINED (
     logic [4:0] mem_wb_rs1, mem_wb_rs2, mem_wb_reg_dest;
     logic [31:0] mem_wb_write_data [0:vector_length-1];
 
-    logic clk2, locked;
-
-    new_clock clock_slower(
-        .clk_out1(clk2),
-        .reset(reset),
-        .locked(locked),
-        .clk_in1(clk)
-    );
-
     // -- INSTRUCTION FETCH STAGE --
     logic [31:0] pc ;
     logic [31:0] next_pc;
@@ -211,16 +202,16 @@ module RISCV_PIPELINED (
     end
         
     ProgramCounter pc_i (
-        .clk(clk2),
+        .clk(clk),
         .reset(reset),
-        .pc_write(pc_write && fp_pc_write && locked),
+        .pc_write(pc_write && fp_pc_write),
         .next_pc(next_pc), 
         .pc(pc)
     );
 
     InstructionMemory im (
-        .clk(clk2),
-        .stall(stall || fp_stall || mac_stall || !locked),
+        .clk(clk),
+        .stall(stall || fp_stall || mac_stall),
         .instruction_address(pc), 
         .instruction(instruction)
     );
@@ -228,7 +219,7 @@ module RISCV_PIPELINED (
     logic [31:0] fetch_pc;
 
     // This is simply to fix the missalignment of the PC with its corresponding instruction
-    always_ff @(posedge clk2) begin
+    always_ff @(posedge clk) begin
         if (reset) begin
             fetch_pc <= 32'b0;
         end else if (pc_write) begin
@@ -241,10 +232,10 @@ module RISCV_PIPELINED (
     // ------INSTRUCTION FETCH / INSTRUCTION DECODE------
 
     IF_ID_reg if_id_reg (
-        .clk(clk2), 
+        .clk(clk), 
         .reset(reset), 
         .flush(ex_taken), 
-        .if_id_write(if_id_write && fp_if_id_write && locked),
+        .if_id_write(if_id_write && fp_if_id_write),
         .pc(fetch_pc), 
         .instruction(instruction), 
         .pc_if_id(pc_if_id), 
@@ -268,7 +259,7 @@ module RISCV_PIPELINED (
     assign funct7 = instruction_if_id[31:25]; 
     
     Registers regs (
-        .clk(clk2),
+        .clk(clk),
         .reset(reset),
         .fp_mac(fmat_type),
         .read_reg1(reg1),
@@ -290,7 +281,7 @@ module RISCV_PIPELINED (
     vector_registers #(
         .vec_length(vector_length)
     ) v_regs (
-        .clk(clk2),
+        .clk(clk),
         .reset(reset),
         .read_reg1(reg1),
         .read_reg2(reg2),
@@ -304,7 +295,7 @@ module RISCV_PIPELINED (
     );
 
     Floating_Point_registers fp_regs (
-        .clk(clk2),
+        .clk(clk),
         .reset(reset),
         .read_reg1(reg1),
         .read_reg2(reg2),
@@ -384,7 +375,7 @@ module RISCV_PIPELINED (
     fp_hazard_detection #(
         .fp_adder_delay(fp_adder_delay)
     ) fp_hd_u (
-        .clk(clk2),
+        .clk(clk),
         .reset(reset),
         .ex_mem_fmadd(ex_mem_fmat_type == FMADD),
         .fp_result_valid(ex_mem_mac_result_valid),
@@ -409,7 +400,7 @@ module RISCV_PIPELINED (
     ID_EX_reg #(
         .vec_length(vector_length)
     ) id_ex_reg (
-        .clk(clk2), 
+        .clk(clk), 
         .reset(reset), 
         .flush(id_ex_flush),
         .stall(mac_stall),
@@ -801,7 +792,7 @@ module RISCV_PIPELINED (
     );
 
     fp_alu fp_alu (
-        .clk(clk2),
+        .clk(clk),
         .a(alu_fp_1),
         .b(alu_fp_2),
         .fp_alu_op(fp_alu_op),
@@ -891,7 +882,7 @@ module RISCV_PIPELINED (
     EX_MEM_reg #(
         .vec_length(vector_length)
     ) ex_mem_reg (
-        .clk(clk2), 
+        .clk(clk), 
         .reset(reset),
         .stall(mac_stall),
         .vec_op(vec_op_id_ex),
@@ -947,7 +938,7 @@ module RISCV_PIPELINED (
 
     //MAC adder operations 
     floating_point_add_sub mac_adder (
-        .aclk(clk2),
+        .aclk(clk),
         .s_axis_a_tdata(ex_mem_fp_mac_1),
         .s_axis_b_tdata(ex_mem_fp_mac_2),
         .s_axis_a_tvalid(ex_mem_fmat_type == FMADD),
@@ -999,7 +990,7 @@ module RISCV_PIPELINED (
         .data_addresses(data_word_space),
         .UART_base(data_base + data_word_space)
     ) data_mem(
-        .clk(clk2), // phase shifted clock for memory
+        .clk(clk), // phase shifted clock for memory
         .single_load(ex_mem_single_load),
         .fmac(ex_mem_fmat_type == FMADD),
         .address(memory_address),
@@ -1032,7 +1023,7 @@ module RISCV_PIPELINED (
         .BR_BITS(6),
         .FIFO_EXP(2)
     ) uart (
-        .clk_100MHz(clk2),
+        .clk_100MHz(clk),
         .reset(reset),
         .read_uart(uart_write_to_mem),
         .write_uart(send_byte),
@@ -1048,7 +1039,7 @@ module RISCV_PIPELINED (
     logic receive_send;
     assign receive_send = (memory_address[0] == uart_send) && ex_mem_memwrite;
 
-    always_ff @(posedge clk2) begin : uart_write_control
+    always_ff @(posedge clk) begin : uart_write_control
         if(reset) begin
             uart_write_to_mem <= 1'b0;
         end else if(uart_rx_full) begin
@@ -1058,7 +1049,7 @@ module RISCV_PIPELINED (
         end
     end
 
-    always_ff @(posedge clk2) begin : uart_rx_tx_process
+    always_ff @(posedge clk) begin : uart_rx_tx_process
         if(reset) begin
             data_send <= 2'b00;
             ready_to_send <= 1'b0;
@@ -1152,7 +1143,7 @@ module RISCV_PIPELINED (
     MEM_WB_reg #(
         .vec_length(vector_length)
     ) mem_wb_reg (
-        .clk(clk2),
+        .clk(clk),
         .reset(reset),
         .ex_mem_vec_op(ex_mem_vec_op),
         .ex_mem_fp_instruction(ex_mem_fp_instruction),

@@ -18,7 +18,7 @@ initial begin
     rst_n = 1;
     #20;
     rst_n = 0;
-    #20000000;
+    #3000000;
 
     $display("Dumping data memory to MB_data_dump.hex");
     $display("Data content starts at line 1958 I guess");
