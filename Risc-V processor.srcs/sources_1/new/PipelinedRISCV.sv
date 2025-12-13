@@ -4,20 +4,22 @@
 // Engineer: Fernando L. Pizarro Diaz
 // 
 // Create Date: 05/27/2025 10:22:03 AM
-// Design Name: Risc V Embedded Processor
-// Module Name: RISC-V_PIPELINED
-// Project Name: RISC-V Processor (w/ vector computations, floating point computations, and UART communication)
-// Target Devices: Basys3
+// Design Name: Piper
+// Module Name: RISCV_PIPELINED
+// Project Name: RISC-V Wearable
+// Target Devices: Artix-7
 // Tool Versions: SystemVerilog 2012
-// Description: A pipelined RISC-V processor implementation, with support for all integer instructions (excluding environment instructions), 
-// and support for custom vector and some floating point computations (FADD, FSUB, FMADD).
-// Contains usual components such as instruction (ROM) and data memory (RAM), 3 dedicated ALU components, and several DSPs for faster computations.
-// For integer operations, the destination register serves as the 3rd input and the accumulator to the scalar MAC DSP.
+// Description: A pipelined RISC-V processor implementation, with support for all integer instructions (excluding environment call instructions), 
+// and support for custom vector and floating point MAC computations (FMADD).
+// Contains usual components such as instruction (ROM) and data memory (RAM), 3 distinct ALU components, and several DSPs for faster computations.
+// For integer MAC operations, the destination register serves as the 3rd input and the accumulator to the scalar MAC DSP.
 // MAC is its own instruction to substitute the mul -> add instruction when calculating convolutions. Uses the same opcode as MUL.
 // UART communication is implemented through memory-mapped I/O.
 //
 // 
 // Dependencies: 
+//           - riscv-gnu-toolchain for compilation and assembly of data: https://github.com/riscv-collab/riscv-gnu-toolchain
+//           - WSL (if using Windows) for running the toolchain: https://learn.microsoft.com/en-us/windows/wsl/install
 // 
 // Revision:
 // Revision 0.01 - File Created
@@ -978,7 +980,7 @@ module RISCV_PIPELINED (
         if(data_length_store) begin
             conv_data_length = write_data[0];
         end else if(weights_length_store) begin
-            conv_weights_length = write_data[0] - 32'd1;
+            conv_weights_length = write_data[0] - 32'd1; // adjust for zero indexing due to preload
         end else if(output_length_store) begin
             conv_output_length = write_data[0];
         end
@@ -1016,6 +1018,7 @@ module RISCV_PIPELINED (
     logic word_in_progress;
     logic uart_write_to_mem, send_byte, ready_to_send;
 
+    // Number descriptions at the top of the file
     uart_top #(
         .DBITS(8),
         .SB_TICK(16),

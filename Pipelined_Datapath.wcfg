@@ -13,33 +13,19 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="443,160.094 ns"></ZoomStartTime>
-      <ZoomEndTime time="443,366.495 ns"></ZoomEndTime>
-      <Cursor1Time time="443,194.494 ns"></Cursor1Time>
+      <ZoomStartTime time="429,890.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="429,992.001 ns"></ZoomEndTime>
+      <Cursor1Time time="429,975.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="229"></NameColumnWidth>
-      <ValueColumnWidth column_width="222"></ValueColumnWidth>
+      <ValueColumnWidth column_width="216"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="54" />
+   <WVObjectSize size="51" />
    <wave_markers>
-      <marker time="102835100" label="" />
-      <marker time="102985000" label="" />
-      <marker time="102527828" label="" />
-      <marker time="114527928" label="" />
+      <marker time="92465000" label="" />
+      <marker time="429975000" label="" />
    </wave_markers>
-   <wvobject fp_name="/PipelineTester/processor/clock_slower/clk_out1" type="logic">
-      <obj_property name="ElementShortName">clk_out1</obj_property>
-      <obj_property name="ObjectShortName">clk_out1</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/clock_slower/reset" type="logic">
-      <obj_property name="ElementShortName">reset</obj_property>
-      <obj_property name="ObjectShortName">reset</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/clock_slower/locked" type="logic">
-      <obj_property name="ElementShortName">locked</obj_property>
-      <obj_property name="ObjectShortName">locked</obj_property>
-   </wvobject>
    <wvobject fp_name="/PipelineTester/processor/mac_mult/s_axis_a_tvalid" type="logic">
       <obj_property name="ElementShortName">s_axis_a_tvalid</obj_property>
       <obj_property name="ObjectShortName">s_axis_a_tvalid</obj_property>
@@ -155,6 +141,7 @@
    <wvobject fp_name="/PipelineTester/processor/data_mem/address" type="array">
       <obj_property name="ElementShortName">address[0:1][31:0]</obj_property>
       <obj_property name="ObjectShortName">address[0:1][31:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/PipelineTester/processor/data_mem/write_data" type="array">
       <obj_property name="ElementShortName">write_data[0:1][31:0]</obj_property>

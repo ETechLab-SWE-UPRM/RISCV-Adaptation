@@ -1,16 +1,16 @@
-sv xpm --include "../../ipstatic" \
+sv xpm  \
 "C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
 
-verilog blk_mem_gen_v8_4_9 --include "../../ipstatic" \
+verilog blk_mem_gen_v8_4_9  \
 "../../ipstatic/simulation/blk_mem_gen_v8_4.v" \
 
-verilog xil_defaultlib --include "../../ipstatic" \
+verilog xil_defaultlib  \
 "../../../Risc-V processor.gen/sources_1/ip/blk_mem_gen_0_1/sim/blk_mem_gen_0.v" \
 
-verilog floating_point_v7_1_19 --include "../../ipstatic" \
+verilog floating_point_v7_1_19  \
 "../../ipstatic/hdl/floating_point_v7_1_rfs.v" \
 
-verilog xil_defaultlib --include "../../ipstatic" \
+verilog xil_defaultlib  \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_add_sub/sim/floating_point_add_sub.v" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_multiplier/sim/floating_point_multiplier.v" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_branching/sim/floating_point_branching.v" \
@@ -22,7 +22,7 @@ verilog xil_defaultlib --include "../../ipstatic" \
 "../../../Risc-V processor.srcs/sources_1/new/uart_top.v" \
 "../../../Risc-V processor.srcs/sources_1/new/uart_transmitter.v" \
 
-sv xil_defaultlib --include "../../ipstatic" \
+sv xil_defaultlib  \
 "../../../Risc-V processor.srcs/sources_1/new/ALU.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/ALU_Control.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Control.sv" \

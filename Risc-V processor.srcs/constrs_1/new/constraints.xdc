@@ -3,7 +3,6 @@
 ## Clock signal
 set_property -dict {PACKAGE_PIN W5 IOSTANDARD LVCMOS33} [get_ports clk]
 create_clock -period 10.00 -name sys_clk_pin -waveform {0.000 5.000} [get_ports clk]
-create_clock -period 10.101 -name sys_clk_99 -waveform {0.000 5.050} [get_pins clock_slower/clk_out1]
 
 ## Switches
 set_property -dict {PACKAGE_PIN V17 IOSTANDARD LVCMOS33} [get_ports reset]

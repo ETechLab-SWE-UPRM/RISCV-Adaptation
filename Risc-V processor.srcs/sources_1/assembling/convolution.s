@@ -36,8 +36,6 @@ Convolution:
     sw a3, %lo(data_addr)(t1)
     lui t6, %hi(uart_send)
 
-convolution1D:
-    li t5, 1
     li t1, 0 # i = 0
 
     # Weight length store
@@ -70,7 +68,6 @@ inner_loop_finished:
     addi t1, t1, 1
     blt t1, a5, outer_loop
 
-    li s2, 2 # Indicate successful completion
     li s2, 0x4F4B0D0A # "OK\r\n"
     sw s2, %lo(uart_send)(t6)
 
