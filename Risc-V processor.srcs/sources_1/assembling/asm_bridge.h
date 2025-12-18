@@ -1,6 +1,7 @@
 #ifndef X_CAWT_BRIDGE
 #define X_CAWT_BRIDGE
 #include <stdint.h>
+#include <string.h>
 
     // MM addresses
     #define UART_address 0x100082A0u
@@ -26,6 +27,19 @@
         UART_transmit = data;
     }
 
+    static inline float UART_read_float(void) {
+        volatile int temp = UART_receive;
+        volatile float data;
+        memcpy(&data, &temp, sizeof data);
+        return data;
+    }
+
+    static inline void UART_send_float(float data) {
+        volatile int temp;
+        memcpy(&temp, &data, sizeof data);
+        UART_transmit = temp;
+    }
+
     static inline void setup_data_conv(int *data) {
         Conv_data_reg = (int) data;
     }
@@ -36,70 +50,6 @@
 
     static inline void setup_output_conv(int *output) {
         Conv_output_reg = (int) output;
-    }
-
-    // Mul 
-    static inline void vmac(int acc, int a, int b) {
-        asm volatile (".insn r 0x5B, 0x00, 0x01, %0, %1, %2"
-                    : "+r"(acc) : "r"(a), "r"(b));
-    }
-
-    static inline int vadd(int a, int b){
-        int rd;
-        asm volatile (".insn r 0x5B, 0x00, 0x00, %0, %1, %2"
-                    : "=r"(rd) : "r"(a), "r"(b));
-        return rd;
-    }
-
-    static inline int vload(const void *base, int offset) {
-        int rd; 
-        asm volatile (".insn i 0x0B, 0x02, %0, %1, %2"
-                    : "=r"(rd) : "r"(base), "i"(offset));
-        return rd;
-    }
-
-    static inline int vsload(const void *base, int offset) {
-        int rd; 
-        asm volatile (".insn i 0x0B, 0x06, %0, %1, %2"
-                    : "=r"(rd) : "r"(base), "i"(offset));
-        return rd;
-    }
-
-    static inline int vslli(int a, int b) {
-        int rd; 
-        asm volatile (".insn i 0x0B, 0x01, %0, %1, %2"
-                    : "=r"(rd) : "r"(a), "i"(b));
-        return rd;
-    }
-
-    static inline void vstore(int value, const void *base, int offset) {
-        asm volatile (".insn i 0x2B, 0x02, %0, %1, %2"
-                    : : "r"(value), "r"(base), "i"(offset) : "memory");
-    }
-
-    static inline int vcaddi(int a, int b) {
-        int rd;
-        asm volatile (".insn i 0x0B, 0x03, %0, %1, %2"
-                    : "=r"(rd) : "r"(a), "i"(b));
-        return rd;
-    }
-
-    static inline int vauipc(int imm20) {
-        int rd; 
-        asm volatile (".insn u 0x7B, %0, %1"
-                    : "=r"(rd) : "i"(imm20));
-        return rd;
-    }
-
-    static inline void mac(int acc, int a, int b) {
-        asm volatile (".insn r 0x33, 0x00, 0x01, %0, %1, %2"
-                    : "+r"(acc) : "r"(a), "r"(b));
-    }
-
-    // FMADD rd, rs1, rs2, rs3, rm = rne, ties even
-    static inline void fmac(float acc, float a, float b, float c) {
-        asm volatile (".insn r4 0x43, 0x00, %0, %1, %2, %3"
-                    : "+f"(acc) : "f"(a), "f"(b), "f"(c));
     }
 
     /*
