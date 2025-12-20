@@ -1,21 +1,22 @@
 #include "asm_bridge.h"
 
-volatile float signal[1024];
-volatile float kernel[3] = {1.0, 1.0, 1.0};
-volatile float result[1022];
-volatile int done = 1;
+int signal[1024];
+int kernel[3] = {1, 1, 1};
+int result[1022];
+int done = 1;
 
 int main() {
-
-    for(int i = 0; i < 1024; i++){
-        signal[i] = (float)(i + 1);
+    for (int i = 0; i < 1024; i++) {
+        signal[i] = i + 1;
     }
-    
-    done = 0;
 
-    convolution1D((int *)signal, (int *)kernel, (int *)result, 1024, 3, 1022);
+    done = 0;
+    UART_send(done);
     
+    vector_convolution(signal, kernel, result, 1024, 3, 1022);
+
     done = 1; 
+    UART_send(done);
 
     while(1){
     }

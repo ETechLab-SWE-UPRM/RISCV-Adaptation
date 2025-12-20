@@ -22,7 +22,7 @@ always_comb begin
             4'b0111: result[i] = ($signed(a[i]) < $signed(b[i])) ? 32'b1 : 32'b0;
             4'b1001: result[i] = (a[i] < b[i]) ? 32'b1 : 32'b0;
             4'b1010: result[i] = a[i] >>> b[i][4:0];
-            4'b1100: result[i] = 0;
+            4'b1100: result[i] = a[i];
             4'b1101: result[i] = 0;
             default: result[i] = 32'b0;
         endcase

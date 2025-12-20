@@ -15,6 +15,9 @@
     int Convolution(int *data, int *weights, int *output,
                       int data_length, int weights_length, int output_length);
 
+    int vector_convolution_main(int *data, int *weights, int *output,
+                      int data_length, int weights_length, int output_length);
+    
     static inline int UART_read_status(void) {
         return UART_status;
     }
@@ -28,14 +31,14 @@
     }
 
     static inline float UART_read_float(void) {
-        volatile int temp = UART_receive;
-        volatile float data;
+        int temp = UART_receive;
+        float data;
         memcpy(&data, &temp, sizeof data);
         return data;
     }
 
     static inline void UART_send_float(float data) {
-        volatile int temp;
+        int temp;
         memcpy(&temp, &data, sizeof data);
         UART_transmit = temp;
     }
@@ -66,4 +69,7 @@
         return Convolution(data, weights, output, data_length, weights_length, output_length);
     }
 
+    static inline int vector_convolution(int* data, int *weights, int *output, int data_length, int weights_length, int output_length) {
+        return vector_convolution_main(data, weights, output, data_length, weights_length, output_length);
+    }
 #endif

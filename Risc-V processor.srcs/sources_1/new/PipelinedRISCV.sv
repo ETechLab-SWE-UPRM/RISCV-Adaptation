@@ -683,7 +683,14 @@ module RISCV_PIPELINED (
 
     always_comb begin
         for(int i = 0; i < vector_length; i++) begin
-            v_alu_input[i] = (id_ex_auipc) ? pc_id_ex : va_operand1[i];
+            if(id_ex_auipc) begin
+                v_alu_input[i] = pc_id_ex;
+            end else if (alu_control == 4'b1100) begin // 1100b = 12d => vmove
+                v_alu_input[i] = data_read1_id_ex;
+            end else begin
+                v_alu_input[i] = va_operand1[i];
+            end
+
             if(id_ex_alu_src) begin
                 v_alu_input2[i] = (id_ex_continous_addr) ? big_immediate_id_ex + i : big_immediate_id_ex;
             end else begin
