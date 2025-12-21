@@ -681,12 +681,24 @@ module RISCV_PIPELINED (
     assign alu_input = (id_ex_auipc) ? pc_id_ex : (id_ex_lui) ? '0 : alu_operand1;
     assign alu_input2 = id_ex_alu_src ? big_immediate_id_ex: alu_operand2;
 
+    logic use_scalar1;
+    logic [31:0] scalar1;
+
+    assign use_scalar1 = id_ex_auipc || (alu_control == 4'b1100); // 1100b = 12d => vmove
+
+    always_comb begin
+        scalar1 = 32'b0;
+        if(id_ex_auipc) begin
+            scalar1 = pc_id_ex;
+        end else if (alu_control == 4'b1100) begin // 1100b = 12d => vmove
+            scalar1 = data_read1_id_ex;
+        end
+    end
+
     always_comb begin
         for(int i = 0; i < vector_length; i++) begin
-            if(id_ex_auipc) begin
-                v_alu_input[i] = pc_id_ex;
-            end else if (alu_control == 4'b1100) begin // 1100b = 12d => vmove
-                v_alu_input[i] = data_read1_id_ex;
+            if(use_scalar1) begin
+                v_alu_input[i] = scalar1;
             end else begin
                 v_alu_input[i] = va_operand1[i];
             end
