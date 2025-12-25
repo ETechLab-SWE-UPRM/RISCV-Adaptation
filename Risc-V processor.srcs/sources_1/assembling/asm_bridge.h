@@ -33,42 +33,40 @@
     static inline float UART_read_float(void) {
         int temp = UART_receive;
         float data;
-        memcpy(&data, &temp, sizeof data);
+        memcpy(&data, &temp, sizeof(float));
         return data;
     }
 
     static inline void UART_send_float(float data) {
         int temp;
-        memcpy(&temp, &data, sizeof data);
+        memcpy(&temp, &data, sizeof(float));
         UART_transmit = temp;
     }
 
-    static inline void setup_data_conv(int *data) {
-        Conv_data_reg = (int) data;
-    }
-
-    static inline void setup_weights_conv(int *weights) {
-        Conv_weights_reg = (int) weights;
-    }
-
-    static inline void setup_output_conv(int *output) {
-        Conv_output_reg = (int) output;
-    }
-
     /*
-        Convolution function with inline assembly implementation.
+        Floating Point convolution function with inline assembly implementation.
 
-        @param data: pointer to the input data array
-        @param weights: pointer to the weights array
-        @param output: pointer to the output array
-        @param data_length: length of the input data array
-        @param weights_length: length of the weights array
-        @param output_length: length of the output array
+        @param data pointer to the input data array
+        @param weights pointer to the weights array
+        @param output pointer to the output array
+        @param data_length length of the input data array
+        @param weights_length length of the weights array
+        @param output_length length of the output array
     */
     static inline int convolution1D(int *data, int *weights, int *output, int data_length, int weights_length, int output_length) {
         return Convolution(data, weights, output, data_length, weights_length, output_length);
     }
 
+    /*
+        Vector Integer convolution function with inline assembly implementation.
+
+        @param data pointer to the input data array
+        @param weights pointer to the weights array
+        @param output pointer to the output array
+        @param data_length length of the input data array
+        @param weights_length length of the weights array
+        @param output_length length of the output array
+    */
     static inline int vector_convolution(int* data, int *weights, int *output, int data_length, int weights_length, int output_length) {
         return vector_convolution_main(data, weights, output, data_length, weights_length, output_length);
     }
