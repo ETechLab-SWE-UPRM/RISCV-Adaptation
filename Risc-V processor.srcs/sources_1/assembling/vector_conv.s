@@ -69,15 +69,6 @@
 #   a5 = output_length
 
 vector_convolution_main:
-    # ---------- initialization (do not use this) ----------
-    # -------- This is to add the 1d matrix to memory ----------
-    # vauipc s0, 0x10000
-    # vaddi s0, s0, 0
-    # vauipc s1, 0x10001
-    # vaddi s1, s1, -8
-    # vauipc s2, 0x10001
-    # vaddi s2, s2, -4
-
     vmove s0, a0 # s0 = signal base address
     vmove s1, a1 # s1 = kernel base address
     vmove s2, a2 # s2 = result base address

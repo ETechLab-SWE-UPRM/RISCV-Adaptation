@@ -23,14 +23,6 @@
 .set output_addr, 0x100082B8
 
 Convolution:
-    # The mac operations expect the addresses to be in these registers:
-    # a0 -> data address
-    # a1 -> weights address
-    # a2 -> output address
-    # a3 -> inputs length
-    # a4 -> weights length
-    # a5 -> outputs length
-
     # Input length store
     lui t1, %hi(data_addr)
     sw a3, %lo(data_addr)(t1)
