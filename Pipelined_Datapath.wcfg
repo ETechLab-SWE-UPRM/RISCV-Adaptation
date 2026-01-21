@@ -13,18 +13,19 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="429,890.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="429,992.001 ns"></ZoomEndTime>
-      <Cursor1Time time="429,975.000 ns"></Cursor1Time>
+      <ZoomStartTime time="332,406.685 ns"></ZoomStartTime>
+      <ZoomEndTime time="332,884.663 ns"></ZoomEndTime>
+      <Cursor1Time time="332,805.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="229"></NameColumnWidth>
-      <ValueColumnWidth column_width="216"></ValueColumnWidth>
+      <ValueColumnWidth column_width="204"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="51" />
    <wave_markers>
-      <marker time="92465000" label="" />
       <marker time="429975000" label="" />
+      <marker time="71995000" label="" />
+      <marker time="332805000" label="" />
    </wave_markers>
    <wvobject fp_name="/PipelineTester/processor/mac_mult/s_axis_a_tvalid" type="logic">
       <obj_property name="ElementShortName">s_axis_a_tvalid</obj_property>

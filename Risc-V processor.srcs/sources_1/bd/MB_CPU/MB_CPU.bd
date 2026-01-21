@@ -391,22 +391,9 @@
     },
     "elf_association": {
       "file": {
-        "name": "..\\..\\..\\..\\CPU_tester\\build\\CPU_tester.elf",
+        "name": "..\\..\\..\\..\\CPU_tester_with_FPU.elf",
         "type": "ELF",
-        "checksum": "3000143264",
-        "IsVisible": "1",
-        "ScopedToRef": "MB_CPU",
-        "ScopedToCell": [
-          "microblaze_riscv_0"
-        ],
-        "UsedIn": [
-          "implementation"
-        ]
-      },
-      "file": {
-        "name": "..\\..\\..\\..\\CPU_tester_with_FPU\\build\\CPU_tester_with_FPU.elf",
-        "type": "ELF",
-        "checksum": "2943949029",
+        "checksum": "4053243731",
         "IsVisible": "1",
         "ScopedToRef": "MB_CPU",
         "ScopedToCell": [

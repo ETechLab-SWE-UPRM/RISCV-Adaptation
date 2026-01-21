@@ -12,21 +12,21 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="348,547.900 ns"></ZoomStartTime>
-      <ZoomEndTime time="348,650.501 ns"></ZoomEndTime>
-      <Cursor1Time time="348,565.000 ns"></Cursor1Time>
+      <ZoomStartTime time="1,789,526.790 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,789,764.642 ns"></ZoomEndTime>
+      <Cursor1Time time="1,789,725.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="229"></NameColumnWidth>
-      <ValueColumnWidth column_width="210"></ValueColumnWidth>
+      <ValueColumnWidth column_width="198"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="43" />
    <wave_markers>
       <marker time="102835100" label="" />
       <marker time="102527828" label="" />
       <marker time="16080705000" label="" />
-      <marker time="348565000" label="" />
-      <marker time="2034985000" label="" />
+      <marker time="1789725000" label="" />
+      <marker time="307705000" label="" />
    </wave_markers>
    <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Clk" type="logic">
       <obj_property name="ElementShortName">Clk</obj_property>
@@ -83,6 +83,7 @@
    <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Data_Addr" type="array">
       <obj_property name="ElementShortName">Data_Addr[0:31]</obj_property>
       <obj_property name="ObjectShortName">Data_Addr[0:31]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/MB_tester/cpu_inst/MB_CPU_i/microblaze_riscv_0/Data_Read" type="array">
       <obj_property name="ElementShortName">Data_Read[0:31]</obj_property>

@@ -3,7 +3,7 @@
 int signal[1024];
 int kernel[3] = {1, 1, 1};
 int result[1022];
-int done = 1;
+volatile int done = 1;
 
 int main() {
     for (int i = 0; i < 1024; i++) {
@@ -11,12 +11,10 @@ int main() {
     }
 
     done = 0;
-    UART_send(done);
     
     vector_convolution(signal, kernel, result, 1024, 3, 1022);
 
     done = 1; 
-    UART_send(done);
 
     while(1){
     }
