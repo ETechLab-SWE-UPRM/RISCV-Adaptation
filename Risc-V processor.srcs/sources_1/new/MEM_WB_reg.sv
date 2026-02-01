@@ -11,6 +11,7 @@ module MEM_WB_reg #(
     input logic ex_mem_fp_reg_write,
     input logic ex_mem_vec_reg_write,
     input logic ex_mem_memtoreg,
+    input logic uart_instruction,
     input logic ex_mem_regwrite,
     input logic ex_mem_jal,
     input logic ex_mem_jalr,
@@ -38,6 +39,7 @@ module MEM_WB_reg #(
     output logic [31:0] mem_wb_link_address,
     output logic [31:0] mem_wb_write_data [0:vec_length-1]
 );
+    logic uart_instruction_reg;
 
     always_ff @(posedge clk) begin
         if (reset) begin
@@ -47,6 +49,7 @@ module MEM_WB_reg #(
             mem_wb_fp_reg_write <= 1'b0;
             mem_wb_vec_reg_write <= 1'b0;
             mem_wb_memtoreg <= 1'b0;
+            uart_instruction_reg <= 1'b0;
             mem_wb_regwrite <= 1'b0;
             mem_wb_jal <= 1'b0;
             mem_wb_jalr <= 1'b0;
@@ -63,6 +66,7 @@ module MEM_WB_reg #(
             mem_wb_fp_reg_write <= ex_mem_fp_reg_write;
             mem_wb_vec_reg_write <= ex_mem_vec_reg_write;
             mem_wb_memtoreg <= ex_mem_memtoreg;
+            uart_instruction_reg <= uart_instruction;
             mem_wb_regwrite <= ex_mem_regwrite;
             mem_wb_jal <= ex_mem_jal;
             mem_wb_jalr <= ex_mem_jalr;
@@ -71,11 +75,8 @@ module MEM_WB_reg #(
             mem_wb_rs2 <= ex_mem_rs2;
             mem_wb_reg_dest <= ex_mem_reg_dest;
             mem_wb_link_address <= ex_mem_link_address_reg; 
+            mem_wb_memory_data_read <= memory_data_read;
         end
-    end
-
-    always_comb begin
-        mem_wb_memory_data_read = memory_data_read;
     end
 
     always_comb begin 
@@ -84,8 +85,10 @@ module MEM_WB_reg #(
             for (int i = 1; i < vec_length; i++) begin
                 mem_wb_write_data[i] = 32'b0; // Other vector elements are not used in JAL/JALR
             end
+        end else if(mem_wb_memtoreg && uart_instruction_reg) begin
+            mem_wb_write_data = mem_wb_memory_data_read; 
         end else if(mem_wb_memtoreg) begin
-            mem_wb_write_data = memory_data_read; 
+            mem_wb_write_data = memory_data_read;
         end else begin
             mem_wb_write_data = mem_wb_alu_result; 
         end

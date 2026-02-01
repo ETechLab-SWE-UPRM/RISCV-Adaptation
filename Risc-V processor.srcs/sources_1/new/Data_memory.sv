@@ -44,7 +44,7 @@ module Data_memory #(
     assign byte_address[0] = address[0] - data_base;
     assign vec_op_enable[0] = 1'b1;
     assign addresses[0] = byte_address[0][15:2];
-    assign in_range[0] = (addresses[0] < data_addresses);
+    assign in_range[0] = (address[0] < UART_base);
     // Calculate next addresses based on the current address and vector length
     genvar j;
     generate
@@ -52,7 +52,7 @@ module Data_memory #(
             assign byte_address[j] = address[j] - data_base;
             assign addresses[j] = byte_address[j][15:2];
             assign vec_op_enable[j] = vec_op || fmac;
-            assign in_range[j] = addresses[j] < (data_addresses);
+            assign in_range[j] = address[j] < (UART_base);
         end
     endgenerate
 

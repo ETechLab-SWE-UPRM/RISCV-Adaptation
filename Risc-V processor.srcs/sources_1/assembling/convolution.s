@@ -60,9 +60,6 @@ inner_loop_finished:
     addi t1, t1, 1
     blt t1, a5, outer_loop
 
-    li s2, 0x4F4B0D0A # "OK\r\n"
-    sw s2, %lo(uart_send)(t6)
-
     li a0, 0
     ret
 

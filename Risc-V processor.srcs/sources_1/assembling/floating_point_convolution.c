@@ -1,22 +1,26 @@
 #include "asm_bridge.h"
+#define MAX_LENGTH 2048
+#define KERNEL_SIZE 64
 
-int signal[1024];
-int kernel[3] = {1, 1, 1};
-int result[1022];
+int signal[MAX_LENGTH];
+int kernel[KERNEL_SIZE];
+int result[MAX_LENGTH - KERNEL_SIZE + 1];
+volatile int data_length = 1;
+volatile int kernel_length = 1;
+volatile int output_length = 1;
 volatile int done = 1;
+volatile int data = 1;
+
+int read_blocked() {
+    while(UART_read_status() == 0) {
+    }
+    return UART_read();
+}
 
 int main() {
-    for (int i = 0; i < 1024; i++) {
-        signal[i] = i + 1;
-    }
-
-    done = 0;
-    
-    vector_convolution(signal, kernel, result, 1024, 3, 1022);
-
-    done = 1; 
-
-    while(1){
+    while (1) {
+        data = read_blocked();
+        UART_send(data);
     }
 
     return 0;

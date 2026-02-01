@@ -557,6 +557,7 @@ module RISCV_PIPELINED (
         if(reset) begin
             data_counter = 32'b0;
             weights_counter = 32'b0;
+            conv_write_enable = 1'b0;
         end else begin
             if(id_ex_fmat_type == FMADD) begin
                 conv_write_enable = 1'b1;
@@ -1173,6 +1174,7 @@ module RISCV_PIPELINED (
         .ex_mem_fp_reg_write(ex_mem_fp_reg_write),
         .ex_mem_vec_reg_write(ex_mem_vec_reg_write),
         .ex_mem_memtoreg(ex_mem_memtoreg),
+        .uart_instruction(status_read | receive_read | receive_send),
         .ex_mem_regwrite(ex_mem_regwrite),
         .ex_mem_jal(ex_mem_jal),
         .ex_mem_jalr(ex_mem_jalr),
