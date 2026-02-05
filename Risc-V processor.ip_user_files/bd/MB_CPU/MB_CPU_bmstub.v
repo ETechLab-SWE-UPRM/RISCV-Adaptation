@@ -6,10 +6,17 @@
 
 (* BLOCK_STUB = "true" *)
 module MB_CPU (
+  usb_uart_rxd,
+  usb_uart_txd,
   Clk,
   reset
 );
 
+  (* X_INTERFACE_INFO = "xilinx.com:interface:uart:1.0 usb_uart RxD" *)
+  (* X_INTERFACE_MODE = "master usb_uart" *)
+  input usb_uart_rxd;
+  (* X_INTERFACE_INFO = "xilinx.com:interface:uart:1.0 usb_uart TxD" *)
+  output usb_uart_txd;
   (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 CLK.CLK CLK" *)
   (* X_INTERFACE_MODE = "slave CLK.CLK" *)
   (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME CLK.CLK, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN MB_CPU_Clk, INSERT_VIP 0" *)

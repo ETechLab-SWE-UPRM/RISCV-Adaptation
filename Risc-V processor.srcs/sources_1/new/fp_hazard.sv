@@ -21,6 +21,7 @@ module fp_hazard_detection #(
 
     logic hazard1, hazard2, hazard3;
     logic previous_fp_stall;
+    logic stall_pending;
     logic [1:0] delay_counter;
 
     assign hazard1 = (id_ex_mem_read && (if_id_rs1 == reg_dest_id_ex));
@@ -43,6 +44,18 @@ module fp_hazard_detection #(
         end
     end
 
+    always_ff @(posedge clk) begin
+        if (reset) begin
+            stall_pending <= 1'b0;
+        end else begin
+            if ((hazard1 || hazard2 || hazard3) && !stall_pending) begin
+                stall_pending <= 1'b1;
+            end else if (stall_pending) begin
+                stall_pending <= 1'b0;
+            end
+        end
+    end
+
     always_comb begin
         stall = 1'b0; 
         mac_stall = 1'b0;
@@ -53,7 +66,7 @@ module fp_hazard_detection #(
             mac_stall = 1'b1;
             pc_write = 1'b0;
             if_id_write = 1'b0;
-        end else if(hazard1 || hazard2 || hazard3) begin
+        end else if(hazard1 || hazard2 || hazard3 || stall_pending) begin
             stall = 1'b1;
             pc_write = 1'b0;
             if_id_write = 1'b0;

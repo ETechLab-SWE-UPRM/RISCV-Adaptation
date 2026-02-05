@@ -2,7 +2,7 @@
 //Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2024.2 (win64) Build 5239630 Fri Nov 08 22:35:27 MST 2024
-//Date        : Tue Jan 20 19:43:16 2026
+//Date        : Wed Feb  4 11:56:43 2026
 //Host        : Louises running 64-bit major release  (build 9200)
 //Command     : generate_target MB_CPU.bd
 //Design      : MB_CPU
@@ -10,14 +10,37 @@
 //--------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
-(* CORE_GENERATION_INFO = "MB_CPU,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=MB_CPU,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=8,numReposBlks=7,numNonXlnxBlks=0,numHierBlks=1,maxHierDepth=1,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=0,numPkgbdBlks=0,bdsource=USER,da_board_cnt=1,da_microblaze_riscv_cnt=1,synth_mode=None}" *) (* HW_HANDOFF = "MB_CPU.hwdef" *) 
+(* CORE_GENERATION_INFO = "MB_CPU,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=MB_CPU,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=10,numReposBlks=9,numNonXlnxBlks=0,numHierBlks=1,maxHierDepth=1,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=0,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=1,da_board_cnt=2,da_microblaze_riscv_cnt=1,synth_mode=None}" *) (* HW_HANDOFF = "MB_CPU.hwdef" *) 
 module MB_CPU
    (Clk,
-    reset);
+    reset,
+    usb_uart_rxd,
+    usb_uart_txd);
   (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 CLK.CLK CLK" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME CLK.CLK, CLK_DOMAIN MB_CPU_Clk, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, INSERT_VIP 0, PHASE 0.0" *) input Clk;
   (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 RST.RESET RST" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME RST.RESET, INSERT_VIP 0, POLARITY ACTIVE_HIGH" *) input reset;
+  (* X_INTERFACE_INFO = "xilinx.com:interface:uart:1.0 usb_uart RxD" *) (* X_INTERFACE_MODE = "Master" *) input usb_uart_rxd;
+  (* X_INTERFACE_INFO = "xilinx.com:interface:uart:1.0 usb_uart TxD" *) output usb_uart_txd;
 
   wire Clk;
+  wire [31:0]microblaze_riscv_0_M_AXI_DP_ARADDR;
+  wire [2:0]microblaze_riscv_0_M_AXI_DP_ARPROT;
+  wire microblaze_riscv_0_M_AXI_DP_ARREADY;
+  wire microblaze_riscv_0_M_AXI_DP_ARVALID;
+  wire [31:0]microblaze_riscv_0_M_AXI_DP_AWADDR;
+  wire [2:0]microblaze_riscv_0_M_AXI_DP_AWPROT;
+  wire microblaze_riscv_0_M_AXI_DP_AWREADY;
+  wire microblaze_riscv_0_M_AXI_DP_AWVALID;
+  wire microblaze_riscv_0_M_AXI_DP_BREADY;
+  wire [1:0]microblaze_riscv_0_M_AXI_DP_BRESP;
+  wire microblaze_riscv_0_M_AXI_DP_BVALID;
+  wire [31:0]microblaze_riscv_0_M_AXI_DP_RDATA;
+  wire microblaze_riscv_0_M_AXI_DP_RREADY;
+  wire [1:0]microblaze_riscv_0_M_AXI_DP_RRESP;
+  wire microblaze_riscv_0_M_AXI_DP_RVALID;
+  wire [31:0]microblaze_riscv_0_M_AXI_DP_WDATA;
+  wire microblaze_riscv_0_M_AXI_DP_WREADY;
+  wire [3:0]microblaze_riscv_0_M_AXI_DP_WSTRB;
+  wire microblaze_riscv_0_M_AXI_DP_WVALID;
   wire [0:31]microblaze_riscv_0_dlmb_1_ABUS;
   wire microblaze_riscv_0_dlmb_1_ADDRSTROBE;
   wire [0:3]microblaze_riscv_0_dlmb_1_BE;
@@ -40,7 +63,49 @@ module MB_CPU
   wire reset;
   wire [0:0]rst_Clk_100M_bus_struct_reset;
   wire rst_Clk_100M_mb_reset;
+  wire [0:0]rst_Clk_100M_peripheral_aresetn;
+  wire [3:0]smartconnect_0_M00_AXI_ARADDR;
+  wire smartconnect_0_M00_AXI_ARREADY;
+  wire smartconnect_0_M00_AXI_ARVALID;
+  wire [3:0]smartconnect_0_M00_AXI_AWADDR;
+  wire smartconnect_0_M00_AXI_AWREADY;
+  wire smartconnect_0_M00_AXI_AWVALID;
+  wire smartconnect_0_M00_AXI_BREADY;
+  wire [1:0]smartconnect_0_M00_AXI_BRESP;
+  wire smartconnect_0_M00_AXI_BVALID;
+  wire [31:0]smartconnect_0_M00_AXI_RDATA;
+  wire smartconnect_0_M00_AXI_RREADY;
+  wire [1:0]smartconnect_0_M00_AXI_RRESP;
+  wire smartconnect_0_M00_AXI_RVALID;
+  wire [31:0]smartconnect_0_M00_AXI_WDATA;
+  wire smartconnect_0_M00_AXI_WREADY;
+  wire [3:0]smartconnect_0_M00_AXI_WSTRB;
+  wire smartconnect_0_M00_AXI_WVALID;
+  wire usb_uart_rxd;
+  wire usb_uart_txd;
 
+  MB_CPU_axi_uartlite_0_0 axi_uartlite_0
+       (.rx(usb_uart_rxd),
+        .s_axi_aclk(Clk),
+        .s_axi_araddr(smartconnect_0_M00_AXI_ARADDR),
+        .s_axi_aresetn(rst_Clk_100M_peripheral_aresetn),
+        .s_axi_arready(smartconnect_0_M00_AXI_ARREADY),
+        .s_axi_arvalid(smartconnect_0_M00_AXI_ARVALID),
+        .s_axi_awaddr(smartconnect_0_M00_AXI_AWADDR),
+        .s_axi_awready(smartconnect_0_M00_AXI_AWREADY),
+        .s_axi_awvalid(smartconnect_0_M00_AXI_AWVALID),
+        .s_axi_bready(smartconnect_0_M00_AXI_BREADY),
+        .s_axi_bresp(smartconnect_0_M00_AXI_BRESP),
+        .s_axi_bvalid(smartconnect_0_M00_AXI_BVALID),
+        .s_axi_rdata(smartconnect_0_M00_AXI_RDATA),
+        .s_axi_rready(smartconnect_0_M00_AXI_RREADY),
+        .s_axi_rresp(smartconnect_0_M00_AXI_RRESP),
+        .s_axi_rvalid(smartconnect_0_M00_AXI_RVALID),
+        .s_axi_wdata(smartconnect_0_M00_AXI_WDATA),
+        .s_axi_wready(smartconnect_0_M00_AXI_WREADY),
+        .s_axi_wstrb(smartconnect_0_M00_AXI_WSTRB),
+        .s_axi_wvalid(smartconnect_0_M00_AXI_WVALID),
+        .tx(usb_uart_txd));
   (* BMM_INFO_PROCESSOR = "riscv > MB_CPU microblaze_riscv_0_local_memory/dlmb_bram_if_cntlr" *) 
   (* KEEP_HIERARCHY = "yes" *) 
   MB_CPU_microblaze_riscv_0_0 microblaze_riscv_0
@@ -72,14 +137,25 @@ module MB_CPU
         .Instr_Addr(microblaze_riscv_0_ilmb_1_ABUS),
         .Interrupt(1'b0),
         .Interrupt_Address({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .M_AXI_DP_ARREADY(1'b0),
-        .M_AXI_DP_AWREADY(1'b0),
-        .M_AXI_DP_BRESP({1'b0,1'b0}),
-        .M_AXI_DP_BVALID(1'b0),
-        .M_AXI_DP_RDATA({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}),
-        .M_AXI_DP_RRESP({1'b0,1'b0}),
-        .M_AXI_DP_RVALID(1'b0),
-        .M_AXI_DP_WREADY(1'b0),
+        .M_AXI_DP_ARADDR(microblaze_riscv_0_M_AXI_DP_ARADDR),
+        .M_AXI_DP_ARPROT(microblaze_riscv_0_M_AXI_DP_ARPROT),
+        .M_AXI_DP_ARREADY(microblaze_riscv_0_M_AXI_DP_ARREADY),
+        .M_AXI_DP_ARVALID(microblaze_riscv_0_M_AXI_DP_ARVALID),
+        .M_AXI_DP_AWADDR(microblaze_riscv_0_M_AXI_DP_AWADDR),
+        .M_AXI_DP_AWPROT(microblaze_riscv_0_M_AXI_DP_AWPROT),
+        .M_AXI_DP_AWREADY(microblaze_riscv_0_M_AXI_DP_AWREADY),
+        .M_AXI_DP_AWVALID(microblaze_riscv_0_M_AXI_DP_AWVALID),
+        .M_AXI_DP_BREADY(microblaze_riscv_0_M_AXI_DP_BREADY),
+        .M_AXI_DP_BRESP(microblaze_riscv_0_M_AXI_DP_BRESP),
+        .M_AXI_DP_BVALID(microblaze_riscv_0_M_AXI_DP_BVALID),
+        .M_AXI_DP_RDATA(microblaze_riscv_0_M_AXI_DP_RDATA),
+        .M_AXI_DP_RREADY(microblaze_riscv_0_M_AXI_DP_RREADY),
+        .M_AXI_DP_RRESP(microblaze_riscv_0_M_AXI_DP_RRESP),
+        .M_AXI_DP_RVALID(microblaze_riscv_0_M_AXI_DP_RVALID),
+        .M_AXI_DP_WDATA(microblaze_riscv_0_M_AXI_DP_WDATA),
+        .M_AXI_DP_WREADY(microblaze_riscv_0_M_AXI_DP_WREADY),
+        .M_AXI_DP_WSTRB(microblaze_riscv_0_M_AXI_DP_WSTRB),
+        .M_AXI_DP_WVALID(microblaze_riscv_0_M_AXI_DP_WVALID),
         .Read_Strobe(microblaze_riscv_0_dlmb_1_READSTROBE),
         .Reset(rst_Clk_100M_mb_reset),
         .Write_Strobe(microblaze_riscv_0_dlmb_1_WRITESTROBE));
@@ -112,7 +188,79 @@ module MB_CPU
         .ext_reset_in(reset),
         .mb_debug_sys_rst(1'b0),
         .mb_reset(rst_Clk_100M_mb_reset),
+        .peripheral_aresetn(rst_Clk_100M_peripheral_aresetn),
         .slowest_sync_clk(Clk));
+  MB_CPU_smartconnect_0_0 smartconnect_0
+       (.M00_AXI_araddr(smartconnect_0_M00_AXI_ARADDR),
+        .M00_AXI_arready(smartconnect_0_M00_AXI_ARREADY),
+        .M00_AXI_arvalid(smartconnect_0_M00_AXI_ARVALID),
+        .M00_AXI_awaddr(smartconnect_0_M00_AXI_AWADDR),
+        .M00_AXI_awready(smartconnect_0_M00_AXI_AWREADY),
+        .M00_AXI_awvalid(smartconnect_0_M00_AXI_AWVALID),
+        .M00_AXI_bready(smartconnect_0_M00_AXI_BREADY),
+        .M00_AXI_bresp(smartconnect_0_M00_AXI_BRESP),
+        .M00_AXI_bvalid(smartconnect_0_M00_AXI_BVALID),
+        .M00_AXI_rdata(smartconnect_0_M00_AXI_RDATA),
+        .M00_AXI_rready(smartconnect_0_M00_AXI_RREADY),
+        .M00_AXI_rresp(smartconnect_0_M00_AXI_RRESP),
+        .M00_AXI_rvalid(smartconnect_0_M00_AXI_RVALID),
+        .M00_AXI_wdata(smartconnect_0_M00_AXI_WDATA),
+        .M00_AXI_wready(smartconnect_0_M00_AXI_WREADY),
+        .M00_AXI_wstrb(smartconnect_0_M00_AXI_WSTRB),
+        .M00_AXI_wvalid(smartconnect_0_M00_AXI_WVALID),
+        .S00_AXI_araddr(microblaze_riscv_0_M_AXI_DP_ARADDR),
+        .S00_AXI_arprot(microblaze_riscv_0_M_AXI_DP_ARPROT),
+        .S00_AXI_arready(microblaze_riscv_0_M_AXI_DP_ARREADY),
+        .S00_AXI_arvalid(microblaze_riscv_0_M_AXI_DP_ARVALID),
+        .S00_AXI_awaddr(microblaze_riscv_0_M_AXI_DP_AWADDR),
+        .S00_AXI_awprot(microblaze_riscv_0_M_AXI_DP_AWPROT),
+        .S00_AXI_awready(microblaze_riscv_0_M_AXI_DP_AWREADY),
+        .S00_AXI_awvalid(microblaze_riscv_0_M_AXI_DP_AWVALID),
+        .S00_AXI_bready(microblaze_riscv_0_M_AXI_DP_BREADY),
+        .S00_AXI_bresp(microblaze_riscv_0_M_AXI_DP_BRESP),
+        .S00_AXI_bvalid(microblaze_riscv_0_M_AXI_DP_BVALID),
+        .S00_AXI_rdata(microblaze_riscv_0_M_AXI_DP_RDATA),
+        .S00_AXI_rready(microblaze_riscv_0_M_AXI_DP_RREADY),
+        .S00_AXI_rresp(microblaze_riscv_0_M_AXI_DP_RRESP),
+        .S00_AXI_rvalid(microblaze_riscv_0_M_AXI_DP_RVALID),
+        .S00_AXI_wdata(microblaze_riscv_0_M_AXI_DP_WDATA),
+        .S00_AXI_wready(microblaze_riscv_0_M_AXI_DP_WREADY),
+        .S00_AXI_wstrb(microblaze_riscv_0_M_AXI_DP_WSTRB),
+        .S00_AXI_wvalid(microblaze_riscv_0_M_AXI_DP_WVALID),
+        .S01_AXI_araddr(1'b0),
+        .S01_AXI_arburst({1'b0,1'b1}),
+        .S01_AXI_arcache({1'b0,1'b0,1'b1,1'b1}),
+        .S01_AXI_arid(1'b0),
+        .S01_AXI_arlen(1'b0),
+        .S01_AXI_arlock(1'b0),
+        .S01_AXI_arprot({1'b0,1'b0,1'b0}),
+        .S01_AXI_arqos({1'b0,1'b0,1'b0,1'b0}),
+        .S01_AXI_arregion({1'b0,1'b0,1'b0,1'b0}),
+        .S01_AXI_arsize({1'b0,1'b1,1'b0}),
+        .S01_AXI_aruser(1'b0),
+        .S01_AXI_arvalid(1'b0),
+        .S01_AXI_awaddr(1'b0),
+        .S01_AXI_awburst({1'b0,1'b1}),
+        .S01_AXI_awcache({1'b0,1'b0,1'b1,1'b1}),
+        .S01_AXI_awid(1'b0),
+        .S01_AXI_awlen(1'b0),
+        .S01_AXI_awlock(1'b0),
+        .S01_AXI_awprot({1'b0,1'b0,1'b0}),
+        .S01_AXI_awqos({1'b0,1'b0,1'b0,1'b0}),
+        .S01_AXI_awregion({1'b0,1'b0,1'b0,1'b0}),
+        .S01_AXI_awsize({1'b0,1'b1,1'b0}),
+        .S01_AXI_awuser(1'b0),
+        .S01_AXI_awvalid(1'b0),
+        .S01_AXI_bready(1'b0),
+        .S01_AXI_rready(1'b0),
+        .S01_AXI_wdata(1'b0),
+        .S01_AXI_wid(1'b0),
+        .S01_AXI_wlast(1'b0),
+        .S01_AXI_wstrb(1'b1),
+        .S01_AXI_wuser(1'b0),
+        .S01_AXI_wvalid(1'b0),
+        .aclk(Clk),
+        .aresetn(rst_Clk_100M_peripheral_aresetn));
 endmodule
 
 module microblaze_riscv_0_local_memory_imp_1M48OSC

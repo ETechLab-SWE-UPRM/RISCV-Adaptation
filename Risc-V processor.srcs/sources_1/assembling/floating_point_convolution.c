@@ -11,17 +11,27 @@ volatile int output_length = 1;
 volatile int done = 1;
 volatile int data = 1;
 
-int read_blocked() {
-    while(UART_read_status() == 0) {
-    }
-    return UART_read();
-}
-
 int main() {
     while (1) {
-        data = read_blocked();
-        UART_send(data);
-    }
+        for (int i = 0; i < 1024; i++) {
+            signal[i] = i + 1;
+        }
 
+        data_length = 1024;
+
+        for (int i = 0; i < 3; i++) {
+            kernel[i] = 1;
+        }
+
+        kernel_length = 3;
+
+        output_length = data_length - kernel_length + 1;
+
+        done = 0;
+
+        vector_convolution(signal, kernel, result, data_length, kernel_length, output_length);
+
+        done = 1;
+    }
     return 0;
 }

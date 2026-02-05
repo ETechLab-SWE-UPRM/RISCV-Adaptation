@@ -4,6 +4,7 @@ onerror {quit -force}
 transcript on
 
 vlib work
+vlib activehdl/xilinx_vip
 vlib activehdl/xpm
 vlib activehdl/xbip_dsp48_wrapper_v3_0_6
 vlib activehdl/xbip_utils_v3_0_14
@@ -15,6 +16,7 @@ vlib activehdl/axi_utils_v2_0_10
 vlib activehdl/mult_gen_v12_0_22
 vlib activehdl/floating_point_v7_1_19
 
+vmap xilinx_vip activehdl/xilinx_vip
 vmap xpm activehdl/xpm
 vmap xbip_dsp48_wrapper_v3_0_6 activehdl/xbip_dsp48_wrapper_v3_0_6
 vmap xbip_utils_v3_0_14 activehdl/xbip_utils_v3_0_14
@@ -26,7 +28,18 @@ vmap axi_utils_v2_0_10 activehdl/axi_utils_v2_0_10
 vmap mult_gen_v12_0_22 activehdl/mult_gen_v12_0_22
 vmap floating_point_v7_1_19 activehdl/floating_point_v7_1_19
 
-vlog -work xpm  -sv2k12 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work xilinx_vip  -sv2k12 "+incdir+C:/Xilinx/Vivado/2024.2/data/xilinx_vip/include" -l xilinx_vip -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+"C:/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/axi4stream_vip_axi4streampc.sv" \
+"C:/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/axi_vip_axi4pc.sv" \
+"C:/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/xil_common_vip_pkg.sv" \
+"C:/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/axi4stream_vip_pkg.sv" \
+"C:/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/axi_vip_pkg.sv" \
+"C:/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/axi4stream_vip_if.sv" \
+"C:/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/axi_vip_if.sv" \
+"C:/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/clk_vip_if.sv" \
+"C:/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/rst_vip_if.sv" \
+
+vlog -work xpm  -sv2k12 "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/f0b6/hdl/verilog" "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/0127/hdl/verilog" "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/ec67/hdl" "+incdir+C:/Xilinx/Vivado/2024.2/data/xilinx_vip/include" -l xilinx_vip -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
 "C:/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
 
 vcom -work xpm -93  \
@@ -47,10 +60,10 @@ vcom -work dsp_macro_v1_0_7 -93  \
 vcom -work xil_defaultlib -93  \
 "../../../Risc-V processor.gen/sources_1/ip/MAC_dsp/sim/MAC_dsp.vhd" \
 
-vlog -work blk_mem_gen_v8_4_9  -v2k5 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work blk_mem_gen_v8_4_9  -v2k5 "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/f0b6/hdl/verilog" "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/0127/hdl/verilog" "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/ec67/hdl" "+incdir+C:/Xilinx/Vivado/2024.2/data/xilinx_vip/include" -l xilinx_vip -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
 "../../ipstatic/simulation/blk_mem_gen_v8_4.v" \
 
-vlog -work xil_defaultlib  -v2k5 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work xil_defaultlib  -v2k5 "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/f0b6/hdl/verilog" "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/0127/hdl/verilog" "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/ec67/hdl" "+incdir+C:/Xilinx/Vivado/2024.2/data/xilinx_vip/include" -l xilinx_vip -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
 "../../../Risc-V processor.gen/sources_1/ip/blk_mem_gen_0_1/sim/blk_mem_gen_0.v" \
 
 vcom -work axi_utils_v2_0_10 -93  \
@@ -62,10 +75,10 @@ vcom -work mult_gen_v12_0_22 -93  \
 vcom -work floating_point_v7_1_19 -93  \
 "../../ipstatic/hdl/floating_point_v7_1_rfs.vhd" \
 
-vlog -work floating_point_v7_1_19  -v2k5 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work floating_point_v7_1_19  -v2k5 "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/f0b6/hdl/verilog" "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/0127/hdl/verilog" "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/ec67/hdl" "+incdir+C:/Xilinx/Vivado/2024.2/data/xilinx_vip/include" -l xilinx_vip -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
 "../../ipstatic/hdl/floating_point_v7_1_rfs.v" \
 
-vlog -work xil_defaultlib  -v2k5 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work xil_defaultlib  -v2k5 "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/f0b6/hdl/verilog" "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/0127/hdl/verilog" "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/ec67/hdl" "+incdir+C:/Xilinx/Vivado/2024.2/data/xilinx_vip/include" -l xilinx_vip -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_add_sub/sim/floating_point_add_sub.v" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_multiplier/sim/floating_point_multiplier.v" \
 "../../../Risc-V processor.gen/sources_1/ip/floating_point_branching/sim/floating_point_branching.v" \
@@ -77,7 +90,7 @@ vlog -work xil_defaultlib  -v2k5 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_uti
 "../../../Risc-V processor.srcs/sources_1/new/uart_top.v" \
 "../../../Risc-V processor.srcs/sources_1/new/uart_transmitter.v" \
 
-vlog -work xil_defaultlib  -sv2k12 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
+vlog -work xil_defaultlib  -sv2k12 "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/f0b6/hdl/verilog" "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/0127/hdl/verilog" "+incdir+../../../Risc-V processor.gen/sources_1/bd/MB_CPU/ipshared/ec67/hdl" "+incdir+C:/Xilinx/Vivado/2024.2/data/xilinx_vip/include" -l xilinx_vip -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 -l xil_defaultlib -l blk_mem_gen_v8_4_9 -l axi_utils_v2_0_10 -l mult_gen_v12_0_22 -l floating_point_v7_1_19 \
 "../../../Risc-V processor.srcs/sources_1/new/ALU.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/ALU_Control.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Control.sv" \
@@ -88,6 +101,7 @@ vlog -work xil_defaultlib  -sv2k12 -l xpm -l xbip_dsp48_wrapper_v3_0_6 -l xbip_u
 "../../../Risc-V processor.srcs/sources_1/new/IF_ID_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Imm_gen.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/InstructionMemory.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/MEM1_MEM2.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/MEM_WB_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/ProgramCounter.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Registers.sv" \

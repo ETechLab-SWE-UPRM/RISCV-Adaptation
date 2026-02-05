@@ -1,19 +1,22 @@
 import serial, struct
 
 def send_i32(ser, v):
-    ser.write(struct.pack("<i", v))
+    data = struct.pack(">i", v)
+    ser.write(data)
+    print(f"Sent {v} as {data}")
+
 
 def recv_i32(ser):
     b = ser.read(4)
     if len(b) != 4:
         print(b)
         raise TimeoutError("timeout")
-    return struct.unpack("<i", b)[0]
+    return struct.unpack(">i", b)[0]
 
-port = "COM4"
+port = "COM4" # Change this to your serial port
 baud = 115200
 
-signal = [i for i in range(1,1025)]
+signal = [i for i in range(1,11)]
 kernel = [1,1,1]
 
 with serial.Serial(port, baud, timeout=5) as ser:

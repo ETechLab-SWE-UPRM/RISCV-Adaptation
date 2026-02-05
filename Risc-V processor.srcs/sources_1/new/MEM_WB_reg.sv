@@ -85,10 +85,8 @@ module MEM_WB_reg #(
             for (int i = 1; i < vec_length; i++) begin
                 mem_wb_write_data[i] = 32'b0; // Other vector elements are not used in JAL/JALR
             end
-        end else if(mem_wb_memtoreg && uart_instruction_reg) begin
-            mem_wb_write_data = mem_wb_memory_data_read; 
         end else if(mem_wb_memtoreg) begin
-            mem_wb_write_data = memory_data_read;
+            mem_wb_write_data = mem_wb_memory_data_read; 
         end else begin
             mem_wb_write_data = mem_wb_alu_result; 
         end

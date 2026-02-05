@@ -13,15 +13,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="404,022.467 ns"></ZoomStartTime>
-      <ZoomEndTime time="404,277.668 ns"></ZoomEndTime>
-      <Cursor1Time time="404,065.000 ns"></Cursor1Time>
+      <ZoomStartTime time="169,094.438 ns"></ZoomStartTime>
+      <ZoomEndTime time="169,277.811 ns"></ZoomEndTime>
+      <Cursor1Time time="169,145.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="277"></NameColumnWidth>
+      <NameColumnWidth column_width="265"></NameColumnWidth>
       <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="264" />
+   <WVObjectSize size="27" />
    <wave_markers>
       <marker time="429975000" label="" />
       <marker time="71995000" label="" />
@@ -29,1060 +29,112 @@
       <marker time="275000" label="" />
       <marker time="404065000" label="" />
    </wave_markers>
-   <wvobject fp_name="/PipelineTester/processor/clk" type="logic">
+   <wvobject fp_name="/PipelineTester/processor/data_mem/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/reset" type="logic">
-      <obj_property name="ElementShortName">reset</obj_property>
-      <obj_property name="ObjectShortName">reset</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/rx" type="logic">
-      <obj_property name="ElementShortName">rx</obj_property>
-      <obj_property name="ObjectShortName">rx</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/tx" type="logic">
-      <obj_property name="ElementShortName">tx</obj_property>
-      <obj_property name="ObjectShortName">tx</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/seg" type="array">
-      <obj_property name="ElementShortName">seg[6:0]</obj_property>
-      <obj_property name="ObjectShortName">seg[6:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/an" type="array">
-      <obj_property name="ElementShortName">an[3:0]</obj_property>
-      <obj_property name="ObjectShortName">an[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/led" type="logic">
-      <obj_property name="ElementShortName">led</obj_property>
-      <obj_property name="ObjectShortName">led</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/uart_write_data" type="array">
-      <obj_property name="ElementShortName">uart_write_data[7:0]</obj_property>
-      <obj_property name="ObjectShortName">uart_write_data[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/uart_read_data" type="array">
-      <obj_property name="ElementShortName">uart_read_data[7:0]</obj_property>
-      <obj_property name="ObjectShortName">uart_read_data[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/uart_rx_full" type="logic">
-      <obj_property name="ElementShortName">uart_rx_full</obj_property>
-      <obj_property name="ObjectShortName">uart_rx_full</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/uart_rx_empty" type="logic">
-      <obj_property name="ElementShortName">uart_rx_empty</obj_property>
-      <obj_property name="ObjectShortName">uart_rx_empty</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/instruction_if_id" type="array">
-      <obj_property name="ElementShortName">instruction_if_id[31:0]</obj_property>
-      <obj_property name="ObjectShortName">instruction_if_id[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/pc_if_id" type="array">
-      <obj_property name="ElementShortName">pc_if_id[31:0]</obj_property>
-      <obj_property name="ObjectShortName">pc_if_id[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_op" type="array">
-      <obj_property name="ElementShortName">fp_op[1:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_op[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_read1" type="array">
-      <obj_property name="ElementShortName">data_read1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_read1[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_read2" type="array">
-      <obj_property name="ElementShortName">data_read2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_read2[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_read3" type="array">
-      <obj_property name="ElementShortName">data_read3[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_read3[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_data_read1" type="array">
-      <obj_property name="ElementShortName">fp_data_read1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_data_read1[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_data_read2" type="array">
-      <obj_property name="ElementShortName">fp_data_read2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_data_read2[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_data_read3" type="array">
-      <obj_property name="ElementShortName">fp_data_read3[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_data_read3[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_data_read4" type="array">
-      <obj_property name="ElementShortName">fp_data_read4[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_data_read4[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vector_data_read1" type="array">
-      <obj_property name="ElementShortName">vector_data_read1[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">vector_data_read1[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vector_data_read2" type="array">
-      <obj_property name="ElementShortName">vector_data_read2[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">vector_data_read2[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vector_data_read3" type="array">
-      <obj_property name="ElementShortName">vector_data_read3[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">vector_data_read3[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/conv_data_read" type="array">
-      <obj_property name="ElementShortName">conv_data_read[31:0]</obj_property>
-      <obj_property name="ObjectShortName">conv_data_read[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/conv_weights_read" type="array">
-      <obj_property name="ElementShortName">conv_weights_read[31:0]</obj_property>
-      <obj_property name="ObjectShortName">conv_weights_read[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_instruction" type="logic">
-      <obj_property name="ElementShortName">fp_instruction</obj_property>
-      <obj_property name="ObjectShortName">fp_instruction</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_alu_src" type="logic">
-      <obj_property name="ElementShortName">fp_alu_src</obj_property>
-      <obj_property name="ObjectShortName">fp_alu_src</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_reg_write" type="logic">
-      <obj_property name="ElementShortName">fp_reg_write</obj_property>
-      <obj_property name="ObjectShortName">fp_reg_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_load" type="logic">
-      <obj_property name="ElementShortName">fp_load</obj_property>
-      <obj_property name="ObjectShortName">fp_load</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_store" type="logic">
-      <obj_property name="ElementShortName">fp_store</obj_property>
-      <obj_property name="ObjectShortName">fp_store</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fmat_type" type="array">
-      <obj_property name="ElementShortName">fmat_type[1:0]</obj_property>
-      <obj_property name="ObjectShortName">fmat_type[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vec_op" type="logic">
-      <obj_property name="ElementShortName">vec_op</obj_property>
-      <obj_property name="ObjectShortName">vec_op</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vec_reg_write" type="logic">
-      <obj_property name="ElementShortName">vec_reg_write</obj_property>
-      <obj_property name="ObjectShortName">vec_reg_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/continous_addr" type="logic">
-      <obj_property name="ElementShortName">continous_addr</obj_property>
-      <obj_property name="ObjectShortName">continous_addr</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/single_load" type="logic">
-      <obj_property name="ElementShortName">single_load</obj_property>
-      <obj_property name="ObjectShortName">single_load</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/branch" type="logic">
-      <obj_property name="ElementShortName">branch</obj_property>
-      <obj_property name="ObjectShortName">branch</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/beq" type="logic">
-      <obj_property name="ElementShortName">beq</obj_property>
-      <obj_property name="ObjectShortName">beq</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/bne" type="logic">
-      <obj_property name="ElementShortName">bne</obj_property>
-      <obj_property name="ObjectShortName">bne</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/blt" type="logic">
-      <obj_property name="ElementShortName">blt</obj_property>
-      <obj_property name="ObjectShortName">blt</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/bge" type="logic">
-      <obj_property name="ElementShortName">bge</obj_property>
-      <obj_property name="ObjectShortName">bge</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_read" type="logic">
-      <obj_property name="ElementShortName">mem_read</obj_property>
-      <obj_property name="ObjectShortName">mem_read</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/memtoreg" type="logic">
-      <obj_property name="ElementShortName">memtoreg</obj_property>
-      <obj_property name="ObjectShortName">memtoreg</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_write" type="logic">
-      <obj_property name="ElementShortName">mem_write</obj_property>
-      <obj_property name="ObjectShortName">mem_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/alu_src" type="logic">
-      <obj_property name="ElementShortName">alu_src</obj_property>
-      <obj_property name="ObjectShortName">alu_src</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/reg_write" type="logic">
-      <obj_property name="ElementShortName">reg_write</obj_property>
-      <obj_property name="ObjectShortName">reg_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/jal" type="logic">
-      <obj_property name="ElementShortName">jal</obj_property>
-      <obj_property name="ObjectShortName">jal</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/jalr" type="logic">
-      <obj_property name="ElementShortName">jalr</obj_property>
-      <obj_property name="ObjectShortName">jalr</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/auipc" type="logic">
-      <obj_property name="ElementShortName">auipc</obj_property>
-      <obj_property name="ObjectShortName">auipc</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/lui" type="logic">
-      <obj_property name="ElementShortName">lui</obj_property>
-      <obj_property name="ObjectShortName">lui</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/alu_op" type="array">
-      <obj_property name="ElementShortName">alu_op[1:0]</obj_property>
-      <obj_property name="ObjectShortName">alu_op[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/big_immediate" type="array">
-      <obj_property name="ElementShortName">big_immediate[31:0]</obj_property>
-      <obj_property name="ObjectShortName">big_immediate[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_taken" type="logic">
-      <obj_property name="ElementShortName">ex_taken</obj_property>
-      <obj_property name="ObjectShortName">ex_taken</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/stall" type="logic">
-      <obj_property name="ElementShortName">stall</obj_property>
-      <obj_property name="ObjectShortName">stall</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/pc_write" type="logic">
-      <obj_property name="ElementShortName">pc_write</obj_property>
-      <obj_property name="ObjectShortName">pc_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/if_id_write" type="logic">
-      <obj_property name="ElementShortName">if_id_write</obj_property>
-      <obj_property name="ObjectShortName">if_id_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_stall" type="logic">
-      <obj_property name="ElementShortName">fp_stall</obj_property>
-      <obj_property name="ObjectShortName">fp_stall</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_pc_write" type="logic">
-      <obj_property name="ElementShortName">fp_pc_write</obj_property>
-      <obj_property name="ObjectShortName">fp_pc_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_if_id_write" type="logic">
-      <obj_property name="ElementShortName">fp_if_id_write</obj_property>
-      <obj_property name="ObjectShortName">fp_if_id_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mac_stall" type="logic">
-      <obj_property name="ElementShortName">mac_stall</obj_property>
-      <obj_property name="ObjectShortName">mac_stall</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/pc_id_ex" type="array">
-      <obj_property name="ElementShortName">pc_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">pc_id_ex[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/instruction_id_ex" type="array">
-      <obj_property name="ElementShortName">instruction_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">instruction_id_ex[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vec_op_id_ex" type="logic">
-      <obj_property name="ElementShortName">vec_op_id_ex</obj_property>
-      <obj_property name="ObjectShortName">vec_op_id_ex</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vec_reg_write_id_ex" type="logic">
-      <obj_property name="ElementShortName">vec_reg_write_id_ex</obj_property>
-      <obj_property name="ObjectShortName">vec_reg_write_id_ex</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_instruction_id_ex" type="logic">
-      <obj_property name="ElementShortName">fp_instruction_id_ex</obj_property>
-      <obj_property name="ObjectShortName">fp_instruction_id_ex</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_reg_write_id_ex" type="logic">
-      <obj_property name="ElementShortName">fp_reg_write_id_ex</obj_property>
-      <obj_property name="ObjectShortName">fp_reg_write_id_ex</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_continous_addr" type="logic">
-      <obj_property name="ElementShortName">id_ex_continous_addr</obj_property>
-      <obj_property name="ObjectShortName">id_ex_continous_addr</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_single_load" type="logic">
-      <obj_property name="ElementShortName">id_ex_single_load</obj_property>
-      <obj_property name="ObjectShortName">id_ex_single_load</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_branch" type="logic">
-      <obj_property name="ElementShortName">id_ex_branch</obj_property>
-      <obj_property name="ObjectShortName">id_ex_branch</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_beq" type="logic">
-      <obj_property name="ElementShortName">id_ex_beq</obj_property>
-      <obj_property name="ObjectShortName">id_ex_beq</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_bne" type="logic">
-      <obj_property name="ElementShortName">id_ex_bne</obj_property>
-      <obj_property name="ObjectShortName">id_ex_bne</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_blt" type="logic">
-      <obj_property name="ElementShortName">id_ex_blt</obj_property>
-      <obj_property name="ObjectShortName">id_ex_blt</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_bge" type="logic">
-      <obj_property name="ElementShortName">id_ex_bge</obj_property>
-      <obj_property name="ObjectShortName">id_ex_bge</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_mem_read" type="logic">
-      <obj_property name="ElementShortName">id_ex_mem_read</obj_property>
-      <obj_property name="ObjectShortName">id_ex_mem_read</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_memtoreg" type="logic">
-      <obj_property name="ElementShortName">id_ex_memtoreg</obj_property>
-      <obj_property name="ObjectShortName">id_ex_memtoreg</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_mem_write" type="logic">
-      <obj_property name="ElementShortName">id_ex_mem_write</obj_property>
-      <obj_property name="ObjectShortName">id_ex_mem_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_auipc" type="logic">
-      <obj_property name="ElementShortName">id_ex_auipc</obj_property>
-      <obj_property name="ObjectShortName">id_ex_auipc</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_alu_src" type="logic">
-      <obj_property name="ElementShortName">id_ex_alu_src</obj_property>
-      <obj_property name="ObjectShortName">id_ex_alu_src</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_reg_write" type="logic">
-      <obj_property name="ElementShortName">id_ex_reg_write</obj_property>
-      <obj_property name="ObjectShortName">id_ex_reg_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_jal" type="logic">
-      <obj_property name="ElementShortName">id_ex_jal</obj_property>
-      <obj_property name="ObjectShortName">id_ex_jal</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_jalr" type="logic">
-      <obj_property name="ElementShortName">id_ex_jalr</obj_property>
-      <obj_property name="ObjectShortName">id_ex_jalr</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_lui" type="logic">
-      <obj_property name="ElementShortName">id_ex_lui</obj_property>
-      <obj_property name="ObjectShortName">id_ex_lui</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_fp_alu_src" type="logic">
-      <obj_property name="ElementShortName">id_ex_fp_alu_src</obj_property>
-      <obj_property name="ObjectShortName">id_ex_fp_alu_src</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_fp_load" type="logic">
-      <obj_property name="ElementShortName">id_ex_fp_load</obj_property>
-      <obj_property name="ObjectShortName">id_ex_fp_load</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_fp_store" type="logic">
-      <obj_property name="ElementShortName">id_ex_fp_store</obj_property>
-      <obj_property name="ObjectShortName">id_ex_fp_store</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_fmat_type" type="array">
-      <obj_property name="ElementShortName">id_ex_fmat_type[1:0]</obj_property>
-      <obj_property name="ObjectShortName">id_ex_fmat_type[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/conv_write_enable" type="logic">
-      <obj_property name="ElementShortName">conv_write_enable</obj_property>
-      <obj_property name="ObjectShortName">conv_write_enable</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/conv_data_read_id_ex" type="array">
-      <obj_property name="ElementShortName">conv_data_read_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">conv_data_read_id_ex[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/weights_data_read_id_ex" type="array">
-      <obj_property name="ElementShortName">weights_data_read_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">weights_data_read_id_ex[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/conv_data_plus4" type="array">
-      <obj_property name="ElementShortName">conv_data_plus4[31:0]</obj_property>
-      <obj_property name="ObjectShortName">conv_data_plus4[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/weights_data_plus4" type="array">
-      <obj_property name="ElementShortName">weights_data_plus4[31:0]</obj_property>
-      <obj_property name="ObjectShortName">weights_data_plus4[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_fp_op" type="array">
-      <obj_property name="ElementShortName">id_ex_fp_op[1:0]</obj_property>
-      <obj_property name="ObjectShortName">id_ex_fp_op[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_alu_op" type="array">
-      <obj_property name="ElementShortName">id_ex_alu_op[1:0]</obj_property>
-      <obj_property name="ObjectShortName">id_ex_alu_op[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_read1_id_ex" type="array">
-      <obj_property name="ElementShortName">data_read1_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_read1_id_ex[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_read2_id_ex" type="array">
-      <obj_property name="ElementShortName">data_read2_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_read2_id_ex[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_read3_id_ex" type="array">
-      <obj_property name="ElementShortName">data_read3_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_read3_id_ex[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_data_read1_id_ex" type="array">
-      <obj_property name="ElementShortName">fp_data_read1_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_data_read1_id_ex[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_data_read2_id_ex" type="array">
-      <obj_property name="ElementShortName">fp_data_read2_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_data_read2_id_ex[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_data_read3_id_ex" type="array">
-      <obj_property name="ElementShortName">fp_data_read3_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_data_read3_id_ex[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_data_read4_id_ex" type="array">
-      <obj_property name="ElementShortName">fp_data_read4_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_data_read4_id_ex[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vector_data_read1_id_ex" type="array">
-      <obj_property name="ElementShortName">vector_data_read1_id_ex[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">vector_data_read1_id_ex[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vector_data_read2_id_ex" type="array">
-      <obj_property name="ElementShortName">vector_data_read2_id_ex[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">vector_data_read2_id_ex[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vector_data_read3_id_ex" type="array">
-      <obj_property name="ElementShortName">vector_data_read3_id_ex[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">vector_data_read3_id_ex[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/big_immediate_id_ex" type="array">
-      <obj_property name="ElementShortName">big_immediate_id_ex[31:0]</obj_property>
-      <obj_property name="ObjectShortName">big_immediate_id_ex[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/reg_dest_id_ex" type="array">
-      <obj_property name="ElementShortName">reg_dest_id_ex[4:0]</obj_property>
-      <obj_property name="ObjectShortName">reg_dest_id_ex[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/reg1_id_ex" type="array">
-      <obj_property name="ElementShortName">reg1_id_ex[4:0]</obj_property>
-      <obj_property name="ObjectShortName">reg1_id_ex[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/reg2_id_ex" type="array">
-      <obj_property name="ElementShortName">reg2_id_ex[4:0]</obj_property>
-      <obj_property name="ObjectShortName">reg2_id_ex[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/reg3_id_ex" type="array">
-      <obj_property name="ElementShortName">reg3_id_ex[4:0]</obj_property>
-      <obj_property name="ObjectShortName">reg3_id_ex[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/funct3_id_ex" type="array">
-      <obj_property name="ElementShortName">funct3_id_ex[2:0]</obj_property>
-      <obj_property name="ObjectShortName">funct3_id_ex[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/funct7_id_ex" type="array">
-      <obj_property name="ElementShortName">funct7_id_ex[6:0]</obj_property>
-      <obj_property name="ObjectShortName">funct7_id_ex[6:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/id_ex_flush" type="logic">
-      <obj_property name="ElementShortName">id_ex_flush</obj_property>
-      <obj_property name="ObjectShortName">id_ex_flush</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_alu_op" type="array">
-      <obj_property name="ElementShortName">fp_alu_op[3:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_alu_op[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/rm" type="array">
-      <obj_property name="ElementShortName">rm[2:0]</obj_property>
-      <obj_property name="ObjectShortName">rm[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_alu_result_valid" type="logic">
-      <obj_property name="ElementShortName">fp_alu_result_valid</obj_property>
-      <obj_property name="ObjectShortName">fp_alu_result_valid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_mac_result_valid" type="logic">
-      <obj_property name="ElementShortName">fp_mac_result_valid</obj_property>
-      <obj_property name="ObjectShortName">fp_mac_result_valid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_next_pc" type="array">
-      <obj_property name="ElementShortName">ex_next_pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_next_pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_vec_op" type="logic">
-      <obj_property name="ElementShortName">ex_mem_vec_op</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_vec_op</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_vec_reg_write" type="logic">
-      <obj_property name="ElementShortName">ex_mem_vec_reg_write</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_vec_reg_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_fp_instruction" type="logic">
-      <obj_property name="ElementShortName">ex_mem_fp_instruction</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_fp_instruction</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_fp_reg_write" type="logic">
-      <obj_property name="ElementShortName">ex_mem_fp_reg_write</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_fp_reg_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_single_load" type="logic">
-      <obj_property name="ElementShortName">ex_mem_single_load</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_single_load</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_memread" type="logic">
-      <obj_property name="ElementShortName">ex_mem_memread</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_memread</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_memwrite" type="logic">
-      <obj_property name="ElementShortName">ex_mem_memwrite</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_memwrite</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_memtoreg" type="logic">
-      <obj_property name="ElementShortName">ex_mem_memtoreg</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_memtoreg</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_regwrite" type="logic">
-      <obj_property name="ElementShortName">ex_mem_regwrite</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_regwrite</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_jal" type="logic">
-      <obj_property name="ElementShortName">ex_mem_jal</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_jal</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_jalr" type="logic">
-      <obj_property name="ElementShortName">ex_mem_jalr</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_jalr</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_fmat_type" type="array">
-      <obj_property name="ElementShortName">ex_mem_fmat_type[1:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_fmat_type[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_conv_data_read" type="array">
-      <obj_property name="ElementShortName">ex_mem_conv_data_read[31:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_conv_data_read[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_weights_data_read" type="array">
-      <obj_property name="ElementShortName">ex_mem_weights_data_read[31:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_weights_data_read[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_fp_mac_1" type="array">
-      <obj_property name="ElementShortName">ex_mem_fp_mac_1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_fp_mac_1[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_fp_mac_2" type="array">
-      <obj_property name="ElementShortName">ex_mem_fp_mac_2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_fp_mac_2[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_mac_result" type="array">
-      <obj_property name="ElementShortName">ex_mem_mac_result[31:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_mac_result[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/final_mem_result" type="array">
-      <obj_property name="ElementShortName">final_mem_result[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">final_mem_result[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_alu_result" type="array">
-      <obj_property name="ElementShortName">ex_mem_alu_result[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_alu_result[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_data_read2" type="array">
-      <obj_property name="ElementShortName">ex_mem_data_read2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_data_read2[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vec_ex_mem_data_read2" type="array">
-      <obj_property name="ElementShortName">vec_ex_mem_data_read2[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">vec_ex_mem_data_read2[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_rs1" type="array">
-      <obj_property name="ElementShortName">ex_mem_rs1[4:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_rs1[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_rs2" type="array">
-      <obj_property name="ElementShortName">ex_mem_rs2[4:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_rs2[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_reg_dest" type="array">
-      <obj_property name="ElementShortName">ex_mem_reg_dest[4:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_reg_dest[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_funct3" type="array">
-      <obj_property name="ElementShortName">ex_mem_funct3[2:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_funct3[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_link_address_reg" type="array">
-      <obj_property name="ElementShortName">ex_mem_link_address_reg[31:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_link_address_reg[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/conv_data_length" type="array">
-      <obj_property name="ElementShortName">conv_data_length[31:0]</obj_property>
-      <obj_property name="ObjectShortName">conv_data_length[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/conv_weights_length" type="array">
-      <obj_property name="ElementShortName">conv_weights_length[31:0]</obj_property>
-      <obj_property name="ObjectShortName">conv_weights_length[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/conv_output_length" type="array">
-      <obj_property name="ElementShortName">conv_output_length[31:0]</obj_property>
-      <obj_property name="ObjectShortName">conv_output_length[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_rd_dup" type="array">
-      <obj_property name="ElementShortName">ex_mem_rd_dup[4:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_rd_dup[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_regwrite_dup" type="logic">
-      <obj_property name="ElementShortName">ex_mem_regwrite_dup</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_regwrite_dup</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_memtoreg" type="logic">
-      <obj_property name="ElementShortName">mem_wb_memtoreg</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_memtoreg</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_regwrite" type="logic">
-      <obj_property name="ElementShortName">mem_wb_regwrite</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_regwrite</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_jal" type="logic">
-      <obj_property name="ElementShortName">mem_wb_jal</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_jal</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_jalr" type="logic">
-      <obj_property name="ElementShortName">mem_wb_jalr</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_jalr</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_vec_op" type="logic">
-      <obj_property name="ElementShortName">mem_wb_vec_op</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_vec_op</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_vec_reg_write" type="logic">
-      <obj_property name="ElementShortName">mem_wb_vec_reg_write</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_vec_reg_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_fp_instruction" type="logic">
-      <obj_property name="ElementShortName">mem_wb_fp_instruction</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_fp_instruction</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_fp_reg_write" type="logic">
-      <obj_property name="ElementShortName">mem_wb_fp_reg_write</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_fp_reg_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_alu_result" type="array">
-      <obj_property name="ElementShortName">mem_wb_alu_result[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_alu_result[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_memory_data_read" type="array">
-      <obj_property name="ElementShortName">mem_wb_memory_data_read[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_memory_data_read[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_link_address" type="array">
-      <obj_property name="ElementShortName">mem_wb_link_address[31:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_link_address[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_rs1" type="array">
-      <obj_property name="ElementShortName">mem_wb_rs1[4:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_rs1[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_rs2" type="array">
-      <obj_property name="ElementShortName">mem_wb_rs2[4:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_rs2[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_reg_dest" type="array">
-      <obj_property name="ElementShortName">mem_wb_reg_dest[4:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_reg_dest[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_write_data" type="array">
-      <obj_property name="ElementShortName">mem_wb_write_data[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_write_data[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/pc" type="array">
-      <obj_property name="ElementShortName">pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/next_pc" type="array">
-      <obj_property name="ElementShortName">next_pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">next_pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/instruction" type="array">
+   <wvobject fp_name="/PipelineTester/processor/im/instruction" type="array">
       <obj_property name="ElementShortName">instruction[31:0]</obj_property>
       <obj_property name="ObjectShortName">instruction[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fetch_pc" type="array">
-      <obj_property name="ElementShortName">fetch_pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fetch_pc[31:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/single_load" type="logic">
+      <obj_property name="ElementShortName">single_load</obj_property>
+      <obj_property name="ObjectShortName">single_load</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/reg1" type="array">
-      <obj_property name="ElementShortName">reg1[4:0]</obj_property>
-      <obj_property name="ObjectShortName">reg1[4:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/fmac" type="logic">
+      <obj_property name="ElementShortName">fmac</obj_property>
+      <obj_property name="ObjectShortName">fmac</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/reg2" type="array">
-      <obj_property name="ElementShortName">reg2[4:0]</obj_property>
-      <obj_property name="ObjectShortName">reg2[4:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/address" type="array">
+      <obj_property name="ElementShortName">address[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">address[0:1][31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/reg3" type="array">
-      <obj_property name="ElementShortName">reg3[4:0]</obj_property>
-      <obj_property name="ObjectShortName">reg3[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/reg_dest" type="array">
-      <obj_property name="ElementShortName">reg_dest[4:0]</obj_property>
-      <obj_property name="ObjectShortName">reg_dest[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/opcode" type="array">
-      <obj_property name="ElementShortName">opcode[6:0]</obj_property>
-      <obj_property name="ObjectShortName">opcode[6:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/funct3" type="array">
-      <obj_property name="ElementShortName">funct3[2:0]</obj_property>
-      <obj_property name="ObjectShortName">funct3[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/funct7" type="array">
-      <obj_property name="ElementShortName">funct7[6:0]</obj_property>
-      <obj_property name="ObjectShortName">funct7[6:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/forward_a" type="array">
-      <obj_property name="ElementShortName">forward_a[1:0]</obj_property>
-      <obj_property name="ObjectShortName">forward_a[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/forward_b" type="array">
-      <obj_property name="ElementShortName">forward_b[1:0]</obj_property>
-      <obj_property name="ObjectShortName">forward_b[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/forward_c" type="array">
-      <obj_property name="ElementShortName">forward_c[1:0]</obj_property>
-      <obj_property name="ObjectShortName">forward_c[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_forward_a" type="array">
-      <obj_property name="ElementShortName">fp_forward_a[1:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_forward_a[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_forward_b" type="array">
-      <obj_property name="ElementShortName">fp_forward_b[1:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_forward_b[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_forward_c" type="array">
-      <obj_property name="ElementShortName">fp_forward_c[1:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_forward_c[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_forward_d" type="array">
-      <obj_property name="ElementShortName">fp_forward_d[1:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_forward_d[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/alu_control" type="array">
-      <obj_property name="ElementShortName">alu_control[3:0]</obj_property>
-      <obj_property name="ObjectShortName">alu_control[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/alu_result" type="array">
-      <obj_property name="ElementShortName">alu_result[31:0]</obj_property>
-      <obj_property name="ObjectShortName">alu_result[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/zero" type="logic">
-      <obj_property name="ElementShortName">zero</obj_property>
-      <obj_property name="ObjectShortName">zero</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/is_mac" type="logic">
-      <obj_property name="ElementShortName">is_mac</obj_property>
-      <obj_property name="ObjectShortName">is_mac</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/alu_input" type="array">
-      <obj_property name="ElementShortName">alu_input[31:0]</obj_property>
-      <obj_property name="ObjectShortName">alu_input[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/alu_input2" type="array">
-      <obj_property name="ElementShortName">alu_input2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">alu_input2[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/v_alu_input" type="array">
-      <obj_property name="ElementShortName">v_alu_input[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">v_alu_input[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/v_alu_input2" type="array">
-      <obj_property name="ElementShortName">v_alu_input2[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">v_alu_input2[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/v_alu_result" type="array">
-      <obj_property name="ElementShortName">v_alu_result[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">v_alu_result[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_alu_result" type="array">
-      <obj_property name="ElementShortName">fp_alu_result[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_alu_result[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_counter" type="array">
-      <obj_property name="ElementShortName">data_counter[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_counter[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/weights_counter" type="array">
-      <obj_property name="ElementShortName">weights_counter[31:0]</obj_property>
-      <obj_property name="ObjectShortName">weights_counter[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_alu_operand1" type="array">
-      <obj_property name="ElementShortName">fp_alu_operand1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_alu_operand1[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_alu_operand2" type="array">
-      <obj_property name="ElementShortName">fp_alu_operand2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_alu_operand2[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_alu_operand3" type="array">
-      <obj_property name="ElementShortName">fp_alu_operand3[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_alu_operand3[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/alu_operand1" type="array">
-      <obj_property name="ElementShortName">alu_operand1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">alu_operand1[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/alu_operand2" type="array">
-      <obj_property name="ElementShortName">alu_operand2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">alu_operand2[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/alu_operand3" type="array">
-      <obj_property name="ElementShortName">alu_operand3[31:0]</obj_property>
-      <obj_property name="ObjectShortName">alu_operand3[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/va_operand1" type="array">
-      <obj_property name="ElementShortName">va_operand1[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">va_operand1[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/va_operand2" type="array">
-      <obj_property name="ElementShortName">va_operand2[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">va_operand2[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/va_operand3" type="array">
-      <obj_property name="ElementShortName">va_operand3[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">va_operand3[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/use_scalar1" type="logic">
-      <obj_property name="ElementShortName">use_scalar1</obj_property>
-      <obj_property name="ObjectShortName">use_scalar1</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/scalar1" type="array">
-      <obj_property name="ElementShortName">scalar1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">scalar1[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/scalar_mac_input_a" type="array">
-      <obj_property name="ElementShortName">scalar_mac_input_a[24:0]</obj_property>
-      <obj_property name="ObjectShortName">scalar_mac_input_a[24:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/scalar_mac_input_b" type="array">
-      <obj_property name="ElementShortName">scalar_mac_input_b[17:0]</obj_property>
-      <obj_property name="ObjectShortName">scalar_mac_input_b[17:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/scalar_mac_result" type="array">
-      <obj_property name="ElementShortName">scalar_mac_result[43:0]</obj_property>
-      <obj_property name="ObjectShortName">scalar_mac_result[43:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/scalar_mac_input_c" type="array">
-      <obj_property name="ElementShortName">scalar_mac_input_c[31:0]</obj_property>
-      <obj_property name="ObjectShortName">scalar_mac_input_c[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_result" type="array">
-      <obj_property name="ElementShortName">ex_result[31:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_result[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/complete_alu_result" type="array">
-      <obj_property name="ElementShortName">complete_alu_result[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">complete_alu_result[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vector_mac_input_a" type="array">
-      <obj_property name="ElementShortName">vector_mac_input_a[0:1][24:0]</obj_property>
-      <obj_property name="ObjectShortName">vector_mac_input_a[0:1][24:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vector_mac_input_b" type="array">
-      <obj_property name="ElementShortName">vector_mac_input_b[0:1][17:0]</obj_property>
-      <obj_property name="ObjectShortName">vector_mac_input_b[0:1][17:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vector_mac_result" type="array">
-      <obj_property name="ElementShortName">vector_mac_result[0:1][43:0]</obj_property>
-      <obj_property name="ObjectShortName">vector_mac_result[0:1][43:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vector_mac_input_c" type="array">
-      <obj_property name="ElementShortName">vector_mac_input_c[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">vector_mac_input_c[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vec_ex_result" type="array">
-      <obj_property name="ElementShortName">vec_ex_result[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">vec_ex_result[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_mac_mul_result" type="array">
-      <obj_property name="ElementShortName">fp_mac_mul_result[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_mac_mul_result[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/alu_fp_1" type="array">
-      <obj_property name="ElementShortName">alu_fp_1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">alu_fp_1[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/alu_fp_2" type="array">
-      <obj_property name="ElementShortName">alu_fp_2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">alu_fp_2[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/itf_result" type="array">
-      <obj_property name="ElementShortName">itf_result[31:0]</obj_property>
-      <obj_property name="ObjectShortName">itf_result[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/itf_result_valid" type="logic">
-      <obj_property name="ElementShortName">itf_result_valid</obj_property>
-      <obj_property name="ObjectShortName">itf_result_valid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/link_addr_ex1" type="array">
-      <obj_property name="ElementShortName">link_addr_ex1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">link_addr_ex1[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_to_memory" type="array">
-      <obj_property name="ElementShortName">data_to_memory[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_to_memory[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_read" type="logic">
-      <obj_property name="ElementShortName">ex_mem_read</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_read</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_write" type="logic">
-      <obj_property name="ElementShortName">ex_mem_write</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_write</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_to_reg" type="logic">
-      <obj_property name="ElementShortName">ex_mem_to_reg</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_to_reg</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/memory_data_read" type="array">
-      <obj_property name="ElementShortName">memory_data_read[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">memory_data_read[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/inside_data_mem" type="logic">
-      <obj_property name="ElementShortName">inside_data_mem</obj_property>
-      <obj_property name="ObjectShortName">inside_data_mem</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/memory_address" type="array">
-      <obj_property name="ElementShortName">memory_address[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">memory_address[0:1][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/write_data" type="array">
+   <wvobject fp_name="/PipelineTester/processor/data_mem/write_data" type="array">
       <obj_property name="ElementShortName">write_data[0:1][31:0]</obj_property>
       <obj_property name="ObjectShortName">write_data[0:1][31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_length_store" type="logic">
-      <obj_property name="ElementShortName">data_length_store</obj_property>
-      <obj_property name="ObjectShortName">data_length_store</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/funct3" type="array">
+      <obj_property name="ElementShortName">funct3[2:0]</obj_property>
+      <obj_property name="ObjectShortName">funct3[2:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/weights_length_store" type="logic">
-      <obj_property name="ElementShortName">weights_length_store</obj_property>
-      <obj_property name="ObjectShortName">weights_length_store</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/mem_write" type="logic">
+      <obj_property name="ElementShortName">mem_write</obj_property>
+      <obj_property name="ObjectShortName">mem_write</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/output_length_store" type="logic">
-      <obj_property name="ElementShortName">output_length_store</obj_property>
-      <obj_property name="ObjectShortName">output_length_store</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/mem_read" type="logic">
+      <obj_property name="ElementShortName">mem_read</obj_property>
+      <obj_property name="ObjectShortName">mem_read</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/uart_data" type="array">
-      <obj_property name="ElementShortName">uart_data[31:0]</obj_property>
-      <obj_property name="ObjectShortName">uart_data[31:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/vec_op" type="logic">
+      <obj_property name="ElementShortName">vec_op</obj_property>
+      <obj_property name="ObjectShortName">vec_op</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/uart_send_data" type="array">
-      <obj_property name="ElementShortName">uart_send_data[31:0]</obj_property>
-      <obj_property name="ObjectShortName">uart_send_data[31:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/read_data" type="array">
+      <obj_property name="ElementShortName">read_data[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data[0:1][31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/uart_memory" type="array">
-      <obj_property name="ElementShortName">uart_memory[0:1][31:0]</obj_property>
-      <obj_property name="ObjectShortName">uart_memory[0:1][31:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/bram_data" type="array">
+      <obj_property name="ElementShortName">bram_data[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">bram_data[0:1][31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/override_data_read" type="logic">
-      <obj_property name="ElementShortName">override_data_read</obj_property>
-      <obj_property name="ObjectShortName">override_data_read</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/write_word" type="array">
+      <obj_property name="ElementShortName">write_word[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">write_word[0:1][31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_word_complete" type="logic">
-      <obj_property name="ElementShortName">data_word_complete</obj_property>
-      <obj_property name="ObjectShortName">data_word_complete</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/write_enable" type="array">
+      <obj_property name="ElementShortName">write_enable[0:1][3:0]</obj_property>
+      <obj_property name="ObjectShortName">write_enable[0:1][3:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_place" type="array">
-      <obj_property name="ElementShortName">data_place[1:0]</obj_property>
-      <obj_property name="ObjectShortName">data_place[1:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/addresses" type="array">
+      <obj_property name="ElementShortName">addresses[0:1][13:0]</obj_property>
+      <obj_property name="ObjectShortName">addresses[0:1][13:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_send" type="array">
-      <obj_property name="ElementShortName">data_send[1:0]</obj_property>
-      <obj_property name="ObjectShortName">data_send[1:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/vec_op_enable" type="array">
+      <obj_property name="ElementShortName">vec_op_enable[0:1]</obj_property>
+      <obj_property name="ObjectShortName">vec_op_enable[0:1]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/tx_done_tick" type="logic">
-      <obj_property name="ElementShortName">tx_done_tick</obj_property>
-      <obj_property name="ObjectShortName">tx_done_tick</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/byte_address" type="array">
+      <obj_property name="ElementShortName">byte_address[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">byte_address[0:1][31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/word_in_progress" type="logic">
-      <obj_property name="ElementShortName">word_in_progress</obj_property>
-      <obj_property name="ObjectShortName">word_in_progress</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/in_range" type="array">
+      <obj_property name="ElementShortName">in_range[0:1]</obj_property>
+      <obj_property name="ObjectShortName">in_range[0:1]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/uart_write_to_mem" type="logic">
-      <obj_property name="ElementShortName">uart_write_to_mem</obj_property>
-      <obj_property name="ObjectShortName">uart_write_to_mem</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/mem_read_internal" type="logic">
+      <obj_property name="ElementShortName">mem_read_internal</obj_property>
+      <obj_property name="ObjectShortName">mem_read_internal</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/send_byte" type="logic">
-      <obj_property name="ElementShortName">send_byte</obj_property>
-      <obj_property name="ObjectShortName">send_byte</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/single_load_internal" type="logic">
+      <obj_property name="ElementShortName">single_load_internal</obj_property>
+      <obj_property name="ObjectShortName">single_load_internal</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ready_to_send" type="logic">
-      <obj_property name="ElementShortName">ready_to_send</obj_property>
-      <obj_property name="ObjectShortName">ready_to_send</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/fmac_internal" type="logic">
+      <obj_property name="ElementShortName">fmac_internal</obj_property>
+      <obj_property name="ObjectShortName">fmac_internal</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/receive_send" type="logic">
-      <obj_property name="ElementShortName">receive_send</obj_property>
-      <obj_property name="ObjectShortName">receive_send</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/in_range_internal" type="array">
+      <obj_property name="ElementShortName">in_range_internal[0:1]</obj_property>
+      <obj_property name="ObjectShortName">in_range_internal[0:1]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/status_read" type="logic">
-      <obj_property name="ElementShortName">status_read</obj_property>
-      <obj_property name="ObjectShortName">status_read</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/funct3_internal" type="array">
+      <obj_property name="ElementShortName">funct3_internal[2:0]</obj_property>
+      <obj_property name="ObjectShortName">funct3_internal[2:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/receive_read" type="logic">
-      <obj_property name="ElementShortName">receive_read</obj_property>
-      <obj_property name="ObjectShortName">receive_read</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/vec_length" type="array">
+      <obj_property name="ElementShortName">vec_length[31:0]</obj_property>
+      <obj_property name="ObjectShortName">vec_length[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/ex_mem_mac_result_valid" type="logic">
-      <obj_property name="ElementShortName">ex_mem_mac_result_valid</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_mac_result_valid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/mem_wb_fmat_type" type="logic">
-      <obj_property name="ElementShortName">mem_wb_fmat_type</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_fmat_type</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/vector_length" type="array">
-      <obj_property name="ElementShortName">vector_length[31:0]</obj_property>
-      <obj_property name="ObjectShortName">vector_length[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_base" type="array">
+   <wvobject fp_name="/PipelineTester/processor/data_mem/data_base" type="array">
       <obj_property name="ElementShortName">data_base[31:0]</obj_property>
       <obj_property name="ObjectShortName">data_base[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_word_space" type="array">
-      <obj_property name="ElementShortName">data_word_space[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_word_space[31:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/data_addresses" type="array">
+      <obj_property name="ElementShortName">data_addresses[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_addresses[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/uart_status" type="array">
-      <obj_property name="ElementShortName">uart_status[31:0]</obj_property>
-      <obj_property name="ObjectShortName">uart_status[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/uart_receive" type="array">
-      <obj_property name="ElementShortName">uart_receive[31:0]</obj_property>
-      <obj_property name="ObjectShortName">uart_receive[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/uart_send" type="array">
-      <obj_property name="ElementShortName">uart_send[31:0]</obj_property>
-      <obj_property name="ObjectShortName">uart_send[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_length_addr" type="array">
-      <obj_property name="ElementShortName">data_length_addr[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_length_addr[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/weights_length_addr" type="array">
-      <obj_property name="ElementShortName">weights_length_addr[31:0]</obj_property>
-      <obj_property name="ObjectShortName">weights_length_addr[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/output_length_addr" type="array">
-      <obj_property name="ElementShortName">output_length_addr[31:0]</obj_property>
-      <obj_property name="ObjectShortName">output_length_addr[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/data_bits" type="array">
-      <obj_property name="ElementShortName">data_bits[31:0]</obj_property>
-      <obj_property name="ObjectShortName">data_bits[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/stop_tick" type="array">
-      <obj_property name="ElementShortName">stop_tick[31:0]</obj_property>
-      <obj_property name="ObjectShortName">stop_tick[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fifo_exp" type="array">
-      <obj_property name="ElementShortName">fifo_exp[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fifo_exp[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/baud_rate" type="array">
-      <obj_property name="ElementShortName">baud_rate[31:0]</obj_property>
-      <obj_property name="ObjectShortName">baud_rate[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/br_limit" type="array">
-      <obj_property name="ElementShortName">br_limit[31:0]</obj_property>
-      <obj_property name="ObjectShortName">br_limit[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/br_bits" type="array">
-      <obj_property name="ElementShortName">br_bits[31:0]</obj_property>
-      <obj_property name="ObjectShortName">br_bits[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/PipelineTester/processor/fp_adder_delay" type="array">
-      <obj_property name="ElementShortName">fp_adder_delay[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fp_adder_delay[31:0]</obj_property>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/UART_base" type="array">
+      <obj_property name="ElementShortName">UART_base[31:0]</obj_property>
+      <obj_property name="ObjectShortName">UART_base[31:0]</obj_property>
    </wvobject>
 </wave_config>

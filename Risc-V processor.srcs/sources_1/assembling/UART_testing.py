@@ -11,10 +11,11 @@ def recv_i32(ser):
         raise TimeoutError("timeout")
     return struct.unpack("<i", b)[0]
 
-port = "COM4"
+port = "COM4" # Change this to your serial port
 baud = 115200
 
 with serial.Serial(port, baud, timeout=5) as ser:
-    send_i32(ser, 0x12345678)
-    recv_i32(ser)
-    print("Test message sent and response received.")
+    message =  0x12345678
+    send_i32(ser, message)
+    data = recv_i32(ser)
+    print(f"Test message sent {hex(message)} and response received {hex(data)}.")
