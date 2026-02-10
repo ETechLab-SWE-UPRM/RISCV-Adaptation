@@ -32,15 +32,15 @@ module Floating_Point_registers #(
                 fp_regs[i] <= 0;
             end
         end else begin
-            if (reg_write_enable) begin
+            if (reg_write_enable && conv_write_enable) begin
                 fp_regs[write_reg] <= write_data;
-            end
-
-            if (conv_write_enable) begin
                 fp_regs[conv_write_reg_rs1] <= conv_data_write[0];
-                for (int i = 1; i < vec_length; i++) begin
-                    fp_regs[conv_write_reg_rs2] <= conv_data_write[i];
-                end
+                fp_regs[conv_write_reg_rs2] <= conv_data_write[1];
+            end else if (reg_write_enable) begin
+                fp_regs[write_reg] <= write_data;
+            end else if (conv_write_enable) begin
+                fp_regs[conv_write_reg_rs1] <= conv_data_write[0];
+                fp_regs[conv_write_reg_rs2] <= conv_data_write[1];
             end
         end
     end

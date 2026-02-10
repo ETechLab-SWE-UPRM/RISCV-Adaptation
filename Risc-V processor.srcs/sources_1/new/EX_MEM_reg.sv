@@ -29,7 +29,11 @@ module EX_MEM_reg #(
     input logic [4:0] id_ex_rs2,
     input logic [4:0] reg_dest_id_ex,
     input logic [31:0] ex_link_address,
-    input logic [2:0] funct3, 
+    input logic [2:0] funct3,
+    input logic [31:0] conv_weights_length,
+    input logic [31:0] conv_data_length,
+    input logic [31:0] weights_counter,
+    input logic [31:0] data_counter,
 
     output logic ex_mem_vec_op,
     output logic ex_mem_fp_instruction,
@@ -54,8 +58,9 @@ module EX_MEM_reg #(
     output logic [4:0] ex_mem_rs2,
     output logic [4:0] ex_mem_reg_dest,
     output logic [31:0] ex_mem_link_address_reg,
-    output logic [2:0] ex_mem_funct3 
-
+    output logic [2:0] ex_mem_funct3,
+    output logic [31:0] ex_mem_data_counter,
+    output logic [31:0] ex_mem_weights_counter
 );
 
     always_ff @(posedge clk) begin
@@ -84,6 +89,8 @@ module EX_MEM_reg #(
             ex_mem_reg_dest <= 5'b0;
             ex_mem_link_address_reg <= 32'b0;
             ex_mem_funct3 <= 3'b0; 
+            ex_mem_weights_counter <= '0;
+            ex_mem_data_counter <= '0;
 
         end else if (!stall) begin
             ex_mem_vec_op <= vec_op; 
@@ -99,8 +106,6 @@ module EX_MEM_reg #(
             ex_mem_jal <= id_ex_jal; 
             ex_mem_jalr <= id_ex_jalr;
             ex_mem_fmat_type <= id_ex_fmat_type;
-            ex_mem_conv_data_read <= conv_data_read_id_ex;
-            ex_mem_weights_data_read <= weights_data_read_id_ex;
             ex_mem_fp_mac_1 <= id_ex_fp_mac_1;
             ex_mem_fp_mac_2 <= id_ex_fp_mac_2;
             ex_mem_alu_result <= alu_result; 
@@ -111,6 +116,21 @@ module EX_MEM_reg #(
             ex_mem_link_address_reg <= ex_link_address;
             ex_mem_funct3 <= funct3; 
 
+            if (id_ex_fmat_type == FMADD) begin
+                if (weights_counter == conv_weights_length) begin
+                    ex_mem_conv_data_read <= ((conv_data_read_id_ex - (conv_weights_length << 2)) + 32'd4);
+                    ex_mem_weights_data_read <= weights_data_read_id_ex - (conv_weights_length << 2);
+                    ex_mem_weights_counter <= 32'b0;
+                end else begin
+                    ex_mem_conv_data_read <= conv_data_read_id_ex + 4;
+                    ex_mem_weights_data_read <= weights_data_read_id_ex + 4;
+                    ex_mem_weights_counter <= weights_counter + 1;
+                    ex_mem_data_counter <= data_counter + 1;
+                end
+            end else begin
+                ex_mem_conv_data_read <= conv_data_read_id_ex;
+                ex_mem_weights_data_read <= weights_data_read_id_ex;
+            end
         end
     end
 endmodule

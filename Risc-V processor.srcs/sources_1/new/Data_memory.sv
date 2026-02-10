@@ -52,7 +52,7 @@ module Data_memory #(
             assign byte_address[j] = address[j] - data_base;
             assign addresses[j] = byte_address[j][15:2];
             assign vec_op_enable[j] = vec_op || fmac;
-            assign in_range[j] = address[j] < (UART_base);
+            assign in_range[j] = (address[j] < (UART_base)) || (address[j] != 0);
         end
     endgenerate
 

@@ -16,7 +16,7 @@
     #define BITS_PER_WORD_ON_WIRE 40u // 1 start, 8 data, 1 stop (4 bytes)
     #define UART_Clocks_per_bit 34723 // CPU_Hz / UART_Baudrate
 
-    int Convolution(int *data, int *weights, int *output,
+    int Convolution(float *data, float *weights, float *output,
                       int data_length, int weights_length, int output_length);
 
     int vector_convolution_main(int *data, int *weights, int *output,
@@ -66,6 +66,11 @@
         UART_transmit = temp;
     }
 
+    static inline void write_blocked_float(float data) {
+        UART_send_float(data);
+        busy(UART_Clocks_per_bit);
+    } 
+
     /*
         Floating Point convolution function with inline assembly implementation.
 
@@ -76,7 +81,7 @@
         @param weights_length length of the weights array
         @param output_length length of the output array
     */
-    static inline int convolution1D(int *data, int *weights, int *output, int data_length, int weights_length, int output_length) {
+    static inline int convolution1D(float *data, float *weights, float *output, int data_length, int weights_length, int output_length) {
         return Convolution(data, weights, output, data_length, weights_length, output_length);
     }
 

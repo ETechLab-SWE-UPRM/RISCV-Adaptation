@@ -34,6 +34,7 @@ module Registers(
             end 
             
             // Has priority over normal register writes for a0 and a1
+            // Where the addresses are being kept for FP convolutions
             if(conv_write_enable) begin
                 regs[a0] <= conv_data_write;
                 regs[a1] <= conv_weights_write;

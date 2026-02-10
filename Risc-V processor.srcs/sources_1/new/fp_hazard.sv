@@ -1,18 +1,19 @@
 `timescale 1ns/1ps
 
 module fp_hazard_detection #(
-    parameter fp_adder_delay = 3
+    parameter fp_adder_delay = 3,
+    parameter fp_multiplier_delay = 1
 ) (
     input logic clk,
     input logic reset,
     input logic ex_mem_fmadd,
     input logic fp_result_valid,
+    input logic fp_mac_result_valid,
     input logic id_ex_fmadd,
     input logic id_ex_adder,
     input logic [4:0] if_id_rs1, if_id_rs2, if_id_rs3,
     input logic [4:0] reg_dest_id_ex,
     input logic id_ex_mem_read,
-    input logic fp_fmadd_result_valid,
     input logic fp_adder_result_valid,
 
     output logic mac_stall,
@@ -21,7 +22,6 @@ module fp_hazard_detection #(
 
     logic hazard1, hazard2, hazard3;
     logic previous_fp_stall;
-    logic stall_pending;
     logic [1:0] delay_counter;
 
     assign hazard1 = (id_ex_mem_read && (if_id_rs1 == reg_dest_id_ex));
@@ -44,18 +44,6 @@ module fp_hazard_detection #(
         end
     end
 
-    always_ff @(posedge clk) begin
-        if (reset) begin
-            stall_pending <= 1'b0;
-        end else begin
-            if ((hazard1 || hazard2 || hazard3) && !stall_pending) begin
-                stall_pending <= 1'b1;
-            end else if (stall_pending) begin
-                stall_pending <= 1'b0;
-            end
-        end
-    end
-
     always_comb begin
         stall = 1'b0; 
         mac_stall = 1'b0;
@@ -66,7 +54,7 @@ module fp_hazard_detection #(
             mac_stall = 1'b1;
             pc_write = 1'b0;
             if_id_write = 1'b0;
-        end else if(hazard1 || hazard2 || hazard3 || stall_pending) begin
+        end else if(hazard1 || hazard2 || hazard3) begin
             stall = 1'b1;
             pc_write = 1'b0;
             if_id_write = 1'b0;

@@ -26,7 +26,6 @@ Convolution:
     # Input length store
     lui t1, %hi(data_addr)
     sw a3, %lo(data_addr)(t1)
-    lui t6, %hi(uart_send)
 
     li t1, 0 # i = 0
 

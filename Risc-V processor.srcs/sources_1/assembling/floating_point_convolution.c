@@ -2,9 +2,9 @@
 #define MAX_LENGTH 2048
 #define KERNEL_SIZE 64
 
-int signal[MAX_LENGTH];
-int kernel[KERNEL_SIZE];
-int result[MAX_LENGTH - KERNEL_SIZE + 1];
+float signal[MAX_LENGTH];
+float kernel[KERNEL_SIZE];
+float result[MAX_LENGTH - KERNEL_SIZE + 1];
 volatile int data_length = 1;
 volatile int kernel_length = 1;
 volatile int output_length = 1;
@@ -13,14 +13,16 @@ volatile int data = 1;
 
 int main() {
     while (1) {
+        int add_result = 0;
         for (int i = 0; i < 1024; i++) {
-            signal[i] = i + 1;
+            add_result = i + 1;
+            signal[i] = (float) add_result;
         }
 
         data_length = 1024;
 
         for (int i = 0; i < 3; i++) {
-            kernel[i] = 1;
+            kernel[i] = 1.0f;
         }
 
         kernel_length = 3;
@@ -29,7 +31,7 @@ int main() {
 
         done = 0;
 
-        vector_convolution(signal, kernel, result, data_length, kernel_length, output_length);
+        convolution1D(signal, kernel, result, data_length, kernel_length, output_length);
 
         done = 1;
     }

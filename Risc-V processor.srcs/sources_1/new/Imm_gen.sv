@@ -48,12 +48,12 @@ module Immediate_generator #(
 
       // FLW
       7'b0000111:
-        immediate = {{(XLEN-32){instruction[31]}},
+        immediate = {{(XLEN-12){instruction[31]}},
                      instruction[31:20]};
 
       // FSW
       7'b0100111:
-        immediate = {{(XLEN-32){instruction[31]}},
+        immediate = {{(XLEN-12){instruction[31]}},
                      instruction[31:25], instruction[11:7]};
 
       default:

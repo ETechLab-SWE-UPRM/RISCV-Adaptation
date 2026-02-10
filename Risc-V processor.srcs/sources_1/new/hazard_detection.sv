@@ -11,19 +11,6 @@ module Hazard_Detection (
 );
 
     logic hazard1, hazard2;
-    logic stall_pending;
-
-    always_ff @(posedge clk) begin
-        if (reset) begin
-            stall_pending <= 1'b0;
-        end else begin
-            if ((hazard1 || hazard2) && !stall_pending) begin
-                stall_pending <= 1'b1;
-            end else if (stall_pending) begin
-                stall_pending <= 1'b0;
-            end
-        end
-    end
 
     assign hazard1 =  (id_ex_mem_read && (if_id_vec_op == id_ex_vec_op) && 
         (((if_id_rs1 != 5'b0) && (if_id_rs1 == reg_dest_id_ex))));
@@ -36,7 +23,7 @@ module Hazard_Detection (
         pc_write = 1'b1;
         if_id_write = 1'b1;
 
-        if(hazard1 || hazard2 || stall_pending) begin
+        if(hazard1 || hazard2) begin
             stall = 1'b1; 
             pc_write = 1'b0; 
             if_id_write = 1'b0; 
