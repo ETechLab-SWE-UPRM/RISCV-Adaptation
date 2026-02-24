@@ -1,4 +1,8 @@
 import time
+import struct
+
+def float_to_hex32(f):
+    return struct.unpack('<I', struct.pack('<f', f))[0]
 
 def main():
     signal = [0] * 1024
@@ -18,6 +22,10 @@ def main():
     #finishes time of execution before the print statement is called
     end = (time.perf_counter() - start) * 1_000_000_000 #converts to nanoseconds
     print(end, "nanoseconds")
+    for i in range(15):
+        hex_val = float_to_hex32(result[i])
+        print(f"{result[i]:10.3f}  ->  0x{hex_val:08X}")
+
 
 if __name__ == "__main__":
     main()
