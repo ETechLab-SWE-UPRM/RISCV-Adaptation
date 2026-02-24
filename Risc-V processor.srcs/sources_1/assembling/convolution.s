@@ -62,5 +62,9 @@ inner_loop_finished:
     li a0, 0
     ret
 
+add_strife: # Helper function if you want to add strife between the loops (Default strife is 1)
+    addi a0, a0, 4
+    jal outer_loop
+
 forever:
     jal forever

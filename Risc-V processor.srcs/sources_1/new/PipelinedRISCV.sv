@@ -167,13 +167,14 @@ module RISCV_PIPELINED (
     fp_fma_t ex_mem_fmat_type;
     logic [31:0] ex_mem_conv_addr, ex_mem_weights_addr;
     logic [31:0] ex_mem_fp_mac_1, ex_mem_fp_mac_2, ex_mem_mac_result;
-    logic [31:0] final_mem_result [0:vector_length-1];
     logic [31:0] ex_mem_alu_result [0:vector_length-1], ex_mem_data_read2;
     logic [31:0] vec_ex_mem_data_read2 [0:vector_length-1];
     logic [4:0] ex_mem_rs1, ex_mem_rs2, ex_mem_reg_dest;
     logic [2:0] ex_mem_funct3;
     logic [31:0] ex_mem_link_address_reg;
     logic [31:0] ex_mem_data_counter, ex_mem_weights_counter;
+    logic [4:0] fp_mac_result_reg_dest;
+    logic [31:0] memory_data_read [0:vector_length-1];
 
     // Convolution registers for memory mapping
     logic [31:0] conv_data_length, conv_weights_length, conv_output_length;
@@ -311,7 +312,10 @@ module RISCV_PIPELINED (
         .write_data(mem_wb_write_data[0]),
         .reg_write_enable(mem_wb_fp_reg_write),
         .conv_write_enable(mem_wb_fmat_type == FMADD),
-        .conv_data_write(mem_wb_memory_data_read),
+        .conv_data_write(memory_data_read),
+        .fp_mac_finished(ex_mem_mac_result_valid),
+        .fp_mac_reg_dest(fp_mac_result_reg_dest),
+        .fp_mac_data(ex_mem_mac_result),
 
         .read_data1(fp_data_read1),
         .read_data2(fp_data_read2),
@@ -384,16 +388,16 @@ module RISCV_PIPELINED (
     ) fp_hd_u (
         .clk(clk),
         .reset(reset),
-        .ex_mem_fmadd(ex_mem_fmat_type == FMADD),
-        .fp_result_valid(ex_mem_mac_result_valid),
         .fp_mac_result_valid(fp_mac_result_valid),
-        .id_ex_fmadd(id_ex_fmat_type == FMADD),
-        .id_ex_adder(fp_alu_op == FADD || fp_alu_op == FSUB),
         .if_id_rs1(reg1),
         .if_id_rs2(reg2),
         .if_id_rs3(reg3),
+        .id_ex_rs2(reg2_id_ex),
         .reg_dest_id_ex(reg_dest_id_ex),
+        .fp_mac_reg_dest(fp_mac_result_reg_dest),
+        .fp_mac_finished(ex_mem_mac_result_valid),
         .id_ex_mem_read(id_ex_fp_load),
+        .id_ex_mem_write(id_ex_fp_store),
         .fp_adder_result_valid(fp_alu_result_valid),
 
         .mac_stall(mac_stall),
@@ -632,7 +636,7 @@ module RISCV_PIPELINED (
             unique case (forward_b)
                 2'b00: va_operand2 = vector_data_read2_id_ex;
                 2'b01: va_operand2 = mem_wb_write_data;
-                2'b10: va_operand2 = final_mem_result;
+                2'b10: va_operand2 = ex_mem_alu_result;
                 default: va_operand2 = vector_data_read2_id_ex;
             endcase
 
@@ -813,7 +817,7 @@ module RISCV_PIPELINED (
 
     // MAC multiply operations
     floating_point_multiplier mac_mult (
-        // .aclk(clk),
+        .aclk(clk),
         .s_axis_a_tdata(fp_alu_operand1),
         .s_axis_b_tdata(fp_alu_operand2),
         .s_axis_a_tvalid(id_ex_fmat_type == FMADD),
@@ -952,20 +956,35 @@ module RISCV_PIPELINED (
         .ex_mem_weights_counter(ex_mem_weights_counter)
     );
 
+    logic [31:0] mac_result;
+
+    // Keeps track of the fp mac result register
+    // When completed, it writes to this register
+    // in the regfile
+    always_ff @(posedge clk) begin
+        if(reset) begin
+            fp_mac_result_reg_dest <= '0;
+            mac_result <= '0;
+        end else if (ex_mem_fmat_type == FMADD) begin
+            fp_mac_result_reg_dest <= ex_mem_reg_dest;
+        end else if (ex_mem_mac_result_valid) begin
+            mac_result <= ex_mem_mac_result;
+        end
+    end
+
     //MAC adder operations 
     floating_point_add_sub mac_adder (
         .aclk(clk),
-        .s_axis_a_tdata(ex_mem_fp_mac_1),
+        .s_axis_a_tdata(fp_mac_mul_result),
         .s_axis_b_tdata(ex_mem_fp_mac_2),
-        .s_axis_a_tvalid(ex_mem_fmat_type == FMADD),
-        .s_axis_b_tvalid(ex_mem_fmat_type == FMADD),
+        .s_axis_a_tvalid(fp_mac_result_valid),
+        .s_axis_b_tvalid(fp_mac_result_valid),
 
         .m_axis_result_tdata(ex_mem_mac_result),
         .m_axis_result_tvalid(ex_mem_mac_result_valid)
     );
 
     // ------MEMORY STAGE------
-    logic [31:0] memory_data_read [0:vector_length-1];
     logic inside_data_mem;
     logic [31:0] memory_address [0:vector_length-1];
     logic [31:0] write_data [0:vector_length-1];
@@ -977,6 +996,11 @@ module RISCV_PIPELINED (
     always_comb begin
         if(ex_mem_vec_op) begin
             write_data = vec_ex_mem_data_read2;
+        end else if (ex_mem_memwrite && ex_mem_fp_instruction && (ex_mem_rs2 == fp_mac_result_reg_dest)) begin
+            write_data[0] = mac_result;
+            for(int i = 1; i < vector_length; i++) begin
+                write_data[i] = 32'b0;
+            end
         end else begin
             write_data[0] = ex_mem_data_read2;
             for(int i = 1; i < vector_length; i++) begin
@@ -1156,13 +1180,6 @@ module RISCV_PIPELINED (
         end
     end
 
-    always_comb begin : mac_result_override
-        final_mem_result = ex_mem_alu_result;
-        if(ex_mem_fmat_type == FMADD && ex_mem_mac_result_valid) begin
-            final_mem_result[0] = ex_mem_mac_result;
-        end
-    end
-
     MEM_WB_reg #(
         .vec_length(vector_length)
     ) mem_wb_reg (
@@ -1178,7 +1195,7 @@ module RISCV_PIPELINED (
         .ex_mem_regwrite(ex_mem_regwrite),
         .ex_mem_jal(ex_mem_jal),
         .ex_mem_jalr(ex_mem_jalr),
-        .ex_mem_alu_result(final_mem_result),
+        .ex_mem_alu_result(ex_mem_alu_result),
         .memory_data_read((override_data_read) ? uart_memory : memory_data_read),
         .ex_mem_rs1(ex_mem_rs1),
         .ex_mem_rs2(ex_mem_rs2),

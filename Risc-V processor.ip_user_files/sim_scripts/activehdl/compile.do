@@ -101,7 +101,6 @@ vlog -work xil_defaultlib  -sv2k12 "+incdir+../../../Risc-V processor.gen/source
 "../../../Risc-V processor.srcs/sources_1/new/IF_ID_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Imm_gen.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/InstructionMemory.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/MEM1_MEM2.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/MEM_WB_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/ProgramCounter.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Registers.sv" \

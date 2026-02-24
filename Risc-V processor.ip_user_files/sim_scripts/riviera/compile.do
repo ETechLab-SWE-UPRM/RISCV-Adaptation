@@ -101,7 +101,6 @@ vlog -work xil_defaultlib  -incr -l axi_vip_v1_1_19 -l smartconnect_v1_0 "+incdi
 "../../../Risc-V processor.srcs/sources_1/new/IF_ID_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Imm_gen.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/InstructionMemory.sv" \
-"../../../Risc-V processor.srcs/sources_1/new/MEM1_MEM2.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/MEM_WB_reg.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/ProgramCounter.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/Registers.sv" \
