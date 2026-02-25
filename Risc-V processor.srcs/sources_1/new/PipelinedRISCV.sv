@@ -1,14 +1,14 @@
 `timescale 1ns/1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: CAWT
+// Company: UPRM
 // Engineer: Fernando L. Pizarro Diaz
 // 
 // Create Date: 05/27/2025 10:22:03 AM
-// Design Name: Piper
-// Module Name: RISCV_PIPELINED
+// Design Name: RVW
+// Module Name: RISCV_WEARABLE
 // Project Name: RISC-V Wearable
 // Target Devices: Artix-7
-// Tool Versions: SystemVerilog 2012
+// Tool Versions: Vivado 2024.2
 // Description: A pipelined RISC-V processor implementation, with support for all integer instructions (excluding environment call instructions), 
 // and support for custom vector and floating point MAC computations (FMADD).
 // Contains usual components such as instruction (ROM) and data memory (RAM), 3 distinct ALU components, and several DSPs for faster computations.
@@ -22,7 +22,7 @@
 //           - WSL (if using Windows) for running the toolchain: https://learn.microsoft.com/en-us/windows/wsl/install
 // 
 // Revision:
-// Revision 0.01 - File Created
+// Revision 1.0 - First Implmentation Completed
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +59,7 @@ package fp_alu_pkg;
     } rm_t;
 endpackage
 
-module RISCV_PIPELINED (
+module RISCV_WEARABLE (
     input logic clk,
     input logic reset, 
     input logic rx, 
@@ -89,8 +89,8 @@ module RISCV_PIPELINED (
     localparam stop_tick = 16; // Stop bit / Oversampling ticks
     localparam fifo_exp = 2; // 2^2 = 4 entries in the FIFO's
     localparam baud_rate = 115200;
-    localparam br_limit = 54; // 100 MHz / (115200 * 16)
-    localparam br_bits = 6; // ceil(log2(br_limit))
+    localparam br_limit = 27; // 50 MHz / (115200 * 16)
+    localparam br_bits = 5; // ceil(log2(br_limit))
 
     logic [data_bits-1:0] uart_write_data;
     logic [data_bits-1:0] uart_read_data;
@@ -1066,8 +1066,8 @@ module RISCV_PIPELINED (
     uart_top #(
         .DBITS(8),
         .SB_TICK(16),
-        .BR_LIMIT(54),
-        .BR_BITS(6),
+        .BR_LIMIT(27),
+        .BR_BITS(5),
         .FIFO_EXP(2)
     ) uart (
         .clk_100MHz(clk),

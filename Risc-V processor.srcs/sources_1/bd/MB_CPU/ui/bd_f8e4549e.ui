@@ -1,34 +1,35 @@
 {
    "ActiveEmotionalView":"Default View",
-   "Default View_ScaleFactor":"1.32101",
-   "Default View_TopLeft":"-80,-266",
+   "Default View_ScaleFactor":"1.0",
+   "Default View_TopLeft":"-144,-338",
    "ExpandedHierarchyInLayout":"",
-   "guistr":"# # String gsaved with Nlview 7.8.0 2024-04-26 e1825d835c VDI=44 GEI=38 GUI=JA:21.0
+   "guistr":"# # String gsaved with Nlview 7.8.0 2024-04-26 e1825d835c VDI=44 GEI=38 GUI=JA:21.0 TLS
 #  -string -flagsOSRD
-preplace port usb_uart -pg 1 -lvl 5 -x 1440 -y 100 -defaultsOSRD
-preplace port port-id_Clk -pg 1 -lvl 0 -x 0 -y 100 -defaultsOSRD
-preplace port port-id_reset -pg 1 -lvl 0 -x 0 -y 180 -defaultsOSRD
-preplace inst microblaze_riscv_0 -pg 1 -lvl 2 -x 640 -y 270 -defaultsOSRD
-preplace inst microblaze_riscv_0_local_memory -pg 1 -lvl 3 -x 1060 -y 280 -defaultsOSRD
-preplace inst rst_Clk_100M -pg 1 -lvl 1 -x 190 -y 200 -defaultsOSRD
-preplace inst axi_uartlite_0 -pg 1 -lvl 4 -x 1310 -y 110 -defaultsOSRD
-preplace inst smartconnect_0 -pg 1 -lvl 3 -x 1060 -y 90 -defaultsOSRD
-preplace netloc microblaze_riscv_0_Clk 1 0 4 20 100 380 100 920 180 1190J
-preplace netloc reset_1 1 0 1 NJ 180
-preplace netloc rst_Clk_100M_bus_struct_reset 1 1 2 NJ 180 900
-preplace netloc rst_Clk_100M_mb_reset 1 1 1 360 160n
-preplace netloc rst_Clk_100M_peripheral_aresetn 1 1 3 370J 170 930 190 1200J
-preplace netloc axi_uartlite_0_UART 1 4 1 N 100
-preplace netloc microblaze_riscv_0_M_AXI_DP 1 2 1 910 60n
-preplace netloc microblaze_riscv_0_dlmb_1 1 2 1 N 250
-preplace netloc microblaze_riscv_0_ilmb_1 1 2 1 N 270
-preplace netloc smartconnect_0_M00_AXI 1 3 1 N 90
-levelinfo -pg 1 0 190 640 1060 1310 1440
-pagesize -pg 1 -db -bbox -sgen -80 0 1550 360
+preplace port usb_uart -pg 1 -lvl 5 -x 1480 -y 90 -defaultsOSRD
+preplace port port-id_reset -pg 1 -lvl 0 -x 0 -y 160 -defaultsOSRD
+preplace port port-id_Clk -pg 1 -lvl 0 -x 0 -y 80 -defaultsOSRD
+preplace inst microblaze_riscv_0 -pg 1 -lvl 2 -x 660 -y 250 -defaultsOSRD
+preplace inst axi_uartlite_0 -pg 1 -lvl 4 -x 1350 -y 100 -defaultsOSRD
+preplace inst microblaze_riscv_0_local_memory -pg 1 -lvl 3 -x 1090 -y 260 -defaultsOSRD
+preplace inst rst_clk_wiz_1_100M -pg 1 -lvl 1 -x 200 -y 180 -defaultsOSRD
+preplace inst axi_smc -pg 1 -lvl 3 -x 1090 -y 80 -defaultsOSRD
+preplace netloc rst_clk_wiz_1_100M_mb_reset 1 1 1 380 140n
+preplace netloc rst_clk_wiz_1_100M_bus_struct_reset 1 1 2 NJ 160 920
+preplace netloc rst_clk_wiz_1_100M_peripheral_aresetn 1 1 3 390J 150 950 160 1240J
+preplace netloc reset_1 1 0 1 NJ 160
+preplace netloc Clk_1 1 0 4 20 80 400 80 940 170 1230J
+preplace netloc microblaze_riscv_0_dlmb_1 1 2 1 N 230
+preplace netloc microblaze_riscv_0_ilmb_1 1 2 1 N 250
+preplace netloc microblaze_riscv_0_M_AXI_DP 1 2 1 930 60n
+preplace netloc axi_smc_M00_AXI 1 3 1 N 80
+preplace netloc axi_uartlite_0_UART 1 4 1 N 90
+levelinfo -pg 1 0 200 660 1090 1350 1480
+pagesize -pg 1 -db -bbox -sgen -90 0 1590 340
 "
 }
 {
    "da_axi4_cnt":"1",
-   "da_board_cnt":"2",
+   "da_board_cnt":"4",
+   "da_clkrst_cnt":"4",
    "da_microblaze_riscv_cnt":"1"
 }

@@ -13,18 +13,22 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="82,615.965 ns"></ZoomStartTime>
-      <ZoomEndTime time="83,070.807 ns"></ZoomEndTime>
-      <Cursor1Time time="82,824.483 ns"></Cursor1Time>
+      <ZoomStartTime time="737,215.785 ns"></ZoomStartTime>
+      <ZoomEndTime time="737,784.843 ns"></ZoomEndTime>
+      <Cursor1Time time="737,690.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="145"></NameColumnWidth>
-      <ValueColumnWidth column_width="120"></ValueColumnWidth>
+      <ValueColumnWidth column_width="112"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="65" />
    <wave_markers>
       <marker label="" time="82735000" />
       <marker label="" time="82755000" />
+      <marker label="" time="82465000" />
+      <marker label="" time="368895000" />
+      <marker label="" time="164830000" />
+      <marker label="" time="737690000" />
    </wave_markers>
    <wvobject type="logic" fp_name="/PipelineTester/processor/data_mem/clk">
       <obj_property name="ElementShortName">clk</obj_property>
@@ -41,11 +45,11 @@
    <wvobject type="array" fp_name="/PipelineTester/processor/data_mem/address">
       <obj_property name="ElementShortName">address[0:1][31:0]</obj_property>
       <obj_property name="ObjectShortName">address[0:1][31:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/PipelineTester/processor/data_mem/write_data">
       <obj_property name="ElementShortName">write_data[0:1][31:0]</obj_property>
       <obj_property name="ObjectShortName">write_data[0:1][31:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/PipelineTester/processor/data_mem/funct3">
       <obj_property name="ElementShortName">funct3[2:0]</obj_property>

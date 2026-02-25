@@ -88,7 +88,7 @@ module PipelineTester;
   end
 endtask
 
-    RISCV_PIPELINED processor (
+    RISCV_WEARABLE processor (
         .clk(clk),
         .reset(rst),
         .rx(rx),
@@ -98,7 +98,7 @@ endtask
         .led(led)
     );
 
-    always #5 clk = ~clk; // Clock period of 10 time units
+    always #10 clk = ~clk; // Clock period of 10 time units
     
     initial begin
     // Initialize
