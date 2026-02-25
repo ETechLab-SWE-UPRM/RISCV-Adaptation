@@ -41,8 +41,8 @@ module uart_test(
     uart_top #(
         .DBITS(8),          // number of data bits in a word
         .SB_TICK(16),       // number of stop bit / oversampling ticks
-        .BR_LIMIT(54),     // baud rate generator counter limit
-        .BR_BITS(6),       // number of baud rate generator counter bits
+        .BR_LIMIT(27),     // baud rate generator counter limit
+        .BR_BITS(5),       // number of baud rate generator counter bits
         .FIFO_EXP(2) 
     ) UART_UNIT (
             .clk_100MHz(clk),

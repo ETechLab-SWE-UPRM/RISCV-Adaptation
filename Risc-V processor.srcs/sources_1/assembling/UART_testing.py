@@ -11,7 +11,7 @@ def recv_i32(ser):
         raise TimeoutError("timeout")
     return struct.unpack("<i", b)[0]
 
-port = "COM4" # Change this to your serial port
+port = "/dev/ttyUSB1" # Change this to your serial port
 baud = 115200
 
 with serial.Serial(port, baud, timeout=5) as ser:
