@@ -3,7 +3,7 @@ ENTRY(_start)
 
 MEMORY
 {
-  ROM (rx) : ORIGIN = 0x00000000, LENGTH = 1024 /* 1KB ROM for instructions */
+  ROM (rx) : ORIGIN = 0x00000000, LENGTH = 4096 /* 4KB ROM for instructions */
   RAM (rwx): ORIGIN = 0x10000000, LENGTH = 33440 /* 33KB RAM for data */
 }
 

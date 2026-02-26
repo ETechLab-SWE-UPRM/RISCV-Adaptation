@@ -15,8 +15,8 @@ ELF="program.elf"
 # Toolchain settings
 ARCH=rv32imf
 ABI=ilp32
-CC=$HOME/riscv/bin/riscv32-unknown-elf-gcc
-OBJCOPY=$HOME/riscv/bin/riscv32-unknown-elf-objcopy
+CC=riscv32-unknown-elf-gcc
+OBJCOPY=riscv32-unknown-elf-objcopy
 
 echo "→ Collecting sources in ${ASS_DIR}"
 mapfile -t SRC_LIST < <(find -maxdepth 1 \( -name '*.c' -o -name '*.s' \) | sort)

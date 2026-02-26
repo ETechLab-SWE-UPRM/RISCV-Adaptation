@@ -11,10 +11,10 @@
     #define Conv_data_reg (* (volatile int *) (UART_address + 0x10u))
     #define Conv_weights_reg (* (volatile int *) (UART_address + 0x14u))
     #define Conv_output_reg (* (volatile int *) (UART_address + 0x18u))
-    #define CPU_Hz 100000000u // 100 MHz
+    #define CPU_Hz 50000000u // 50 MHz
     #define UART_Baudrate 115200u
     #define BITS_PER_WORD_ON_WIRE 40u // 1 start, 8 data, 1 stop (4 bytes)
-    #define UART_Clocks_per_bit 34723 // CPU_Hz / UART_Baudrate
+    #define UART_Clocks_per_bit (CPU_Hz / UART_Baudrate ) * 4 // 4 bytes -> 1 word
 
     int Convolution(float *data, float *weights, float *output,
                       int data_length, int weights_length, int output_length);
@@ -69,7 +69,14 @@
     static inline void write_blocked_float(float data) {
         UART_send_float(data);
         busy(UART_Clocks_per_bit);
-    } 
+    }
+
+    static inline float read_blocked_float(void) {
+        while (UART_read_status() == 0) {
+            // wait
+        }
+        return UART_read_float();    
+    }
 
     /*
         Floating Point convolution function with inline assembly implementation.

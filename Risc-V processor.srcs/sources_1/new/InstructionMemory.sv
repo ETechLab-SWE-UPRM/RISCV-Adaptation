@@ -19,7 +19,7 @@ module InstructionMemory (
     Instruction_Memory im_inst(
         .clka(clk),
         .ena(stall_memory),
-        .addra(instruction_address[9:2]),
+        .addra(instruction_address[11:2]),
         .douta(instruction_reg)
     );
 

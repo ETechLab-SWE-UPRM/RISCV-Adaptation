@@ -1,7 +1,64 @@
-sv xpm --include "../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" \
-"/tools/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
+sv xilinx_vip --include "/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/include" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/3cbc" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/f0b6/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/0127/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/ec67/hdl" --include "../../ipstatic" \
+"/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/axi4stream_vip_axi4streampc.sv" \
+"/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/axi_vip_axi4pc.sv" \
+"/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/xil_common_vip_pkg.sv" \
+"/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/axi4stream_vip_pkg.sv" \
+"/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/axi_vip_pkg.sv" \
+"/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/axi4stream_vip_if.sv" \
+"/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/axi_vip_if.sv" \
+"/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/clk_vip_if.sv" \
+"/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/hdl/rst_vip_if.sv" \
 
-sv xil_defaultlib --include "../../../Risc-V processor.gen/sources_1/ip/clk_wiz_0" \
+sv xpm --include "/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/include" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/3cbc" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/f0b6/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/0127/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/ec67/hdl" --include "../../ipstatic" \
+"/tools/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
+"/tools/Xilinx/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
+
+verilog blk_mem_gen_v8_4_9 --include "/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/include" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/3cbc" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/f0b6/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/0127/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/ec67/hdl" --include "../../ipstatic" \
+"../../ipstatic/simulation/blk_mem_gen_v8_4.v" \
+
+verilog xil_defaultlib --include "/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/include" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/3cbc" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/f0b6/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/0127/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/ec67/hdl" --include "../../ipstatic" \
+"../../../Risc-V processor.gen/sources_1/ip/blk_mem_gen_0_1/sim/blk_mem_gen_0.v" \
+
+verilog floating_point_v7_1_19 --include "/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/include" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/3cbc" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/f0b6/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/0127/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/ec67/hdl" --include "../../ipstatic" \
+"../../ipstatic/hdl/floating_point_v7_1_rfs.v" \
+
+verilog xil_defaultlib --include "/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/include" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/3cbc" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/f0b6/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/0127/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/ec67/hdl" --include "../../ipstatic" \
+"../../../Risc-V processor.gen/sources_1/ip/floating_point_add_sub/sim/floating_point_add_sub.v" \
+"../../../Risc-V processor.gen/sources_1/ip/floating_point_multiplier/sim/floating_point_multiplier.v" \
+"../../../Risc-V processor.gen/sources_1/ip/floating_point_branching/sim/floating_point_branching.v" \
+"../../../Risc-V processor.gen/sources_1/ip/int_to_float_ip/sim/int_to_float_ip.v" \
+"../../../Risc-V processor.gen/sources_1/ip/Instruction_Memory/sim/Instruction_Memory.v" \
+"../../../Risc-V processor.srcs/sources_1/new/baud_rate_generator.v" \
+"../../../Risc-V processor.srcs/sources_1/new/fifo.v" \
+"../../../Risc-V processor.srcs/sources_1/new/uart_receiver.v" \
+"../../../Risc-V processor.srcs/sources_1/new/uart_top.v" \
+"../../../Risc-V processor.srcs/sources_1/new/uart_transmitter.v" \
+
+sv xil_defaultlib --include "/tools/Xilinx/Vivado/2024.2/data/xilinx_vip/include" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/3cbc" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/f0b6/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/0127/hdl/verilog" --include "../../../Risc-V processor.gen/sources_1/bd/MC_CPU_50/ipshared/ec67/hdl" --include "../../ipstatic" \
+"../../../Risc-V processor.srcs/sources_1/new/ALU.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/ALU_Control.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/Control.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/Data_memory.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/PipelinedRISCV.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/EX_MEM_reg.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/ID_EX_reg.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/IF_ID_reg.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/Imm_gen.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/InstructionMemory.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/MEM_WB_reg.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/ProgramCounter.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/Registers.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/branch.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/forwarding_unit.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/fp_alu.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/fp_alu_control.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/fp_control.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/fp_forward.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/fp_hazard.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/fp_registers.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/hazard_detection.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/vector_ALU.sv" \
+"../../../Risc-V processor.srcs/sources_1/new/vector_registers.sv" \
 "../../../Risc-V processor.srcs/sim_1/new/PipelineTester.sv" \
 
 verilog xil_defaultlib "glbl.v"

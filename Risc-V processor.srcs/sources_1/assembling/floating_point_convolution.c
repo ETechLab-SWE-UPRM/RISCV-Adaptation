@@ -9,31 +9,14 @@ volatile int data_length = 1;
 volatile int kernel_length = 1;
 volatile int output_length = 1;
 volatile int done = 1;
-volatile int data = 1;
 
 int main() {
+    // int err = 0;
+    float data = 0;
+
     while (1) {
-        int add_result = 0;
-        for (int i = 0; i < 1024; i++) {
-            add_result = i + 1;
-            signal[i] = (float) add_result;
-        }
-
-        data_length = 1024;
-
-        for (int i = 0; i < 3; i++) {
-            kernel[i] = 1.0f;
-        }
-
-        kernel_length = 3;
-
-        output_length = data_length - kernel_length + 1;
-
-        done = 0;
-
-        convolution1D(signal, kernel, result, data_length, kernel_length, output_length);
-
-        done = 1;
+        data = read_blocked_float();
+        write_blocked_float(data);
     }
     return 0;
 }
