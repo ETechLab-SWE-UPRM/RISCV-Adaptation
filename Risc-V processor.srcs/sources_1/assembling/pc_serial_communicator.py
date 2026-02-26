@@ -68,7 +68,8 @@ with serial.Serial(port, baud, timeout=5) as ser:
     out = []
     for i in range(1,11):
         v = recv_f32(ser)
-        if v == DONE:
+        v_sign = float_to_hex(v)
+        if v_sign == DONE:
             break
         out.append(v)
 
