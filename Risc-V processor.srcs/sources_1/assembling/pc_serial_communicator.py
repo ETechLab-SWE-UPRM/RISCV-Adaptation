@@ -18,6 +18,12 @@ def recv_f32(ser):
         raise TimeoutError("timeout")
     return struct.unpack("<f", b)[0]
 
+def recv_u32(ser):
+    b = ser.read(4)
+    if len(b) != 4:
+        raise TimeoutError("timeout")
+    return struct.unpack("<I", b)[0]
+
 def int_to_hex(i):
     return struct.unpack("<I", struct.pack("<i", i))[0]
 
@@ -43,8 +49,7 @@ with serial.Serial(port, baud, timeout=5) as ser:
         send_f32(ser, v)
     send_f32(ser, -1.0)
 
-    sign = recv_i32(ser)
-    sign = int_to_hex(sign)
+    sign = recv_u32(ser)
 
     if sign == SIGN:
         print(f"Received 'SIGN'")
@@ -56,8 +61,7 @@ with serial.Serial(port, baud, timeout=5) as ser:
         send_f32(ser, v)
     send_f32(ser, -1.0)
 
-    sign = recv_i32(ser)
-    sign = int_to_hex(sign)
+    sign = recv_u32(ser)
 
     if sign == KERN:
         print(f"Received 'KERN'")
