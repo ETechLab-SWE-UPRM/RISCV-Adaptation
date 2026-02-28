@@ -2,9 +2,11 @@ import serial, struct
 
 def send_i32(ser, v):
     ser.write(struct.pack("<i", v))
+    print(f"Sent {v} as {int_to_hex(v)}")
 
 def send_f32(ser, v):
     ser.write(struct.pack("<f", v))
+    print(f"Sent {v} as {float_to_hex(v)}")
 
 def recv_i32(ser):
     b = ser.read(4)

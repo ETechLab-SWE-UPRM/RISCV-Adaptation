@@ -110,7 +110,7 @@ module RISCV_WEARABLE (
     logic [31:0] vector_data_read2 [0:vector_length-1];
     logic [31:0] vector_data_read3 [0:vector_length-1];
     logic [31:0] conv_data_read, conv_weights_read;
-    logic fp_instruction,fp_alu_src, fp_reg_write, fp_load, fp_store;
+    logic fp_instruction, fp_alu_src, fp_reg_write, fp_load, fp_store, rd_is_int;
     fp_fma_t fmat_type;
     logic vec_op, vec_reg_write, continous_addr, single_load, branch, beq, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc, lui;
     logic [1:0] alu_op;
@@ -127,7 +127,7 @@ module RISCV_WEARABLE (
     // ID/EX pipeline registers
     logic [31:0] pc_id_ex, instruction_id_ex;
     logic vec_op_id_ex, vec_reg_write_id_ex;
-    logic fp_instruction_id_ex, fp_reg_write_id_ex;
+    logic fp_instruction_id_ex, fp_reg_write_id_ex, rd_is_int_id_ex;
     logic id_ex_continous_addr;
     logic id_ex_single_load;
     logic id_ex_branch, id_ex_beq, id_ex_bne, id_ex_blt, id_ex_bge, id_ex_mem_read, id_ex_memtoreg, id_ex_mem_write, id_ex_auipc, id_ex_alu_src, id_ex_reg_write, id_ex_jal, id_ex_jalr;
@@ -161,7 +161,7 @@ module RISCV_WEARABLE (
 
     // EX/MEM pipeline registers
     logic ex_mem_vec_op, ex_mem_vec_reg_write;
-    logic ex_mem_fp_instruction, ex_mem_fp_reg_write;
+    logic ex_mem_fp_instruction, ex_mem_fp_reg_write, ex_mem_rd_is_int;
     logic ex_mem_single_load;
     logic ex_mem_memread, ex_mem_memwrite, ex_mem_memtoreg, ex_mem_regwrite, ex_mem_jal, ex_mem_jalr;
     fp_fma_t ex_mem_fmat_type;
@@ -187,7 +187,7 @@ module RISCV_WEARABLE (
     
     // MEM/WB pipeline registers
     logic mem_wb_memtoreg, mem_wb_regwrite, mem_wb_jal, mem_wb_jalr, mem_wb_vec_op, mem_wb_vec_reg_write;
-    logic mem_wb_fp_instruction, mem_wb_fp_reg_write;
+    logic mem_wb_fp_instruction, mem_wb_fp_reg_write, mem_wb_rd_is_int;
     logic [31:0] mem_wb_alu_result [0:vector_length-1], mem_wb_memory_data_read [0:vector_length-1], mem_wb_link_address;
     logic [4:0] mem_wb_rs1, mem_wb_rs2, mem_wb_reg_dest;
     logic [31:0] mem_wb_write_data [0:vector_length-1];
@@ -275,7 +275,7 @@ module RISCV_WEARABLE (
         .conv_write_enable(mem_wb_fmat_type == FMADD),
         .conv_data_write(mem_wb_conv_addr),
         .conv_weights_write(mem_wb_weights_addr),
-        .reg_write_enable(mem_wb_regwrite),
+        .reg_write_enable(mem_wb_regwrite | mem_wb_rd_is_int),
         .read_data1(data_read1),
         .read_data2(data_read2),
         .read_data3(data_read3),
@@ -359,6 +359,7 @@ module RISCV_WEARABLE (
         .funct7(funct7),
 
         .fp_instruction(fp_instruction),
+        .rd_is_int(rd_is_int),
         .fp_op(fp_op),
         .fp_alu_src(fp_alu_src),
         .fp_reg_write(fp_reg_write),
@@ -417,6 +418,7 @@ module RISCV_WEARABLE (
         .stall(mac_stall),
         .vec_op(vec_op),
         .fp_instruction(fp_instruction),
+        .rd_is_int(rd_is_int),
         .fp_reg_write(fp_reg_write),
         .vec_reg_write(vec_reg_write),
         .continous_addr(continous_addr),
@@ -467,6 +469,7 @@ module RISCV_WEARABLE (
         .instruction_id_ex(instruction_id_ex),
         .vec_op_id_ex(vec_op_id_ex),
         .fp_instruction_id_ex(fp_instruction_id_ex),
+        .rd_is_int_id_ex(rd_is_int_id_ex),
         .fp_reg_write_id_ex(fp_reg_write_id_ex),
         .vec_reg_write_id_ex(vec_reg_write_id_ex),
         .id_ex_continous_addr(id_ex_continous_addr),
@@ -526,6 +529,10 @@ module RISCV_WEARABLE (
         .id_ex_vec_op(vec_op_id_ex),
         .ex_mem_vec_op(ex_mem_vec_op),
         .mem_wb_vec_op(mem_wb_vec_op),
+        .rd_is_int_id_ex(rd_is_int_id_ex),
+        .ex_mem_rd_is_int(ex_mem_rd_is_int),
+        .mem_wb_rd_is_int(mem_wb_rd_is_int),
+
         .forward_a(forward_a), 
         .forward_b(forward_b),
         .forward_c(forward_c)
@@ -901,6 +908,7 @@ module RISCV_WEARABLE (
         .stall(mac_stall),
         .vec_op(vec_op_id_ex),
         .id_ex_fp_instruction(fp_instruction_id_ex),
+        .id_ex_rd_is_int(rd_is_int_id_ex),
         .id_ex_fp_reg_write(fp_reg_write_id_ex),
         .vec_reg_write(vec_reg_write_id_ex),
         .id_ex_single_load(id_ex_single_load),
@@ -930,6 +938,7 @@ module RISCV_WEARABLE (
 
         .ex_mem_vec_op(ex_mem_vec_op),
         .ex_mem_fp_instruction(ex_mem_fp_instruction),
+        .ex_mem_rd_is_int(ex_mem_rd_is_int),
         .ex_mem_fp_reg_write(ex_mem_fp_reg_write),
         .ex_mem_vec_reg_write(ex_mem_vec_reg_write),
         .ex_mem_single_load(ex_mem_single_load),
@@ -1187,6 +1196,7 @@ module RISCV_WEARABLE (
         .reset(reset),
         .ex_mem_vec_op(ex_mem_vec_op),
         .ex_mem_fp_instruction(ex_mem_fp_instruction),
+        .ex_mem_rd_is_int(ex_mem_rd_is_int),
         .ex_mem_fmat_type(ex_mem_fmat_type),
         .ex_mem_fp_reg_write(ex_mem_fp_reg_write),
         .ex_mem_vec_reg_write(ex_mem_vec_reg_write),
@@ -1206,6 +1216,7 @@ module RISCV_WEARABLE (
 
         .mem_wb_vec_op(mem_wb_vec_op),
         .mem_wb_fp_instruction(mem_wb_fp_instruction),
+        .mem_wb_rd_is_int(mem_wb_rd_is_int),
         .mem_wb_fmat_type(mem_wb_fmat_type),
         .mem_wb_fp_reg_write(mem_wb_fp_reg_write),
         .mem_wb_vec_reg_write(mem_wb_vec_reg_write),

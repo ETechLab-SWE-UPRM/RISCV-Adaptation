@@ -7,6 +7,7 @@ module MEM_WB_reg #(
     input logic reset,
     input logic ex_mem_vec_op,
     input logic ex_mem_fp_instruction,
+    input logic ex_mem_rd_is_int,
     input fp_fma_t ex_mem_fmat_type,
     input logic ex_mem_fp_reg_write,
     input logic ex_mem_vec_reg_write,
@@ -26,6 +27,7 @@ module MEM_WB_reg #(
 
     output logic mem_wb_vec_op,
     output logic mem_wb_fp_instruction,
+    output logic mem_wb_rd_is_int,
     output fp_fma_t mem_wb_fmat_type,
     output logic mem_wb_fp_reg_write,
     output logic mem_wb_vec_reg_write,
@@ -49,6 +51,7 @@ module MEM_WB_reg #(
         if (reset) begin
             mem_wb_vec_op <= 1'b0;
             mem_wb_fp_instruction <= 1'b0;
+            mem_wb_rd_is_int <= 1'b0;
             mem_wb_fmat_type <= FM_NONE;
             mem_wb_fp_reg_write <= 1'b0;
             mem_wb_vec_reg_write <= 1'b0;
@@ -68,6 +71,7 @@ module MEM_WB_reg #(
         end else begin
             mem_wb_vec_op <= ex_mem_vec_op;
             mem_wb_fp_instruction <= ex_mem_fp_instruction;
+            mem_wb_rd_is_int <= ex_mem_rd_is_int;
             mem_wb_fmat_type <= ex_mem_fmat_type;
             mem_wb_fp_reg_write <= ex_mem_fp_reg_write;
             mem_wb_vec_reg_write <= ex_mem_vec_reg_write;

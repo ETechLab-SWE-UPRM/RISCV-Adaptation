@@ -15,6 +15,9 @@
     #define UART_Baudrate 115200u
     #define BITS_PER_WORD_ON_WIRE 40u // 1 start, 8 data, 1 stop (4 bytes)
     #define UART_Clocks_per_bit (CPU_Hz / UART_Baudrate ) * 4 // 4 bytes -> 1 word
+    #define DATAERROR 0x44455252
+    #define WEIGHTSERROR 0x57455252
+    #define DONE 0x444F4E45
 
     int Convolution(float *data, float *weights, float *output,
                       int data_length, int weights_length, int output_length);
