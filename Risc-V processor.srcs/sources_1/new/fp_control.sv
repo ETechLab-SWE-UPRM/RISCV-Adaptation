@@ -58,7 +58,7 @@ module fp_control (
 
             7'b1010011: begin
                 fp_op = 2'b10;
-                integer_transfer = 1'b1;
+                rd_is_int = 1'b1;
                 fp_instruction = 1'b1;
             end
 
