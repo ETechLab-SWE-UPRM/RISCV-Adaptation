@@ -7,6 +7,7 @@ module fp_control (
     input logic [6:0] funct7,
 
     output logic fp_instruction,
+    output logic rd_is_int,
     output logic [1:0] fp_op,
     output logic fp_alu_src,
     output logic fp_reg_write, 
@@ -23,6 +24,7 @@ module fp_control (
         fp_op = '0;
         fmat_type = FM_NONE;
         fp_instruction = 1'b0;
+        rd_is_int = 1'b0;
         
         case (opcode)
             7'b0100111 : begin
@@ -56,7 +58,7 @@ module fp_control (
 
             7'b1010011: begin
                 fp_op = 2'b10;
-                fp_reg_write = 1'b1;
+                rd_is_int = 1'b1;
                 fp_instruction = 1'b1;
             end
 
@@ -68,6 +70,7 @@ module fp_control (
                 fp_op = 1'b0;
                 fmat_type = FM_NONE;
                 fp_instruction = 1'b0;
+                rd_is_int = 1'b0;
             end
         endcase
     end

@@ -17,6 +17,9 @@ module Floating_Point_registers #(
     input logic reg_write_enable,
     input logic conv_write_enable,
     input logic [data_width-1:0] conv_data_write [0:vec_length-1],
+    input logic fp_mac_finished,
+    input logic [4:0] fp_mac_reg_dest,
+    input logic [31:0] fp_mac_data,
 
     output logic [data_width-1:0] read_data1,
     output logic [data_width-1:0] read_data2,
@@ -41,6 +44,8 @@ module Floating_Point_registers #(
             end else if (conv_write_enable) begin
                 fp_regs[conv_write_reg_rs1] <= conv_data_write[0];
                 fp_regs[conv_write_reg_rs2] <= conv_data_write[1];
+            end else if (fp_mac_finished) begin
+                fp_regs[fp_mac_reg_dest] <= fp_mac_data;
             end
         end
     end

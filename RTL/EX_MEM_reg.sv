@@ -8,6 +8,7 @@ module EX_MEM_reg #(
     input logic stall,
     input logic vec_op, 
     input logic id_ex_fp_instruction,
+    input logic id_ex_rd_is_int,
     input logic id_ex_fp_reg_write,
     input logic vec_reg_write,
     input logic id_ex_single_load,
@@ -37,6 +38,7 @@ module EX_MEM_reg #(
 
     output logic ex_mem_vec_op,
     output logic ex_mem_fp_instruction,
+    output logic ex_mem_rd_is_int,
     output logic ex_mem_fp_reg_write,
     output logic ex_mem_vec_reg_write,
     output logic ex_mem_single_load,
@@ -67,6 +69,7 @@ module EX_MEM_reg #(
         if (reset) begin
             ex_mem_vec_op <= 1'b0;
             ex_mem_fp_instruction <= 1'b0;
+            ex_mem_rd_is_int <= 1'b0;
             ex_mem_fp_reg_write <= 1'b0;
             ex_mem_vec_reg_write <= 1'b0;
             ex_mem_single_load <= 1'b0;
@@ -95,6 +98,7 @@ module EX_MEM_reg #(
         end else if (!stall) begin
             ex_mem_vec_op <= vec_op; 
             ex_mem_fp_instruction <= id_ex_fp_instruction;
+            ex_mem_rd_is_int <= id_ex_rd_is_int;
             ex_mem_fp_reg_write <= id_ex_fp_reg_write;
             ex_mem_vec_reg_write <= vec_reg_write;
             ex_mem_single_load <= id_ex_single_load;

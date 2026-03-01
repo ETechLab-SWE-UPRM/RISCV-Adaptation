@@ -9,6 +9,7 @@ module ID_EX_reg #(
     input logic stall,
     input logic vec_op,
     input logic fp_instruction,
+    input logic rd_is_int,
     input logic fp_reg_write,
     input logic vec_reg_write,
     input logic continous_addr,
@@ -59,6 +60,7 @@ module ID_EX_reg #(
     output logic [31:0] instruction_id_ex,
     output logic vec_op_id_ex,
     output logic fp_instruction_id_ex,
+    output lgoic rd_is_int_id_ex,
     output logic fp_reg_write_id_ex,
     output logic vec_reg_write_id_ex,
     output logic id_ex_continous_addr,
@@ -110,6 +112,7 @@ module ID_EX_reg #(
             instruction_id_ex <= 32'h13;
             vec_op_id_ex <= 1'b0;
             fp_instruction_id_ex <= 1'b0;
+            rd_is_int_id_ex <= 1'b0;
             fp_reg_write_id_ex <= 1'b0;
             vec_reg_write_id_ex <= 1'b0;
             id_ex_continous_addr <= 1'b0;
@@ -160,6 +163,7 @@ module ID_EX_reg #(
             instruction_id_ex <= instruction_if_id;
             vec_op_id_ex <= vec_op;
             fp_instruction_id_ex <= fp_instruction;
+            rd_is_int_id_ex <= rd_is_int;
             fp_reg_write_id_ex <= fp_reg_write;
             vec_reg_write_id_ex <= vec_reg_write;
             id_ex_continous_addr <= continous_addr;
