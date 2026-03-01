@@ -88,7 +88,7 @@ module PipelineTester;
   end
 endtask
 
-    RISCV_PIPELINED processor (
+    RISCV_WEARABLE processor (
         .clk(clk),
         .reset(rst),
         .rx(rx),
@@ -111,11 +111,11 @@ endtask
     uart_rx_send_string("boot");
     #800000;
 
-     $display("Dumping data memory to data_tester_dump.hex");
-         $writememh(
-             "C:/Users/pizar/RISCV-Adaptation/Risc-V processor.srcs/sources_1/memory_dump.hex",
-             processor.data_mem.mem_inst.inst.native_mem_module.blk_mem_gen_v8_4_9_inst.memory
-         );
+    //  $display("Dumping data memory to data_tester_dump.hex");
+    //      $writememh(
+    //          "C:/Users/pizar/RISCV-Adaptation/Risc-V processor.srcs/sources_1/memory_dump.hex",
+    //          processor.data_mem.mem_inst.inst.native_mem_module.blk_mem_gen_v8_4_9_inst.memory
+    //      );
 
     $finish;
   end

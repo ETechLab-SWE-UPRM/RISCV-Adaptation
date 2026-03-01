@@ -60,7 +60,7 @@ module ID_EX_reg #(
     output logic [31:0] instruction_id_ex,
     output logic vec_op_id_ex,
     output logic fp_instruction_id_ex,
-    output lgoic rd_is_int_id_ex,
+    output logic rd_is_int_id_ex,
     output logic fp_reg_write_id_ex,
     output logic vec_reg_write_id_ex,
     output logic id_ex_continous_addr,
