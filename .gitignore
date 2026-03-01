@@ -10,6 +10,11 @@
 *.jou
 *.log
 *.str
+*.xpr
+*.ip_user_files
+*build
+*.Xil
+*.srcs
 
 # Ignore generate Vitis stuff
 _ide/
@@ -17,9 +22,9 @@ _ide/
 .vscode/
 
 # Keep important files
-!*.xpr
 !*.wcfg
-!RISC-V*srcs/
-!RISC-V*ip_user_files/
-
-*build
+!RTL/
+!Simulation
+!Vitis
+!Constraints
+!BD
