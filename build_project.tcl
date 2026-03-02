@@ -107,7 +107,9 @@ if {[llength $xci_files] != 0} {
 }
 
 set_property top top [current_fileset]
+set_property top PipelineTester [get_filesets sim_1]
 
+update_compile_order -fileset sim_1
 update_compile_order -fileset sources_1
 
 puts "Project created at: $build_dir/$proj_name.xpr"
