@@ -28,8 +28,8 @@ module fp_alu (
         .s_axis_b_tdata(b),
         .s_axis_a_tvalid(comp_a_valid),
         .s_axis_b_tvalid(comp_b_valid),
-        .s_axis_operation_tdata(comp_op),
-        .s_axis_operation_tvalid(comp_op_valid),
+        // .s_axis_operation_tdata(comp_op),
+        // .s_axis_operation_tvalid(comp_op_valid),
         .m_axis_result_tdata(comp_result),
         .m_axis_result_tvalid(comp_result_valid)
     );

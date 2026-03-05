@@ -11,10 +11,16 @@
     #define Conv_data_reg (* (volatile int *) (UART_address + 0x10u))
     #define Conv_weights_reg (* (volatile int *) (UART_address + 0x14u))
     #define Conv_output_reg (* (volatile int *) (UART_address + 0x18u))
+
+    // CPU specs
     #define CPU_Hz 50000000u // 50 MHz
     #define UART_Baudrate 115200u
     #define BITS_PER_WORD_ON_WIRE 40u // 1 start, 8 data, 1 stop (4 bytes)
-    #define UART_Clocks_per_bit (CPU_Hz / UART_Baudrate ) * 4 // 4 bytes -> 1 word
+    #define UART_Clocks_per_word (CPU_Hz / UART_Baudrate ) * 4 // 4 bytes -> 1 word
+
+    // Hex representation of ascii characters for UART
+    #define SIGN 0x5349474E
+    #define KERN 0x4B45524E
     #define DATAERROR 0x44455252
     #define WEIGHTSERROR 0x57455252
     #define DONE 0x444F4E45
@@ -53,7 +59,7 @@
 
     static inline void write_blocked(int data) {
         UART_send(data);
-        busy(UART_Clocks_per_bit);
+        busy(UART_Clocks_per_word);
     }
 
     static inline float UART_read_float(void) {
@@ -71,7 +77,7 @@
 
     static inline void write_blocked_float(float data) {
         UART_send_float(data);
-        busy(UART_Clocks_per_bit);
+        busy(UART_Clocks_per_word);
     }
 
     static inline float read_blocked_float(void) {

@@ -1,36 +1,37 @@
 import serial, struct
+from time import sleep
 
-def send_i32(ser, v):
-    ser.write(struct.pack("<i", v))
 
-def send_f32(ser, v):
-    ser.write(struct.pack("<f", v))
+def send_u32(ser, v):
+    ser.write(struct.pack(">I", v))
 
-def recv_i32(ser):
+def recv_u32(ser):
     b = ser.read(4)
     if len(b) != 4:
         raise TimeoutError("timeout")
-    return struct.unpack("<i", b)[0]
+    return struct.unpack(">I", b)[0]
 
-def recv_f32(ser):
-    b = ser.read(4)
-    if len(b) != 4:
-        raise TimeoutError("timeout")
-    return struct.unpack("<f", b)[0]
-
-def float_to_hex(f):
-    return struct.unpack("<I", struct.pack("<f", f))[0]
-
-port = "/dev/ttyUSB1" # Change this to your serial port
+def f32_bits(x):
+    return struct.unpack("<I", struct.pack("<f", x))[0]
+port = "/dev/ttyUSB1"
 baud = 115200
 
-with serial.Serial(port, baud, timeout=5) as ser:
-    message = 1.0
-    send_f32(ser, message)
-    
-    data = recv_f32(ser)
+SIGN = 0x5349474E
+KERN      = 0x4B45524E
+DATAERROR = 0x44455252
+WEIGHTSERROR = 0x57455252
+signal = [float(i) for i in range(1,11)]
 
-    print(f"Sent float: {message}")
-    print(f"Sent hex: 0x{float_to_hex(message):08X}")
-    print(f"Received float: {data}")
-    print(f"Received hex: 0x{float_to_hex(data):08X}")
+with serial.Serial("/dev/ttyUSB1",115200,timeout=5) as ser:
+    ser.reset_input_buffer()
+    ser.reset_output_buffer()
+    for f in signal:
+        send_u32(ser, f32_bits(f))
+        sleep(0.5)
+        data = recv_u32(ser)
+        print(f"Received 0x{data:08X}")
+    send_u32(ser, f32_bits(-1.0))
+    data = recv_u32(ser)
+    if data == SIGN:
+        print("Received SIGN in ascii")
+    print(f"Received 0x{data:08X}")
