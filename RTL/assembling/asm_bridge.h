@@ -82,7 +82,7 @@
     }
 
     static inline float read_blocked_float(void) {
-        while (UART_read_status() == 0) {
+        while ((UART_read_status() & UART_RX_MASK) == 0) {
             // wait
         }
         return UART_read_float();    
