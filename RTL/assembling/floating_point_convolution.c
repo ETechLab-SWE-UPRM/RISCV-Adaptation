@@ -10,18 +10,11 @@ volatile int kernel_length = 1;
 volatile int output_length = 1;
 volatile int done = 1;
 volatile float data = 1.0f;
+volatile int err = 1;
 
 int main() {
-    // int err = 0;
-    // float data = 1.0f;
-
     while (1) {
-        data = read_blocked_float();
-        if (data == -1.0f) {
-            write_blocked(SIGN);
-        } else {
-            write_blocked_float(data);
-        }
-    }
+        write_blocked(0x12345678);
+    } 
     return 0;
 }

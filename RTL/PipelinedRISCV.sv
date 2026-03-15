@@ -1144,8 +1144,10 @@ module RISCV_WEARABLE (
                 2'd3: begin
                     uart_write_data <= uart_send_data[7:0];
                     send_byte <= 1'b1;
-                    ready_to_send <= 1'b0;
                     uart_send_data <= 32'b0;
+                end
+                2'd4: begin
+                    ready_to_send <= 1'b0;
                     word_in_progress <= 1'b0;
                 end
                 default: ;
@@ -1171,6 +1173,8 @@ module RISCV_WEARABLE (
     end
 
     logic status_read, receive_read;
+    logic tx_ready;
+    assign tx_ready = (!word_in_progress);
     assign status_read = (memory_address[0] == uart_status) && ex_mem_memread;
     assign receive_read = (memory_address[0] == uart_receive) && ex_mem_memread;
 
@@ -1181,7 +1185,9 @@ module RISCV_WEARABLE (
         end
 
         if(status_read) begin
-            uart_memory[0] = (data_word_complete) ? 32'b1 : 32'b0;
+            uart_memory[0] = (data_word_complete && tx_ready) ? 32'h3 :
+                             (tx_ready) ? 32'h2 :
+                             (data_word_complete) ? 32'b1 : 32'b0;
             override_data_read = 1'b1;
         end else if(receive_read && data_word_complete) begin
             uart_memory[0] = uart_data;

@@ -25,13 +25,9 @@ signal = [float(i) for i in range(1,11)]
 with serial.Serial("/dev/ttyUSB1",115200,timeout=5) as ser:
     ser.reset_input_buffer()
     ser.reset_output_buffer()
-    for f in signal:
-        send_u32(ser, f32_bits(f))
-        sleep(0.5)
-        data = recv_u32(ser)
-        print(f"Received 0x{data:08X}")
-    send_u32(ser, f32_bits(-1.0))
-    data = recv_u32(ser)
-    if data == SIGN:
-        print("Received SIGN in ascii")
-    print(f"Received 0x{data:08X}")
+    while True:
+        try:
+            data = recv_u32(ser)
+            print(f"Received 0x{data:08X}")
+        except KeyboardInterrupt:
+            break

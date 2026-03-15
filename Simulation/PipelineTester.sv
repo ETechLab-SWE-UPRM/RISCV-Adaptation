@@ -108,8 +108,7 @@ endtask
     rst = 1'b0;
     #1000;
     // Send test string via UART
-    uart_rx_send_string("boot");
-    #800000;
+    #8000000;
 
     //  $display("Dumping data memory to data_tester_dump.hex");
     //      $writememh(

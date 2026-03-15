@@ -12,6 +12,10 @@
     #define Conv_weights_reg (* (volatile int *) (UART_address + 0x14u))
     #define Conv_output_reg (* (volatile int *) (UART_address + 0x18u))
 
+    // UART masking
+    #define UART_RX_MASK 0x1
+    #define UART_TX_MASK 0x2
+
     // CPU specs
     #define CPU_Hz 50000000u // 50 MHz
     #define UART_Baudrate 115200u
@@ -44,22 +48,17 @@
     }
 
     static inline int read_blocked(void) {
-        while (UART_read_status() == 0) {
+        while ((UART_read_status() & UART_RX_MASK) == 0) {
             // wait
         }
         return UART_read();
     }
 
-    static inline void busy(int cycles) {
-        volatile int count = cycles;
-        while (count > 0) {
-            count--;
-        }
-    }
-
     static inline void write_blocked(int data) {
+        while ((UART_read_status() & UART_TX_MASK) == 0) {
+            // wait
+        }
         UART_send(data);
-        busy(UART_Clocks_per_word);
     }
 
     static inline float UART_read_float(void) {
@@ -76,8 +75,10 @@
     }
 
     static inline void write_blocked_float(float data) {
+        while ((UART_read_status() & UART_TX_MASK) == 0) {
+            // wait
+        }
         UART_send_float(data);
-        busy(UART_Clocks_per_word);
     }
 
     static inline float read_blocked_float(void) {
