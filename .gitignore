@@ -20,6 +20,8 @@
 _ide/
 .rigel_lopper/
 .vscode/
+ip/
+ui/
 
 # Keep important files
 !*.wcfg

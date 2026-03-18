@@ -16,7 +16,7 @@ proc rglob {dir pattern} {
 
 set repo_root [file normalize [file dirname [info script]]]
 set proj_name [lindex $argv 0]
-if {$proj_name eq ""} { set proj_name "RVWearable" }
+if {$proj_name eq ""} { set proj_name "Risc-V-Wearable" }
 
 # BASYS 3 FPGA
 set part_name "xc7a35tcpg236-1" 
@@ -33,6 +33,9 @@ puts "INFO: build_dir    = $build_dir"
 
 create_project $proj_name $build_dir -part $part_name
 set_property board_part digilentinc.com:basys3:part0:1.2 [current_project]
+
+set_property strategy Flow_PerfOptimized_high [get_runs synth_1]
+set_property strategy Performance_ExplorePostRoutePhysOpt [get_runs impl_1]
 
 # ---- Add RTL sources ----
 set rtl_dir [file join $repo_root RTL]
@@ -103,7 +106,60 @@ if {[llength $xci_files] != 0} {
   # If you use Out-of-Context IP runs, uncomment:
   # create_ip_run $xci_objs
 } else {
-  puts "INFO: No .xci files found under $ip_dir (including subdirs)"
+  puts "WARNING: No .xci files found under $ip_dir (including subdirs)"
+}
+
+# ---- Recreate Block Designs ----
+set bd_tcl_dir [file join $repo_root BD]
+set bd_tcl_files [glob -nocomplain -directory $bd_tcl_dir -types f *.tcl]
+
+if {[llength $bd_tcl_files] == 0} {
+  puts "WARNING: No BD Tcl files found under $bd_tcl_dir"
+} else {
+  foreach bd_tcl $bd_tcl_files {
+    puts "INFO: Sourcing BD Tcl: $bd_tcl"
+    source $bd_tcl
+  }
+
+  # Collect only top-level BDs, not scoped/generated nested BDs
+  set bd_files {}
+  foreach bd [get_files *.bd] {
+    set bd_norm [file normalize $bd]
+
+    if {[string match "*/.gen/*" $bd_norm]} {
+      continue
+    }
+    if {[regexp {[/\\]ip[/\\].*[/\\]bd_[^/\\]+\.bd$} $bd_norm]} {
+      continue
+    }
+
+    lappend bd_files $bd
+  }
+
+  foreach bd $bd_files {
+    puts "INFO: Finalizing Block Design $bd"
+    open_bd_design $bd
+    validate_bd_design
+    save_bd_design
+    generate_target all [get_files $bd]
+    make_wrapper -files [get_files $bd] -top
+
+    set bd_dirname [file dirname $bd]
+    set wrappers [concat \
+      [glob -nocomplain [file join $bd_dirname hdl *_wrapper.v]] \
+      [glob -nocomplain [file join $bd_dirname hdl *_wrapper.vhd]]]
+
+    if {[llength $wrappers] != 0} {
+      add_files -norecurse $wrappers
+    } else {
+      puts "WARNING: No wrapper generated for $bd"
+    }
+
+    set cur_bd [current_bd_design -quiet]
+    if {$cur_bd ne ""} {
+      close_bd_design $cur_bd
+    }
+  }
 }
 
 set_property top top [current_fileset]
