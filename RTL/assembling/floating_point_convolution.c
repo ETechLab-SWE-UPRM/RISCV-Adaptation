@@ -14,7 +14,15 @@ volatile int err = 1;
 
 int main() {
     while (1) {
-        write_blocked(0x12345678);
+        while (1) {
+            data = read_blocked_float();
+            if (data == -1.0f) {
+                write_blocked(SIGN);
+                break;
+            }
+
+            write_blocked_float(data);
+        }
     } 
     return 0;
 }
