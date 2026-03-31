@@ -47,6 +47,16 @@ module PipelineTester;
     end
   endtask
 
+  task automatic uart_rx_send_word(input logic [31:0] w);
+    begin
+        // Send MSB first (matches struct.pack(">I", ...) in Python)
+        uart_rx_send_byte(w[31:24]);
+        uart_rx_send_byte(w[23:16]);
+        uart_rx_send_byte(w[15:8]);
+        uart_rx_send_byte(w[7:0]);
+    end
+  endtask
+
     // -------------------------
   // UART TX receiver (from DUT)
   // -------------------------
@@ -108,13 +118,20 @@ endtask
     rst = 1'b0;
     #1000;
     // Send test string via UART
-    #8000000;
+    
+    uart_rx_send_word(32'h3F800000); // 1.0
+    uart_rx_send_word(32'h40000000); // 2.0
+    uart_rx_send_word(32'h40400000); // 3.0
+    uart_rx_send_word(32'h40800000); // 4.0
+    uart_rx_send_word(32'h40A00000); // 5.0
+    uart_rx_send_word(32'h40C00000); // 6.0
+    uart_rx_send_word(32'h40E00000); // 7.0
+    uart_rx_send_word(32'h41000000); // 8.0
+    uart_rx_send_word(32'h41100000); // 9.0
+    uart_rx_send_word(32'h41200000); // 10.0
 
-    //  $display("Dumping data memory to data_tester_dump.hex");
-    //      $writememh(
-    //          "C:/Users/pizar/RISCV-Adaptation/Risc-V processor.srcs/sources_1/memory_dump.hex",
-    //          processor.data_mem.mem_inst.inst.native_mem_module.blk_mem_gen_v8_4_9_inst.memory
-    //      );
+    uart_rx_send_word(32'hBF800000); // terminator (-1.0)
+    #8000000;
 
     $finish;
   end

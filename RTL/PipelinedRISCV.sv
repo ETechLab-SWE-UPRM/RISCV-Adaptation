@@ -1127,7 +1127,6 @@ module RISCV_WEARABLE (
                 word_in_progress <= 1'b1;
                 uart_write_data <= write_data[0][31:24];
                 send_byte <= 1'b1;
-                data_word_complete <= 1'b0;
                 data_place <= 2'b0;
             end
 
@@ -1168,6 +1167,9 @@ module RISCV_WEARABLE (
                     default: ;
                 endcase
                 data_place <= data_place + 1'b1;
+            end else begin
+                data_place <= 2'd0;
+                data_word_complete <= 1'b0;
             end
         end
     end
