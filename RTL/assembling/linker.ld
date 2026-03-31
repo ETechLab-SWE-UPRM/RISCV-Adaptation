@@ -13,8 +13,8 @@ SECTIONS
 {
   /* all .text go into ROM starting at 0x0 */
   .text : {
-    *(.init)
-    *(.text)        /* every input section named .text */
+    *(.init*)
+    *(.text*)        /* every input section named .text */
   } > ROM
 
   /* all initialized data (.data) goes into RAM at 0x1000_0000 */
@@ -30,7 +30,8 @@ SECTIONS
   /* uninitialized data (.bss) also lives in RAM, zero-filled */
   .bss  : {
     __bss_start = .;
-    *(.bss)
+    *(.bss*)
+    *(.sbss*)
     *(COMMON)
     __bss_end = .;
   } > RAM

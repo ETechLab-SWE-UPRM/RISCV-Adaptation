@@ -26,7 +26,7 @@ if [ ${#SRC_LIST[@]} -eq 0 ]; then
 fi
 
 # Common flags
-CFLAGS="-O2 -ffreestanding -fno-pic -fno-builtin -march=${ARCH} -mabi=${ABI} -Wall -Wextra -ffunction-sections -fdata-sections"
+CFLAGS="-O1 -ffreestanding -fno-pic -fno-builtin -march=${ARCH} -mabi=${ABI} -Wall -Wextra -ffunction-sections -fdata-sections"
 LDFLAGS="-nostdlib -Wl,--no-relax -T ${LD} -march=${ARCH} -mabi=${ABI}"
 
 OBJ_LIST=()
@@ -43,18 +43,12 @@ ${CC} ${LDFLAGS} "${OBJ_LIST[@]}" -o "${ELF}" -lc -lm -lnosys
 echo "→ Extracting sections into raw binaries"
 # Instruction memory: include .init, .text, .rodata (if you keep consts in ROM)
 ${OBJCOPY} -O binary \
-  --only-section .init \
-  --only-section .text* \
+  --only-section=.text \
   "${ELF}" "text.bin"
 
 # Data memory: include .data, .sdata
 ${OBJCOPY} -O binary \
-  --only-section .data* \
-  --only-section .sdata* \
-  --only-section .bss* \
-  --only-section .rodata* \
-  --only-section .srodata* \
-  --only-section .stack* \
+  --only-section=.data \
   "${ELF}" "data.bin"
   
 cd ..

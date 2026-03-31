@@ -2,27 +2,20 @@
 #define MAX_LENGTH 2048
 #define KERNEL_SIZE 64
 
-float signal[MAX_LENGTH];
-float kernel[KERNEL_SIZE];
-float result[MAX_LENGTH - KERNEL_SIZE + 1];
-volatile int data_length = 1;
-volatile int kernel_length = 1;
-volatile int output_length = 1;
-volatile int done = 1;
-volatile float data = 1.0f;
-volatile int err = 1;
+volatile int done = 0;
+volatile float signal[MAX_LENGTH];
 
-int main() {
-    while (1) {
-        while (1) {
-            data = read_blocked_float();
-            if (data == -1.0f) {
-                write_blocked(SIGN);
-                break;
-            }
 
-            write_blocked_float(data);
-        }
+int main() {    
+    for(int i = 0; i < 10; i++) {
+        signal[i] = 1.5f;
     } 
+    
+    while (1) {
+        for(int i = 0; i < 10; i++) {
+            write_blocked_float(signal[i]);
+        }
+    }
+
     return 0;
 }

@@ -189,6 +189,7 @@ module RISCV_WEARABLE (
     logic mem_wb_memtoreg, mem_wb_regwrite, mem_wb_jal, mem_wb_jalr, mem_wb_vec_op, mem_wb_vec_reg_write;
     logic mem_wb_fp_instruction, mem_wb_fp_reg_write, mem_wb_rd_is_int;
     logic [31:0] mem_wb_alu_result [0:vector_length-1], mem_wb_memory_data_read [0:vector_length-1], mem_wb_link_address;
+    logic [31:0] mem_wb_uart_memory [0:vector_length-1];
     logic [4:0] mem_wb_rs1, mem_wb_rs2, mem_wb_reg_dest;
     logic [31:0] mem_wb_write_data [0:vector_length-1];
     logic [31:0] mem_wb_conv_addr, mem_wb_weights_addr;
@@ -1063,7 +1064,6 @@ module RISCV_WEARABLE (
     logic [31:0] uart_send_data;
 
     logic [31:0] uart_memory [0:vector_length-1];
-    logic override_data_read;
     logic data_word_complete;
     logic [1:0] data_place; // rx indexing
     logic [1:0] data_send; // tx indexing
@@ -1179,7 +1179,6 @@ module RISCV_WEARABLE (
     assign receive_read = (memory_address[0] == uart_receive) && ex_mem_memread;
 
     always_comb begin : uart_memory_override
-        override_data_read = 1'b0;
         for(int i = 0; i < vector_length; i++) begin
             uart_memory[i] = 32'b0;
         end
@@ -1188,10 +1187,8 @@ module RISCV_WEARABLE (
             uart_memory[0] = (data_word_complete && tx_ready) ? 32'h3 :
                              (tx_ready) ? 32'h2 :
                              (data_word_complete) ? 32'b1 : 32'b0;
-            override_data_read = 1'b1;
         end else if(receive_read && data_word_complete) begin
             uart_memory[0] = uart_data;
-            override_data_read = 1'b1;
         end
     end
 
@@ -1212,7 +1209,8 @@ module RISCV_WEARABLE (
         .ex_mem_jal(ex_mem_jal),
         .ex_mem_jalr(ex_mem_jalr),
         .ex_mem_alu_result(ex_mem_alu_result),
-        .memory_data_read((override_data_read) ? uart_memory : memory_data_read),
+        .memory_data_read(memory_data_read),
+        .uart_memory(uart_memory),
         .ex_mem_rs1(ex_mem_rs1),
         .ex_mem_rs2(ex_mem_rs2),
         .ex_mem_reg_dest(ex_mem_reg_dest),
@@ -1232,6 +1230,7 @@ module RISCV_WEARABLE (
         .mem_wb_jalr(mem_wb_jalr),
         .mem_wb_alu_result(mem_wb_alu_result),
         .mem_wb_memory_data_read(mem_wb_memory_data_read),
+        .mem_wb_uart_memory(mem_wb_uart_memory),
         .mem_wb_rs1(mem_wb_rs1),
         .mem_wb_rs2(mem_wb_rs2),
         .mem_wb_reg_dest(mem_wb_reg_dest),

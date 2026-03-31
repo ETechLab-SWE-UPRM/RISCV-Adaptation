@@ -18,6 +18,7 @@ module MEM_WB_reg #(
     input logic ex_mem_jalr,
     input logic [31:0] ex_mem_alu_result [0:vec_length-1],
     input logic [31:0] memory_data_read [0:vec_length-1],
+    input logic [31:0] uart_memory [0:vec_length-1],
     input logic [4:0] ex_mem_rs1,
     input logic [4:0] ex_mem_rs2,
     input logic [4:0] ex_mem_reg_dest,
@@ -37,6 +38,7 @@ module MEM_WB_reg #(
     output logic mem_wb_jalr,
     output logic [31:0] mem_wb_alu_result [0:vec_length-1],
     output logic [31:0] mem_wb_memory_data_read [0:vec_length-1],
+    output logic [31:0] mem_wb_uart_memory [0:vec_length-1],
     output logic [4:0] mem_wb_rs1,
     output logic [4:0] mem_wb_rs2,
     output logic [4:0] mem_wb_reg_dest,
@@ -65,6 +67,8 @@ module MEM_WB_reg #(
             mem_wb_rs2 <= 5'b0;
             mem_wb_reg_dest <= 5'b0;
             mem_wb_link_address <= 32'b0;
+            mem_wb_memory_data_read <= '{default: 32'b0};
+            mem_wb_uart_memory <= '{default: 32'b0};
             mem_wb_conv_addr <= 32'b0;
             mem_wb_weights_addr <= 32'b0;
 
@@ -86,6 +90,7 @@ module MEM_WB_reg #(
             mem_wb_reg_dest <= ex_mem_reg_dest;
             mem_wb_link_address <= ex_mem_link_address_reg; 
             mem_wb_memory_data_read <= memory_data_read;
+            mem_wb_uart_memory <= uart_memory;
             mem_wb_conv_addr <= ex_mem_conv_addr;
             mem_wb_weights_addr <= ex_mem_weights_addr;
         end
@@ -98,7 +103,7 @@ module MEM_WB_reg #(
                 mem_wb_write_data[i] = 32'b0; // Other vector elements are not used in JAL/JALR
             end
         end else if(mem_wb_memtoreg && uart_instruction_reg) begin
-            mem_wb_write_data = mem_wb_memory_data_read; 
+            mem_wb_write_data = mem_wb_uart_memory; 
         end else if (mem_wb_memtoreg) begin // Regular load instructions get value directly from memory; cause read_latency = 1
             mem_wb_write_data = memory_data_read;
         end else begin
