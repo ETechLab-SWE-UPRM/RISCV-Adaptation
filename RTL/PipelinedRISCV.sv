@@ -1093,7 +1093,12 @@ module RISCV_WEARABLE (
     );
 
     logic receive_send;
+    logic status_read, receive_read;
+    logic tx_ready;
     assign receive_send = (memory_address[0] == uart_send) && ex_mem_memwrite;
+    assign tx_ready = (!word_in_progress);
+    assign status_read = (memory_address[0] == uart_status) && ex_mem_memread;
+    assign receive_read = (memory_address[0] == uart_receive) && ex_mem_memread;
 
     always_ff @(posedge clk) begin : uart_write_control
         if(reset) begin
@@ -1116,6 +1121,7 @@ module RISCV_WEARABLE (
             data_word_complete <= 1'b0;
             data_place <= 2'b00;
             uart_data <= 32'b0;
+
         end else begin
             send_byte <= 1'b0;
 
@@ -1169,16 +1175,13 @@ module RISCV_WEARABLE (
                 data_place <= data_place + 1'b1;
             end else begin
                 data_place <= 2'd0;
-                data_word_complete <= 1'b0;
             end
+
+            if(receive_read) begin
+                data_word_complete <= 1'b0;
+            end 
         end
     end
-
-    logic status_read, receive_read;
-    logic tx_ready;
-    assign tx_ready = (!word_in_progress);
-    assign status_read = (memory_address[0] == uart_status) && ex_mem_memread;
-    assign receive_read = (memory_address[0] == uart_receive) && ex_mem_memread;
 
     always_comb begin : uart_memory_override
         for(int i = 0; i < vector_length; i++) begin

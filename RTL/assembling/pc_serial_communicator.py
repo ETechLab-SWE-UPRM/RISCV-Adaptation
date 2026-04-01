@@ -13,11 +13,14 @@ def recv_u32(ser):
 def f32_bits(x):
     return struct.unpack("<I", struct.pack("<f", x))[0]
 
+def bits_to_f32(v):
+    return struct.unpack("<f", struct.pack("<I", v))[0]
+
 # UART CONFIGURATION
 port = "/dev/ttyUSB1" # Change this to your serial port
 baud = 115200
 
-signal = [float(i) for i in range(1,11)]
+signal = [float(i) for i in range(1,1025)]
 kernel = [1.0,1.0,1.0]
 
 SIGN = 0x5349474E
@@ -26,7 +29,7 @@ KERN = 0x4B45524E
 WEIGHTERROR = 0x57455252
 DONE = 0x444F4E45
 
-with serial.Serial(port, baud, timeout=10) as ser:
+with serial.Serial(port, baud, timeout=5) as ser:
     ser.reset_input_buffer()
     ser.reset_output_buffer()
     
@@ -49,4 +52,5 @@ with serial.Serial(port, baud, timeout=10) as ser:
             break
         out.append(v)
 
-    print(out[:20])
+    for i in out:
+        print(f"{i:08X} -> {bits_to_f32(i)}")
