@@ -8,7 +8,7 @@
 // Module Name: RISCV_WEARABLE
 // Project Name: RISC-V Wearable
 // Target Devices: Artix-7
-// Tool Versions: Vivado 2024.2
+// Tool Versions: Vivado 2025.2
 // Description: A pipelined RISC-V processor implementation, with support for all integer instructions (excluding environment call instructions), 
 // and support for custom vector and floating point MAC computations (FMADD).
 // Contains usual components such as instruction (ROM) and data memory (RAM), 3 distinct ALU components, and several DSPs for faster computations.
@@ -228,7 +228,7 @@ module RISCV_WEARABLE (
     always_ff @(posedge clk) begin
         if (reset) begin
             fetch_pc <= 32'b0;
-        end else if (pc_write) begin
+        end else if (pc_write && fp_pc_write) begin
             fetch_pc <= pc;
         end else begin
             fetch_pc <= fetch_pc;
