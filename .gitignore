@@ -16,6 +16,8 @@
 *.Xil
 *.srcs
 *.txt
+*.hex
+*.inc
 
 # Ignore generate Vitis stuff
 _ide/

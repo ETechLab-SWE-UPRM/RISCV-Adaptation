@@ -56,10 +56,16 @@ module fp_control (
                 fp_instruction = 1'b1;
             end
 
+            // FP-OP
             7'b1010011: begin
-                fp_op = 2'b10;
-                rd_is_int = 1'b1;
                 fp_instruction = 1'b1;
+                fp_op          = 2'b10;
+
+                if (funct7 == 7'b1010000) begin
+                    rd_is_int = 1'b1; // FLE, FLT, FEQ
+                end else begin
+                    fp_reg_write = 1'b1; // Anything else
+                end
             end
 
             default : begin
@@ -67,7 +73,7 @@ module fp_control (
                 fp_reg_write = 1'b0;
                 fp_load = 1'b0;
                 fp_store = 1'b0;
-                fp_op = 1'b0;
+                fp_op = 2'b0;
                 fmat_type = FM_NONE;
                 fp_instruction = 1'b0;
                 rd_is_int = 1'b0;
