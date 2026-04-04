@@ -1,4 +1,5 @@
 import serial, struct
+import time
 
 def send_u32(ser, v):
     d = struct.pack(">I", v)
@@ -22,12 +23,15 @@ baud = 115200
 
 signal = [float(i) for i in range(1,1025)]
 kernel = [1.0,1.0,1.0]
+result = []
+result_len = len(signal) - len(kernel) + 1
 
 SIGN = 0x5349474E
 DATAERROR = 0x44455252
 KERN = 0x4B45524E
 WEIGHTERROR = 0x57455252
 DONE = 0x444F4E45
+START= 0x53545254
 
 with serial.Serial(port, baud, timeout=5) as ser:
     ser.reset_input_buffer()
@@ -44,13 +48,46 @@ with serial.Serial(port, baud, timeout=5) as ser:
     elif sign == DATAERROR:
         raise ValueError("\033[31mData input error detected.\033[0m")
 
-    out = []
-    for i in signal:
-        v = recv_u32(ser)
-        print(f"Added 0x{v:08X} to array")
-        if v == DONE:
-            break
-        out.append(v)
+    for v in kernel:
+        send_u32(ser, f32_bits(v))
+    send_u32(ser, f32_bits(-1.0))
 
-    for i in out:
-        print(f"{i:08X} -> {bits_to_f32(i)}")
+    kern = recv_u32(ser)
+
+    if kern == KERN:
+        print(f"Received 'KERN'")
+    elif kern == WEIGHTERROR:
+        raise ValueError("\033[31mWeight input error detected.\033[0m")
+    
+    start = recv_u32(ser)
+
+    if start == START:
+        print("Received 'START'")
+    else :
+        print("You done goofed")
+
+    start = time.perf_counter()
+
+    done = recv_u32(ser)
+
+    end = time.perf_counter()
+
+    if done == DONE:
+        print("Received 'DONE'")
+
+    if (done == DONE):
+        elapsed_us = (end - start) * 1e6
+        print("Successful Measurement!")
+        print(f"Took {elapsed_us:.3f} microseconds")
+    else :
+        raise ValueError(f"\033[31mDONE not received: 0x{done:08X}\033[0m")
+
+    i = 0
+    while i < result_len:
+        data = recv_u32(ser)
+        result.append(data)
+        i += 1
+
+with open("results.txt", "w") as file:
+    for v in result:
+        file.write(f"0x{v:08x} -> {bits_to_f32(v)}\n")

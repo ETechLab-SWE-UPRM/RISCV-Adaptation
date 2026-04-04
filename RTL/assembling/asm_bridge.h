@@ -27,6 +27,7 @@
     #define KERN 0x4B45524E
     #define DATAERROR 0x44455252
     #define WEIGHTSERROR 0x57455252
+    #define START 0x53545254
     #define DONE 0x444F4E45
 
     int Convolution(float *data, float *weights, float *output,

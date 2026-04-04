@@ -15,6 +15,7 @@
 *build
 *.Xil
 *.srcs
+*.txt
 
 # Ignore generate Vitis stuff
 _ide/

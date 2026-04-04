@@ -131,6 +131,13 @@ endtask
     uart_rx_send_word(32'h41200000); // 10.0
 
     uart_rx_send_word(32'hBF800000); // terminator (-1.0)
+    
+    uart_rx_send_word(32'h3F800000); // 1.0
+    uart_rx_send_word(32'h3F800000); // 1.0
+    uart_rx_send_word(32'h3F800000); // 1.0
+
+    uart_rx_send_word(32'hBF800000); // terminator (-1.0)
+    
     #8000000;
 
     $finish;
