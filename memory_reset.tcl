@@ -38,6 +38,7 @@ export_ip_user_files \
     -sync \
     -force
 
+reset_run blk_mem_gen_0_synth_1
 reset_run Instruction_Memory_synth_1
 reset_run synth_1
 launch_runs synth_1 -jobs 8
