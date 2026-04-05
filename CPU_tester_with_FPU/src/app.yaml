@@ -1,4 +1,0 @@
-domain_path: C:\Users\pizar\RISCV-Adaptation\MicroBlazeCPU_with_FPU\export\MicroBlazeCPU_with_FPU\sw\standalone_microblaze_riscv_0
-app_src_dir: C:\Xilinx\Vitis\2024.2\data\embeddedsw\lib\sw_apps\empty_application
-template: empty_application
-lang: c
