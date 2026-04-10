@@ -1,6 +1,6 @@
 
 ################################################################
-# This is a generated script based on design: MC_CPU_50
+# This is a generated script based on design: MB_CPU_50M
 #
 # Though there are limitations about the generated script,
 # the main purpose of this utility is to make learning
@@ -41,7 +41,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 ################################################################
 
 # To test this script, run the following commands from Vivado Tcl console:
-# source MC_CPU_50_script.tcl
+# source MB_CPU_50M_script.tcl
 
 # If there is no project opened, this script will create a
 # project, but make sure you do not have an existing project
@@ -56,7 +56,7 @@ if { $list_projs eq "" } {
 
 # CHANGE DESIGN NAME HERE
 variable design_name
-set design_name MC_CPU_50
+set design_name MB_CPU_50M
 
 # If you do not already have an existing IP Integrator design open,
 # you can create a design using the following command:
@@ -295,25 +295,25 @@ proc create_root_design { parentCell } {
   # Create interface ports
   set usb_uart [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:uart_rtl:1.0 usb_uart ]
 
-  set diff_clock_rtl [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 diff_clock_rtl ]
-  set_property -dict [ list \
-   CONFIG.FREQ_HZ {100000000} \
-   ] $diff_clock_rtl
-
 
   # Create ports
   set reset [ create_bd_port -dir I -type rst reset ]
   set_property -dict [ list \
    CONFIG.POLARITY {ACTIVE_HIGH} \
  ] $reset
+  set sys_clock [ create_bd_port -dir I -type clk -freq_hz 100000000 sys_clock ]
+  set_property -dict [ list \
+   CONFIG.PHASE {0.0} \
+ ] $sys_clock
 
   # Create instance: microblaze_riscv_0, and set properties
   set microblaze_riscv_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:microblaze_riscv:1.0 microblaze_riscv_0 ]
   set_property -dict [list \
-    CONFIG.C_DEBUG_ENABLED {0} \
+    CONFIG.C_DEBUG_ENABLED {1} \
     CONFIG.C_D_AXI {1} \
     CONFIG.C_D_LMB {1} \
     CONFIG.C_I_LMB {1} \
+    CONFIG.G_TEMPLATE_LIST {6} \
   ] $microblaze_riscv_0
 
 
@@ -325,8 +325,9 @@ proc create_root_design { parentCell } {
   set_property -dict [list \
     CONFIG.CLKOUT1_JITTER {151.636} \
     CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {50} \
+    CONFIG.CLK_IN1_BOARD_INTERFACE {sys_clock} \
     CONFIG.MMCM_CLKOUT0_DIVIDE_F {20.000} \
-    CONFIG.PRIM_SOURCE {Differential_clock_capable_pin} \
+    CONFIG.PRIM_SOURCE {Single_ended_clock_capable_pin} \
     CONFIG.RESET_BOARD_INTERFACE {reset} \
     CONFIG.USE_BOARD_FLOW {true} \
   ] $clk_wiz_1
@@ -356,7 +357,6 @@ proc create_root_design { parentCell } {
   # Create interface connections
   connect_bd_intf_net -intf_net axi_smc_M00_AXI [get_bd_intf_pins axi_smc/M00_AXI] [get_bd_intf_pins axi_uartlite_0/S_AXI]
   connect_bd_intf_net -intf_net axi_uartlite_0_UART [get_bd_intf_ports usb_uart] [get_bd_intf_pins axi_uartlite_0/UART]
-  connect_bd_intf_net -intf_net diff_clock_rtl_1 [get_bd_intf_ports diff_clock_rtl] [get_bd_intf_pins clk_wiz_1/CLK_IN1_D]
   connect_bd_intf_net -intf_net microblaze_riscv_0_M_AXI_DP [get_bd_intf_pins microblaze_riscv_0/M_AXI_DP] [get_bd_intf_pins axi_smc/S00_AXI]
   connect_bd_intf_net -intf_net microblaze_riscv_0_dlmb_1 [get_bd_intf_pins microblaze_riscv_0/DLMB] [get_bd_intf_pins microblaze_riscv_0_local_memory/DLMB]
   connect_bd_intf_net -intf_net microblaze_riscv_0_ilmb_1 [get_bd_intf_pins microblaze_riscv_0/ILMB] [get_bd_intf_pins microblaze_riscv_0_local_memory/ILMB]
@@ -380,6 +380,8 @@ proc create_root_design { parentCell } {
   connect_bd_net -net rst_clk_wiz_1_100M_peripheral_aresetn  [get_bd_pins rst_clk_wiz_1_100M/peripheral_aresetn] \
   [get_bd_pins axi_uartlite_0/s_axi_aresetn] \
   [get_bd_pins axi_smc/aresetn]
+  connect_bd_net -net sys_clock_1  [get_bd_ports sys_clock] \
+  [get_bd_pins clk_wiz_1/clk_in1]
 
   # Create address segments
   assign_bd_address -offset 0x40600000 -range 0x00010000 -target_address_space [get_bd_addr_spaces microblaze_riscv_0/Data] [get_bd_addr_segs axi_uartlite_0/S_AXI/Reg] -force
