@@ -11,6 +11,7 @@
     #define Conv_data_reg (* (volatile int *) (UART_address + 0x10u))
     #define Conv_weights_reg (* (volatile int *) (UART_address + 0x14u))
     #define Conv_output_reg (* (volatile int *) (UART_address + 0x18u))
+    #define timer_reg (* (volatile int *) (UART_address + 0x1Cu))
 
     // UART masking
     #define UART_RX_MASK 0x1
@@ -46,6 +47,10 @@
 
     static inline void UART_send(int data) {
         UART_transmit = data;
+    }
+
+    static inline int read_timer(void) {
+        return timer_reg;
     }
 
     static inline int read_blocked(void) {

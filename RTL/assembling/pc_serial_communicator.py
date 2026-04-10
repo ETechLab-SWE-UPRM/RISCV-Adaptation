@@ -17,6 +17,11 @@ def f32_bits(x):
 def bits_to_f32(v):
     return struct.unpack("<f", struct.pack("<I", v))[0]
 
+def int_to_bits(v):
+    e = struct.unpack(">I", struct.pack("<i", v))[0]
+    print(f"int_to_bits: {v} -> 0x{e:08x}")
+    return e
+
 # UART CONFIGURATION
 port = "/dev/ttyUSB1" # Change this to your serial port
 baud = 115200
@@ -37,50 +42,11 @@ with serial.Serial(port, baud, timeout=5) as ser:
     ser.reset_input_buffer()
     ser.reset_output_buffer()
     
-    for v in signal:
-        send_u32(ser, f32_bits(v))
-    send_u32(ser, f32_bits(-1.0))
+    send_u32(ser, int_to_bits(-1)) # Send start signal
 
-    sign = recv_u32(ser)
+    elapsed = recv_u32(ser)
 
-    if sign == SIGN:
-        print(f"Received 'SIGN'")
-    elif sign == DATAERROR:
-        raise ValueError("\033[31mData input error detected.\033[0m")
-
-    for v in kernel:
-        send_u32(ser, f32_bits(v))
-    send_u32(ser, f32_bits(-1.0))
-
-    kern = recv_u32(ser)
-
-    if kern == KERN:
-        print(f"Received 'KERN'")
-    elif kern == WEIGHTERROR:
-        raise ValueError("\033[31mWeight input error detected.\033[0m")
-    
-    start = recv_u32(ser)
-
-    if start == START:
-        print("Received 'START'")
-    else :
-        print("You done goofed")
-
-    start = time.perf_counter()
-
-    done = recv_u32(ser)
-
-    end = time.perf_counter()
-
-    if done == DONE:
-        print("Received 'DONE'")
-
-    if (done == DONE):
-        elapsed_us = (end - start) * 1e6
-        print("Successful Measurement!")
-        print(f"Took {elapsed_us:.3f} microseconds")
-    else :
-        raise ValueError(f"\033[31mDONE not received: 0x{done:08X}\033[0m")
+    print(f"Elapsed time: {elapsed} cycles")
 
     i = 0
     while i < result_len:

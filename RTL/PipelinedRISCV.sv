@@ -83,6 +83,7 @@ module RISCV_WEARABLE (
     localparam data_length_addr = uart_send + 4;
     localparam weights_length_addr = data_length_addr + 4;
     localparam output_length_addr = weights_length_addr + 4;
+    localparam timer_addr = output_length_addr + 4;
 
     // UART Parameters
     localparam data_bits = 8;
@@ -190,9 +191,18 @@ module RISCV_WEARABLE (
     logic mem_wb_fp_instruction, mem_wb_fp_reg_write, mem_wb_rd_is_int;
     logic [31:0] mem_wb_alu_result [0:vector_length-1], mem_wb_memory_data_read [0:vector_length-1], mem_wb_link_address;
     logic [31:0] mem_wb_uart_memory [0:vector_length-1];
+    logic [31:0] mem_wb_timer_value;
     logic [4:0] mem_wb_rs1, mem_wb_rs2, mem_wb_reg_dest;
     logic [31:0] mem_wb_write_data [0:vector_length-1];
     logic [31:0] mem_wb_conv_addr, mem_wb_weights_addr;
+
+    logic [31:0] timer_value;
+    Timer timer (
+        .clk(clk),
+        .reset(reset),
+
+        .timer_value(timer_value)
+    );
 
     // -- INSTRUCTION FETCH STAGE --
     logic [31:0] pc ;
@@ -1095,10 +1105,12 @@ module RISCV_WEARABLE (
     logic receive_send;
     logic status_read, receive_read;
     logic tx_ready;
+    logic timer_read;
     assign receive_send = (memory_address[0] == uart_send) && ex_mem_memwrite;
     assign tx_ready = (!word_in_progress);
     assign status_read = (memory_address[0] == uart_status) && ex_mem_memread;
     assign receive_read = (memory_address[0] == uart_receive) && ex_mem_memread;
+    assign timer_read = (memory_address[0] == timer_addr) && ex_mem_memread;
 
     always_ff @(posedge clk) begin : uart_write_control
         if(reset) begin
@@ -1210,12 +1222,14 @@ module RISCV_WEARABLE (
         .ex_mem_vec_reg_write(ex_mem_vec_reg_write),
         .ex_mem_memtoreg(ex_mem_memtoreg),
         .uart_instruction(status_read | receive_read | receive_send),
+        .timer_instruction(timer_read),
         .ex_mem_regwrite(ex_mem_regwrite),
         .ex_mem_jal(ex_mem_jal),
         .ex_mem_jalr(ex_mem_jalr),
         .ex_mem_alu_result(ex_mem_alu_result),
         .memory_data_read(memory_data_read),
         .uart_memory(uart_memory),
+        .timer_value(timer_value),
         .ex_mem_rs1(ex_mem_rs1),
         .ex_mem_rs2(ex_mem_rs2),
         .ex_mem_reg_dest(ex_mem_reg_dest),
@@ -1236,6 +1250,7 @@ module RISCV_WEARABLE (
         .mem_wb_alu_result(mem_wb_alu_result),
         .mem_wb_memory_data_read(mem_wb_memory_data_read),
         .mem_wb_uart_memory(mem_wb_uart_memory),
+        .mem_wb_timer_value(mem_wb_timer_value),
         .mem_wb_rs1(mem_wb_rs1),
         .mem_wb_rs2(mem_wb_rs2),
         .mem_wb_reg_dest(mem_wb_reg_dest),

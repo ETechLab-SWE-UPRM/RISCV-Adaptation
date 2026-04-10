@@ -119,6 +119,8 @@ endtask
     // #1000;
     // Send test string via UART
     
+    uart_rx_send_word(32'hFFFFFFFF); // -1
+
     // uart_rx_send_word(32'h3F800000); // 1.0
     // uart_rx_send_word(32'h40000000); // 2.0
     // uart_rx_send_word(32'h40400000); // 3.0
