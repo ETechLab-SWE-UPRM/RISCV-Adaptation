@@ -23,9 +23,9 @@
         "C_Optimization": [ { "value": "Speed_Optimized", "resolve_type": "user", "usage": "all" } ],
         "C_Mult_Usage": [ { "value": "Full_Usage", "value_src": "user", "resolve_type": "user", "usage": "all" } ],
         "C_BRAM_Usage": [ { "value": "No_Usage", "resolve_type": "user", "usage": "all" } ],
-        "Flow_Control": [ { "value": "Blocking", "resolve_type": "user", "usage": "all" } ],
+        "Flow_Control": [ { "value": "NonBlocking", "value_src": "user", "resolve_type": "user", "usage": "all" } ],
         "Axi_Optimize_Goal": [ { "value": "Resources", "resolve_type": "user", "usage": "all" } ],
-        "Has_RESULT_TREADY": [ { "value": "true", "resolve_type": "user", "format": "bool", "usage": "all" } ],
+        "Has_RESULT_TREADY": [ { "value": "false", "value_src": "user", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "Maximum_Latency": [ { "value": "false", "value_src": "user", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "C_Latency": [ { "value": "1", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
         "C_Rate": [ { "value": "1", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
@@ -103,7 +103,7 @@
         "C_HAS_ACCUM_INPUT_OVERFLOW": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_HAS_ACLKEN": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_HAS_ARESETN": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
-        "C_THROTTLE_SCHEME": [ { "value": "1", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "C_THROTTLE_SCHEME": [ { "value": "3", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_HAS_A_TUSER": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_HAS_A_TLAST": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_HAS_B": [ { "value": "1", "resolve_type": "generated", "format": "long", "usage": "all" } ],
@@ -158,13 +158,10 @@
       "ports": {
         "aclk": [ { "direction": "in", "driver_value": "0x0" } ],
         "s_axis_a_tvalid": [ { "direction": "in", "driver_value": "0x0" } ],
-        "s_axis_a_tready": [ { "direction": "out", "driver_value": "0x0" } ],
         "s_axis_a_tdata": [ { "direction": "in", "size_left": "31", "size_right": "0", "driver_value": "0" } ],
         "s_axis_b_tvalid": [ { "direction": "in", "driver_value": "0x0" } ],
-        "s_axis_b_tready": [ { "direction": "out", "driver_value": "0x0" } ],
         "s_axis_b_tdata": [ { "direction": "in", "size_left": "31", "size_right": "0", "driver_value": "0" } ],
         "m_axis_result_tvalid": [ { "direction": "out", "driver_value": "0x0" } ],
-        "m_axis_result_tready": [ { "direction": "in", "driver_value": "0x0" } ],
         "m_axis_result_tdata": [ { "direction": "out", "size_left": "31", "size_right": "0", "driver_value": "0" } ]
       },
       "interfaces": {
@@ -177,7 +174,7 @@
             "TDEST_WIDTH": [ { "value": "0", "value_src": "constant", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "TID_WIDTH": [ { "value": "0", "value_src": "constant", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "TUSER_WIDTH": [ { "value": "0", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
-            "HAS_TREADY": [ { "value": "1", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
+            "HAS_TREADY": [ { "value": "0", "value_src": "auto", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "HAS_TSTRB": [ { "value": "0", "value_src": "constant", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "HAS_TKEEP": [ { "value": "0", "value_src": "constant", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "HAS_TLAST": [ { "value": "0", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
@@ -189,7 +186,6 @@
           },
           "port_maps": {
             "TDATA": [ { "physical_name": "s_axis_a_tdata" } ],
-            "TREADY": [ { "physical_name": "s_axis_a_tready" } ],
             "TVALID": [ { "physical_name": "s_axis_a_tvalid" } ]
           }
         },
@@ -238,7 +234,7 @@
             "TDEST_WIDTH": [ { "value": "0", "value_src": "constant", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "TID_WIDTH": [ { "value": "0", "value_src": "constant", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "TUSER_WIDTH": [ { "value": "0", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
-            "HAS_TREADY": [ { "value": "1", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
+            "HAS_TREADY": [ { "value": "0", "value_src": "auto", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "HAS_TSTRB": [ { "value": "0", "value_src": "constant", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "HAS_TKEEP": [ { "value": "0", "value_src": "constant", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "HAS_TLAST": [ { "value": "0", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
@@ -250,7 +246,6 @@
           },
           "port_maps": {
             "TDATA": [ { "physical_name": "s_axis_b_tdata" } ],
-            "TREADY": [ { "physical_name": "s_axis_b_tready" } ],
             "TVALID": [ { "physical_name": "s_axis_b_tvalid" } ]
           }
         },
@@ -263,7 +258,7 @@
             "TDEST_WIDTH": [ { "value": "0", "value_src": "constant", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "TID_WIDTH": [ { "value": "0", "value_src": "constant", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "TUSER_WIDTH": [ { "value": "0", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
-            "HAS_TREADY": [ { "value": "1", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
+            "HAS_TREADY": [ { "value": "0", "value_src": "auto", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "HAS_TSTRB": [ { "value": "0", "value_src": "constant", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "HAS_TKEEP": [ { "value": "0", "value_src": "constant", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
             "HAS_TLAST": [ { "value": "0", "resolve_type": "generated", "format": "long", "is_ips_inferred": true, "is_static_object": false } ],
@@ -275,12 +270,11 @@
           },
           "port_maps": {
             "TDATA": [ { "physical_name": "m_axis_result_tdata" } ],
-            "TREADY": [ { "physical_name": "m_axis_result_tready" } ],
             "TVALID": [ { "physical_name": "m_axis_result_tvalid" } ]
           }
         }
       }
     }
   },
-  "checksum": "db61828d"
+  "checksum": "0f505813"
 }
