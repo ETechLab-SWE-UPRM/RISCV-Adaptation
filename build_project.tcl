@@ -52,7 +52,18 @@ if {[llength $rtl_files] == 0} {
 set xdc_dir [file join $repo_root Constraints]
 set xdc_files [glob -nocomplain -directory $xdc_dir -types f *.xdc]
 if {[llength $xdc_files] != 0} {
-  add_files -fileset constrs_1 -norecurse $xdc_files
+    foreach xdc $xdc_files {
+        set added_file [add_files -fileset constrs_1 -norecurse $xdc]
+        set fname [file tail $xdc]
+
+        if {[string tolower $fname] ne "constraints.xdc"} {
+            puts "Disabling constraint file: $fname"
+            set_property USED_IN_SYNTHESIS false $added_file
+            set_property USED_IN_IMPLEMENTATION false $added_file
+        } else {
+            puts "Keeping constraint file enabled: $fname"
+        }
+    }
 }
 
 # ---- Add SIM sources ----
