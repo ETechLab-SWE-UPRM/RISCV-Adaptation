@@ -51,7 +51,7 @@
     .insn i 0x0B, 0x03, \rd, \rs1, \offset
 .endm
 
-    
+
 .text
 .globl vector_convolution_main
 .type vector_convolution_main, @function
@@ -110,6 +110,7 @@ outside_inner_loop:
     vadd s5, s2, t5 # s4 = &result[i]
     vstore s4, s5, 0 # store the result
 
+    # Increase i by factors of 2 for strife in vector operations
     vaddi t0, t0, 2 # i += 2
     addi t0, t0, 2 # increment by 2 for vector operations
     blt t0, t1, outer_loop_vector

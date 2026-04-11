@@ -40,6 +40,8 @@ Convolution:
     flw f0, 0(a0) # preload first data
     flw f1, 0(a1) # preload first weight
 
+    # Add a branch to add_strife here if you want to do so
+
 outer_loop:
     li t2, 0 # j = 0
     fmv.w.x f2, x0 # sum = 0 
@@ -57,7 +59,7 @@ inner_loop_finished:
     fsw f2, 0(a2)
     addi a2, a2, 4 # output address increment
     addi t1, t1, 1
-    blt t1, a5, outer_loop
+    blt t1, a5, outer_loop # change to branch to add_strife if you wish to do so
 
     li a0, 0
     ret
