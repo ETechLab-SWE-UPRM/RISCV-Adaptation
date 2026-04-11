@@ -35,6 +35,7 @@ create_project $proj_name $build_dir -part $part_name
 set_property board_part digilentinc.com:basys3:part0:1.2 [current_project]
 
 set_property strategy Flow_PerfOptimized_high [get_runs synth_1]
+set_property STEPS.SYNTH_DESIGN.ARGS.FLATTEN_HIERARCHY none [get_runs synth_1]
 set_property strategy Performance_ExplorePostRoutePhysOpt [get_runs impl_1]
 
 # ---- Add RTL sources ----
