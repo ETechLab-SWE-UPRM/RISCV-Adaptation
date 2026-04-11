@@ -1,6 +1,6 @@
 
 ################################################################
-# This is a generated script based on design: MB_CPU
+# This is a generated script based on design: MB_CPU_50M
 #
 # Though there are limitations about the generated script,
 # the main purpose of this utility is to make learning
@@ -41,7 +41,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 ################################################################
 
 # To test this script, run the following commands from Vivado Tcl console:
-# source MB_CPU_script.tcl
+# source MB_CPU_50M_script.tcl
 
 # If there is no project opened, this script will create a
 # project, but make sure you do not have an existing project
@@ -56,7 +56,7 @@ if { $list_projs eq "" } {
 
 # CHANGE DESIGN NAME HERE
 variable design_name
-set design_name MB_CPU
+set design_name MB_CPU_50M
 
 # If you do not already have an existing IP Integrator design open,
 # you can create a design using the following command:
@@ -131,9 +131,11 @@ set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:ip:microblaze_riscv:1.0\
-xilinx.com:ip:axi_uartlite:2.0\
+xilinx.com:ip:clk_wiz:6.0\
 xilinx.com:ip:proc_sys_reset:5.0\
+xilinx.com:ip:axi_uartlite:2.0\
 xilinx.com:ip:smartconnect:1.0\
+xilinx.com:ip:axi_timer:2.0\
 xilinx.com:ip:lmb_v10:3.0\
 xilinx.com:ip:lmb_bram_if_cntlr:4.0\
 xilinx.com:ip:blk_mem_gen:8.4\
@@ -300,7 +302,10 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.POLARITY {ACTIVE_HIGH} \
  ] $reset
-  set Clk [ create_bd_port -dir I -type clk -freq_hz 100000000 Clk ]
+  set sys_clock [ create_bd_port -dir I -type clk -freq_hz 100000000 sys_clock ]
+  set_property -dict [ list \
+   CONFIG.PHASE {0.0} \
+ ] $sys_clock
 
   # Create instance: microblaze_riscv_0, and set properties
   set microblaze_riscv_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:microblaze_riscv:1.0 microblaze_riscv_0 ]
@@ -313,16 +318,21 @@ proc create_root_design { parentCell } {
   ] $microblaze_riscv_0
 
 
-  # Create instance: axi_uartlite_0, and set properties
-  set axi_uartlite_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uartlite:2.0 axi_uartlite_0 ]
-  set_property -dict [list \
-    CONFIG.UARTLITE_BOARD_INTERFACE {usb_uart} \
-    CONFIG.USE_BOARD_FLOW {true} \
-  ] $axi_uartlite_0
-
-
   # Create instance: microblaze_riscv_0_local_memory
   create_hier_cell_microblaze_riscv_0_local_memory [current_bd_instance .] microblaze_riscv_0_local_memory
+
+  # Create instance: clk_wiz_1, and set properties
+  set clk_wiz_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_1 ]
+  set_property -dict [list \
+    CONFIG.CLKOUT1_JITTER {151.636} \
+    CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {50} \
+    CONFIG.CLK_IN1_BOARD_INTERFACE {sys_clock} \
+    CONFIG.MMCM_CLKOUT0_DIVIDE_F {20.000} \
+    CONFIG.PRIM_SOURCE {Single_ended_clock_capable_pin} \
+    CONFIG.RESET_BOARD_INTERFACE {reset} \
+    CONFIG.USE_BOARD_FLOW {true} \
+  ] $clk_wiz_1
+
 
   # Create instance: rst_clk_wiz_1_100M, and set properties
   set rst_clk_wiz_1_100M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_clk_wiz_1_100M ]
@@ -332,26 +342,46 @@ proc create_root_design { parentCell } {
   ] $rst_clk_wiz_1_100M
 
 
+  # Create instance: axi_uartlite_0, and set properties
+  set axi_uartlite_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uartlite:2.0 axi_uartlite_0 ]
+  set_property -dict [list \
+    CONFIG.C_BAUDRATE {115200} \
+    CONFIG.UARTLITE_BOARD_INTERFACE {usb_uart} \
+    CONFIG.USE_BOARD_FLOW {true} \
+  ] $axi_uartlite_0
+
+
   # Create instance: axi_smc, and set properties
   set axi_smc [ create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect:1.0 axi_smc ]
-  set_property CONFIG.NUM_SI {1} $axi_smc
+  set_property -dict [list \
+    CONFIG.NUM_MI {2} \
+    CONFIG.NUM_SI {1} \
+  ] $axi_smc
 
+
+  # Create instance: axi_timer_0, and set properties
+  set axi_timer_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_timer:2.0 axi_timer_0 ]
 
   # Create interface connections
   connect_bd_intf_net -intf_net axi_smc_M00_AXI [get_bd_intf_pins axi_smc/M00_AXI] [get_bd_intf_pins axi_uartlite_0/S_AXI]
+  connect_bd_intf_net -intf_net axi_smc_M01_AXI [get_bd_intf_pins axi_smc/M01_AXI] [get_bd_intf_pins axi_timer_0/S_AXI]
   connect_bd_intf_net -intf_net axi_uartlite_0_UART [get_bd_intf_ports usb_uart] [get_bd_intf_pins axi_uartlite_0/UART]
   connect_bd_intf_net -intf_net microblaze_riscv_0_M_AXI_DP [get_bd_intf_pins microblaze_riscv_0/M_AXI_DP] [get_bd_intf_pins axi_smc/S00_AXI]
   connect_bd_intf_net -intf_net microblaze_riscv_0_dlmb_1 [get_bd_intf_pins microblaze_riscv_0/DLMB] [get_bd_intf_pins microblaze_riscv_0_local_memory/DLMB]
   connect_bd_intf_net -intf_net microblaze_riscv_0_ilmb_1 [get_bd_intf_pins microblaze_riscv_0/ILMB] [get_bd_intf_pins microblaze_riscv_0_local_memory/ILMB]
 
   # Create port connections
-  connect_bd_net -net Clk_1  [get_bd_ports Clk] \
-  [get_bd_pins axi_uartlite_0/s_axi_aclk] \
-  [get_bd_pins axi_smc/aclk] \
+  connect_bd_net -net clk_wiz_1_locked  [get_bd_pins clk_wiz_1/locked] \
+  [get_bd_pins rst_clk_wiz_1_100M/dcm_locked]
+  connect_bd_net -net microblaze_riscv_0_Clk  [get_bd_pins clk_wiz_1/clk_out1] \
   [get_bd_pins microblaze_riscv_0/Clk] \
   [get_bd_pins microblaze_riscv_0_local_memory/LMB_Clk] \
-  [get_bd_pins rst_clk_wiz_1_100M/slowest_sync_clk]
+  [get_bd_pins rst_clk_wiz_1_100M/slowest_sync_clk] \
+  [get_bd_pins axi_smc/aclk] \
+  [get_bd_pins axi_uartlite_0/s_axi_aclk] \
+  [get_bd_pins axi_timer_0/s_axi_aclk]
   connect_bd_net -net reset_1  [get_bd_ports reset] \
+  [get_bd_pins clk_wiz_1/reset] \
   [get_bd_pins rst_clk_wiz_1_100M/ext_reset_in]
   connect_bd_net -net rst_clk_wiz_1_100M_bus_struct_reset  [get_bd_pins rst_clk_wiz_1_100M/bus_struct_reset] \
   [get_bd_pins microblaze_riscv_0_local_memory/SYS_Rst]
@@ -359,11 +389,15 @@ proc create_root_design { parentCell } {
   [get_bd_pins microblaze_riscv_0/Reset]
   connect_bd_net -net rst_clk_wiz_1_100M_peripheral_aresetn  [get_bd_pins rst_clk_wiz_1_100M/peripheral_aresetn] \
   [get_bd_pins axi_uartlite_0/s_axi_aresetn] \
-  [get_bd_pins axi_smc/aresetn]
+  [get_bd_pins axi_smc/aresetn] \
+  [get_bd_pins axi_timer_0/s_axi_aresetn]
+  connect_bd_net -net sys_clock_1  [get_bd_ports sys_clock] \
+  [get_bd_pins clk_wiz_1/clk_in1]
 
   # Create address segments
+  assign_bd_address -offset 0x41C00000 -range 0x00010000 -target_address_space [get_bd_addr_spaces microblaze_riscv_0/Data] [get_bd_addr_segs axi_timer_0/S_AXI/Reg] -force
   assign_bd_address -offset 0x40600000 -range 0x00010000 -target_address_space [get_bd_addr_spaces microblaze_riscv_0/Data] [get_bd_addr_segs axi_uartlite_0/S_AXI/Reg] -force
-  assign_bd_address -offset 0x00000000 -range 0x00004000 -target_address_space [get_bd_addr_spaces microblaze_riscv_0/Data] [get_bd_addr_segs microblaze_riscv_0_local_memory/dlmb_bram_if_cntlr/SLMB/Mem] -force
+  assign_bd_address -offset 0x00000000 -range 0x00010000 -target_address_space [get_bd_addr_spaces microblaze_riscv_0/Data] [get_bd_addr_segs microblaze_riscv_0_local_memory/dlmb_bram_if_cntlr/SLMB/Mem] -force
   assign_bd_address -offset 0x00000000 -range 0x00004000 -target_address_space [get_bd_addr_spaces microblaze_riscv_0/Instruction] [get_bd_addr_segs microblaze_riscv_0_local_memory/ilmb_bram_if_cntlr/SLMB/Mem] -force
 
 
