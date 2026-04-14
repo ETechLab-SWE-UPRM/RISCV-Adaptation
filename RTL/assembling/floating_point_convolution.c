@@ -12,7 +12,7 @@ float kernel[KERNEL_SIZE] = {
 
 float result[MAX_LENGTH - KERNEL_SIZE + 1];
 volatile int data_length = 1024;
-volatile int kernel_length = 3;
+volatile int kernel_length = 9;
 volatile int output_length = 1022;
 
 int main() {
