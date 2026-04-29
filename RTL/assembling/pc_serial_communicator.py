@@ -27,7 +27,7 @@ port = "/dev/ttyUSB1" # Change this to your serial port
 baud = 115200
 
 signal = [float(i) for i in range(1,1025)]
-kernel = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0]
+kernel = [1.0 for i in range(11)]
 result = []
 result_len = len(signal) - len(kernel) + 1
 
