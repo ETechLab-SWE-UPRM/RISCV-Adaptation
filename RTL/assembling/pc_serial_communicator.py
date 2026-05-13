@@ -22,12 +22,16 @@ def int_to_bits(v):
     print(f"int_to_bits: {v} -> 0x{e:08x}")
     return e
 
+def bits_to_int(v):
+    e = struct.unpack("<i", struct.pack("<I", v))[0]
+    return e
+
 # UART CONFIGURATION
 port = "/dev/ttyUSB1" # Change this to your serial port
 baud = 115200
 
-signal = [float(i) for i in range(1,1025)]
-kernel = [1.0 for i in range(11)]
+signal = [i for i in range(1,1025)]
+kernel = [1 for i in range(11)]
 result = []
 result_len = len(signal) - len(kernel) + 1
 
@@ -56,4 +60,4 @@ with serial.Serial(port, baud, timeout=5) as ser:
 
 with open("results.txt", "w") as file:
     for v in result:
-        file.write(f"0x{v:08x} -> {bits_to_f32(v)}\n")
+        file.write(f"0x{v:08x} -> {bits_to_int(v)}\n")

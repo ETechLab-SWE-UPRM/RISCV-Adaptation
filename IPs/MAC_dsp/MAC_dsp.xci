@@ -4,7 +4,7 @@
     "xci_name": "MAC_dsp",
     "component_reference": "xilinx.com:ip:dsp_macro:1.0",
     "ip_revision": "9",
-    "gen_directory": "../../../../RVWearable.gen/sources_1/ip/MAC_dsp",
+    "gen_directory": ".",
     "parameters": {
       "component_parameters": {
         "Component_Name": [ { "value": "MAC_dsp", "resolve_type": "user", "usage": "all" } ],
@@ -68,10 +68,10 @@
         "c_width": [ { "value": "32", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
         "c_binarywidth": [ { "value": "0", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
         "pcin_binarywidth": [ { "value": "0", "resolve_type": "user", "format": "long", "usage": "all" } ],
-        "output_properties": [ { "value": "User_Defined", "value_src": "user", "resolve_type": "user", "usage": "all" } ],
+        "output_properties": [ { "value": "Full_Precision", "value_src": "user", "resolve_type": "user", "usage": "all" } ],
         "p_full_width": [ { "value": "44", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
-        "p_width": [ { "value": "32", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
-        "p_binarywidth": [ { "value": "32", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "p_width": [ { "value": "44", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "p_binarywidth": [ { "value": "0", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
         "has_carryout": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "has_acout": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
         "has_bcout": [ { "value": "false", "resolve_type": "user", "format": "bool", "usage": "all" } ],
@@ -138,7 +138,7 @@
         "C_D_WIDTH": [ { "value": "18", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_CONCAT_WIDTH": [ { "value": "48", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_P_MSB": [ { "value": "43", "resolve_type": "generated", "format": "long", "usage": "all" } ],
-        "C_P_LSB": [ { "value": "12", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "C_P_LSB": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_SEL_WIDTH": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_HAS_ACOUT": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_HAS_BCOUT": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
@@ -168,7 +168,7 @@
         "IPCONTEXT": [ { "value": "IP_Flow" } ],
         "IPREVISION": [ { "value": "9" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../RVWearable.gen/sources_1/ip/MAC_dsp" } ],
+        "OUTPUTDIR": [ { "value": "." } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "." } ],
         "SWVERSION": [ { "value": "2025.2" } ],
@@ -180,7 +180,7 @@
         "A": [ { "direction": "in", "size_left": "24", "size_right": "0", "driver_value": "0" } ],
         "B": [ { "direction": "in", "size_left": "17", "size_right": "0", "driver_value": "0" } ],
         "C": [ { "direction": "in", "size_left": "31", "size_right": "0", "driver_value": "0" } ],
-        "P": [ { "direction": "out", "size_left": "31", "size_right": "0", "driver_value": "0" } ]
+        "P": [ { "direction": "out", "size_left": "43", "size_right": "0", "driver_value": "0" } ]
       },
       "interfaces": {
         "sel_intf": {
@@ -695,5 +695,5 @@
       }
     }
   },
-  "checksum": "b78151fe"
+  "checksum": "5334d6bf"
 }
