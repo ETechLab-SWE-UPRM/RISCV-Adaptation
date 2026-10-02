@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="spi_peripheral_tester_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="spi_peripheral_tester" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="12,573.084 ns"></ZoomStartTime>
+      <ZoomEndTime time="13,139.085 ns"></ZoomEndTime>
+      <Cursor1Time time="12,730.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="276"></NameColumnWidth>
+      <ValueColumnWidth column_width="120"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="25" />
+   <wave_markers>
+      <marker label="" time="12730000" />
+   </wave_markers>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/rst">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/sclk">
+      <obj_property name="ElementShortName">sclk</obj_property>
+      <obj_property name="ObjectShortName">sclk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/cs_in">
+      <obj_property name="ElementShortName">cs_in</obj_property>
+      <obj_property name="ObjectShortName">cs_in</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/mosi">
+      <obj_property name="ElementShortName">mosi</obj_property>
+      <obj_property name="ObjectShortName">mosi</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/rd_en">
+      <obj_property name="ElementShortName">rd_en</obj_property>
+      <obj_property name="ObjectShortName">rd_en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/wr_en">
+      <obj_property name="ElementShortName">wr_en</obj_property>
+      <obj_property name="ObjectShortName">wr_en</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/spi_peripheral_tester/data_in">
+      <obj_property name="ElementShortName">data_in[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_in[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/spi_peripheral_tester/data_out">
+      <obj_property name="ElementShortName">data_out[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/spi_peripheral_tester/dut/tx_shift_reg">
+      <obj_property name="ElementShortName">tx_shift_reg[31:0]</obj_property>
+      <obj_property name="ObjectShortName">tx_shift_reg[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/dut/first_bit">
+      <obj_property name="ElementShortName">first_bit</obj_property>
+      <obj_property name="ObjectShortName">first_bit</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/spi_peripheral_tester/dut/tx_fifo">
+      <obj_property name="ElementShortName">tx_fifo[0:3][31:0]</obj_property>
+      <obj_property name="ObjectShortName">tx_fifo[0:3][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/miso">
+      <obj_property name="ElementShortName">miso</obj_property>
+      <obj_property name="ObjectShortName">miso</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/spi_peripheral_tester/dut/fifo_word">
+      <obj_property name="ElementShortName">fifo_word[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fifo_word[31:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/tx_empty">
+      <obj_property name="ElementShortName">tx_empty</obj_property>
+      <obj_property name="ObjectShortName">tx_empty</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/tx_full">
+      <obj_property name="ElementShortName">tx_full</obj_property>
+      <obj_property name="ObjectShortName">tx_full</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/spi_peripheral_tester/errors">
+      <obj_property name="ElementShortName">errors[31:0]</obj_property>
+      <obj_property name="ObjectShortName">errors[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/spi_peripheral_tester/tx_checked_words">
+      <obj_property name="ElementShortName">tx_checked_words[31:0]</obj_property>
+      <obj_property name="ObjectShortName">tx_checked_words[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/rx_empty">
+      <obj_property name="ElementShortName">rx_empty</obj_property>
+      <obj_property name="ObjectShortName">rx_empty</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/spi_peripheral_tester/rx_full">
+      <obj_property name="ElementShortName">rx_full</obj_property>
+      <obj_property name="ObjectShortName">rx_full</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/spi_peripheral_tester/checked_words">
+      <obj_property name="ElementShortName">checked_words[31:0]</obj_property>
+      <obj_property name="ObjectShortName">checked_words[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/spi_peripheral_tester/DATA_WIDTH">
+      <obj_property name="ElementShortName">DATA_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">DATA_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/spi_peripheral_tester/FIFO_DEPTH">
+      <obj_property name="ElementShortName">FIFO_DEPTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">FIFO_DEPTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/spi_peripheral_tester/SPI_HALF_NS">
+      <obj_property name="ElementShortName">SPI_HALF_NS</obj_property>
+      <obj_property name="ObjectShortName">SPI_HALF_NS</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/spi_peripheral_tester/PTR_WIDTH">
+      <obj_property name="ElementShortName">PTR_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">PTR_WIDTH[31:0]</obj_property>
+   </wvobject>
+</wave_config>
