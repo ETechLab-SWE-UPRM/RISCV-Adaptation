@@ -1110,7 +1110,7 @@ module RISCV_WEARABLE (
         .read_data(uart_read_data)
     );
 
-    logic spi_rd_en, spi_wr_en, spi_status;
+    logic spi_rd_en, spi_wr_en, spi_status_read;
     logic [31:0] spi_data_in, spi_data_out;
     logic [31:0] spi_memory;
     logic spi_rx_fifo_empty, spi_rx_fifo_full, spi_tx_fifo_empty, spi_tx_fifo_full;
@@ -1235,7 +1235,7 @@ module RISCV_WEARABLE (
     end
 
     always_comb begin : spi_memory_override
-        if (status_read) begin
+        if (spi_status_read) begin
             spi_memory = {28'b0, spi_rx_fifo_full, spi_rx_fifo_empty, spi_tx_fifo_full, spi_tx_fifo_empty};
         end else if (spi_rd_en) begin
             spi_memory = spi_data_out;
