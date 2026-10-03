@@ -14,6 +14,7 @@ module MEM_WB_reg #(
     input logic ex_mem_memtoreg,
     input logic uart_instruction,
     input logic timer_instruction,
+    input logic spi_instruction,
     input logic ex_mem_regwrite,
     input logic ex_mem_jal,
     input logic ex_mem_jalr,
@@ -21,6 +22,7 @@ module MEM_WB_reg #(
     input logic [31:0] memory_data_read [0:vec_length-1],
     input logic [31:0] uart_memory [0:vec_length-1],
     input logic [31:0] timer_value,
+    input logic [31:0] spi_memory,
     input logic [4:0] ex_mem_rs1,
     input logic [4:0] ex_mem_rs2,
     input logic [4:0] ex_mem_reg_dest,
@@ -52,6 +54,9 @@ module MEM_WB_reg #(
 );
     logic uart_instruction_reg;
     logic timer_instruction_reg;
+    logic spi_instruction_reg;
+
+    logic [31:0] mem_wb_spi_memory;
 
     always_ff @(posedge clk) begin
         if (reset) begin
@@ -64,6 +69,7 @@ module MEM_WB_reg #(
             mem_wb_memtoreg <= 1'b0;
             uart_instruction_reg <= 1'b0;
             timer_instruction_reg <= 1'b0;
+            spi_instruction_reg <= 1'b0;
             mem_wb_regwrite <= 1'b0;
             mem_wb_jal <= 1'b0;
             mem_wb_jalr <= 1'b0;
@@ -74,6 +80,7 @@ module MEM_WB_reg #(
             mem_wb_link_address <= 32'b0;
             mem_wb_memory_data_read <= '{default: 32'b0};
             mem_wb_uart_memory <= '{default: 32'b0};
+            mem_wb_spi_memory <= '0;
             mem_wb_timer_value <= 32'b0;
             mem_wb_conv_addr <= 32'b0;
             mem_wb_weights_addr <= 32'b0;
@@ -88,6 +95,7 @@ module MEM_WB_reg #(
             mem_wb_memtoreg <= ex_mem_memtoreg;
             uart_instruction_reg <= uart_instruction;
             timer_instruction_reg <= timer_instruction;
+            spi_instruction_reg <= spi_instruction;
             mem_wb_regwrite <= ex_mem_regwrite;
             mem_wb_jal <= ex_mem_jal;
             mem_wb_jalr <= ex_mem_jalr;
@@ -99,6 +107,7 @@ module MEM_WB_reg #(
             mem_wb_memory_data_read <= memory_data_read;
             mem_wb_uart_memory <= uart_memory;
             mem_wb_timer_value <= timer_value;
+            mem_wb_spi_memory <= spi_memory;
             mem_wb_conv_addr <= ex_mem_conv_addr;
             mem_wb_weights_addr <= ex_mem_weights_addr;
         end
@@ -117,6 +126,12 @@ module MEM_WB_reg #(
             end
         end else if(mem_wb_memtoreg && uart_instruction_reg) begin
             mem_wb_write_data = mem_wb_uart_memory; 
+        end else if(mem_wb_memtoreg && spi_instruction_reg) begin
+            mem_wb_write_data[0] = mem_wb_spi_memory;
+
+            for (int i = 1; i < vec_length; i++) begin
+                mem_wb_write_data[i] = 32'b0;
+            end
         end else if (mem_wb_memtoreg) begin // Regular load instructions get value directly from memory; cause read_latency = 1
             mem_wb_write_data = memory_data_read;
         end else begin
