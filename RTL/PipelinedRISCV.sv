@@ -1270,7 +1270,7 @@ module RISCV_WEARABLE (
         .ex_mem_memtoreg(ex_mem_memtoreg),
         .uart_instruction(status_read | receive_read | receive_send),
         .timer_instruction(timer_read),
-        .spi_instruction(spi_rd_en | spi_wr_en),
+        .spi_instruction(spi_status_read | spi_rd_en | spi_wr_en),
         .ex_mem_regwrite(ex_mem_regwrite),
         .ex_mem_jal(ex_mem_jal),
         .ex_mem_jalr(ex_mem_jalr),
