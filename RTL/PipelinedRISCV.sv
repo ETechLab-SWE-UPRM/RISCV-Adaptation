@@ -1115,6 +1115,7 @@ module RISCV_WEARABLE (
     logic [31:0] spi_memory;
     logic spi_rx_fifo_empty, spi_rx_fifo_full, spi_tx_fifo_empty, spi_tx_fifo_full;
 
+    assign spi_status_read = (memory_address[0] == spi_status) && ex_mem_memread;
     assign spi_rd_en = (memory_address[0] == spi_receive) && ex_mem_memread;
     assign spi_wr_en = (memory_address[0] == spi_send) && ex_mem_memwrite;
     assign spi_data_in = write_data[0];

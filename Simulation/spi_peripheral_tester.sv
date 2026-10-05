@@ -22,6 +22,7 @@ module spi_peripheral_tester;
     logic [DATA_WIDTH-1:0] pending_words[$];
     integer errors = 0;
     integer tx_checked_words = 0;
+    integer prepared_transactions = 0;
     wire rx_empty = dut.rx_fifo_empty;
     wire rx_full  = dut.rx_fifo_full;
 
@@ -70,7 +71,7 @@ module spi_peripheral_tester;
         begin
             $display("\n[%0t] SEND 0x%h (%0d bits, unsigned decimal %0d)",
                      $time, word, DATA_WIDTH, word);
-            cs_in = 0;
+            start_spi();
             for (bit_index = DATA_WIDTH-1; bit_index >= 0; bit_index = bit_index-1) begin
                 mosi = word[bit_index];
                 #(SPI_HALF_NS); sclk = 1; // Slave samples MOSI
@@ -237,10 +238,42 @@ module spi_peripheral_tester;
         end
     endtask
 
+    // Two complete SCLK cycles with CS HIGH before each transaction
     task automatic start_spi;
+        logic [PTR_WIDTH-1:0] old_tx_read, old_rx_write;
+        integer pulse;
         begin
-            cs_in=0;
-            #(SPI_HALF_NS); // CS setup time; SCLK remains stopped here.
+            if (cs_in !== 1'b1 || sclk !== 1'b0)
+                $fatal(1, "Testbench error: start_spi requires CS high and SCLK low");
+            if (wr_en !== 1'b0 || rd_en !== 1'b0)
+                $fatal(1, "Testbench error: CPU accesses must finish before preparation");
+
+            old_tx_read = dut.tx_rd_ptr_bin;
+            old_rx_write = dut.rx_wr_ptr_bin;
+            mosi = 0;
+            $display("\n[%0t] PREPARE: two SCLK cycles with CS HIGH (%0.3f ns)",
+                     $time, 4.0*SPI_HALF_NS);
+            for (pulse = 1; pulse <= 2; pulse = pulse+1) begin
+                #(SPI_HALF_NS); sclk = 1;
+                #(SPI_HALF_NS); sclk = 0;
+                $display("  Preparation cycle %0d/2 complete; CS=%b", pulse, cs_in);
+            end
+            // Let the final falling-edge nonblocking assignments settle.
+            #0.001;
+            check(dut.tx_rd_ptr_bin === old_tx_read,
+                  "preparation did not consume a TX word");
+            check(dut.rx_wr_ptr_bin === old_rx_write,
+                  "preparation did not enqueue an RX word");
+            check(dut.tx_wr_ptr_gray_sync2 === dut.tx_wr_ptr_gray,
+                  "SPI sees the CPU write pointer after two preparation cycles");
+            if (pending_words.size() != 0)
+                check(tx_empty === 1'b0, "queued TX payload is visible before CS goes low");
+
+            prepared_transactions = prepared_transactions + 1;
+            cs_in = 0;
+            #(SPI_HALF_NS); // CS setup interval before payload task starts.
+            $display("[%0t] SELECTED: next rising edge samples payload bit %0d",
+                     $time, DATA_WIDTH-1);
         end
     endtask
 
@@ -261,6 +294,8 @@ module spi_peripheral_tester;
         $display("FIFO capacity: %0d words = %0d bits = %0d bytes",
                  FIFO_DEPTH, FIFO_DEPTH*DATA_WIDTH, FIFO_DEPTH*DATA_WIDTH/8);
         $display("SPI shifting time: 1000 ns per 32-bit word, excluding test gaps");
+        $display("Each transaction starts with TWO preparation clocks while CS is HIGH.");
+        $display("Preparation takes 62.500 ns; each payload word still uses exactly 32 clocks.");
         $display("NOTE: full can remain high after CPU reads until SCLK resumes.");
 
         #1; rst = 1;
@@ -294,7 +329,7 @@ module spi_peripheral_tester;
 
         $display("\nRX PASS: all %0d received words matched.", checked_words);
 
-        $display("\nStarting TX tests: first-bit payload, no dummy clocks; empty response=0.");
+        $display("\nStarting TX tests: two CS-high preparation clocks, then first-bit payload; empty response=0.");
         $display("TX pending payload is not FIFO occupancy; it includes any active shift word.");
         $display("\nTX TEST 1: Fill TX FIFO and reject an extra CPU write");
         reset_dut();
@@ -334,10 +369,10 @@ module spi_peripheral_tester;
         start_spi(); read_payload(); stop_spi();
 
 
-        $display("\nSUMMARY: RX words=%0d, TX words=%0d, TX failed checks=%0d",
-                 checked_words, tx_checked_words, errors);
+        $display("\nSUMMARY: RX words=%0d, TX words=%0d, failed checks=%0d, prepared transactions=%0d",
+            checked_words, tx_checked_words, errors, prepared_transactions);
         if (errors != 0)
-            $fatal(1, "COMBINED TEST FAILED: review TX FAIL messages above");
+            $fatal(1, "COMBINED TEST FAILED: review FAIL messages above");
         $display("PASS: all RX and TX tests passed");
         $finish;
     end

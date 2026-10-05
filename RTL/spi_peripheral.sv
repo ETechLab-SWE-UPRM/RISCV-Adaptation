@@ -1,3 +1,6 @@
+`timescale 1ns / 1ps
+
+// For the tx side, currently for synchronization, 2 cycles must be sent for preparation before the first bit is sent.
 module spi_peripheral #(
     parameter data_width = 32,
     parameter spi_mode = 0, // sclk idle low, sample on rise and shift on fall
@@ -31,15 +34,13 @@ module spi_peripheral #(
     logic [fifo_ptr_width-1:0] rx_rd_ptr_bin_next; // to simplify the logic for updating the read pointer
     logic [fifo_ptr_width-1:0] rx_rd_ptr_gray;
 
-    (* ASYNC_REG = "TRUE" *)
-    logic [fifo_ptr_width-1:0]rx_rd_ptr_gray_sync, rx_rd_ptr_gray_sync2;
+    (* ASYNC_REG = "TRUE" *) logic [fifo_ptr_width-1:0]rx_rd_ptr_gray_sync, rx_rd_ptr_gray_sync2;
 
     logic [fifo_ptr_width-1:0] rx_wr_ptr_bin;
     logic [fifo_ptr_width-1:0] rx_wr_ptr_bin_next; // to simplify the logic for updating the write pointer
     logic [fifo_ptr_width-1:0] rx_wr_ptr_gray;
 
-    (* ASYNC_REG = "TRUE" *)
-    logic [fifo_ptr_width-1:0] rx_wr_ptr_gray_sync, rx_wr_ptr_gray_sync2;
+    (* ASYNC_REG = "TRUE" *) logic [fifo_ptr_width-1:0] rx_wr_ptr_gray_sync, rx_wr_ptr_gray_sync2;
 
     assign rx_rd_ptr_bin_next = rx_rd_ptr_bin + 1;
     assign rx_wr_ptr_bin_next = rx_wr_ptr_bin + 1;
@@ -120,19 +121,17 @@ module spi_peripheral #(
     logic [fifo_ptr_width-1:0] tx_rd_ptr_bin_next; // to simplify the logic for updating the read pointer
     logic [fifo_ptr_width-1:0] tx_rd_ptr_gray;
 
-    (* ASYNC_REG = "TRUE" *)
-    logic [fifo_ptr_width-1:0]tx_rd_ptr_gray_sync, tx_rd_ptr_gray_sync2;
+    (* ASYNC_REG = "TRUE" *) logic [fifo_ptr_width-1:0]tx_rd_ptr_gray_sync, tx_rd_ptr_gray_sync2;
 
     logic [fifo_ptr_width-1:0] tx_wr_ptr_bin;
     logic [fifo_ptr_width-1:0] tx_wr_ptr_bin_next; // to simplify the logic for updating the write pointer
     logic [fifo_ptr_width-1:0] tx_wr_ptr_gray;
 
-    (* ASYNC_REG = "TRUE" *)
-    logic [fifo_ptr_width-1:0] tx_wr_ptr_gray_sync, tx_wr_ptr_gray_sync2;
+    (* ASYNC_REG = "TRUE" *) logic [fifo_ptr_width-1:0] tx_wr_ptr_gray_sync, tx_wr_ptr_gray_sync2;
 
     assign tx_rd_ptr_bin_next = tx_rd_ptr_bin + 1;
     assign tx_wr_ptr_bin_next = tx_wr_ptr_bin + 1;
-    assign tx_fifo_empty = (tx_rd_ptr_gray == tx_wr_ptr_gray);
+    assign tx_fifo_empty = (tx_rd_ptr_gray == tx_wr_ptr_gray_sync2);
 
     // Inverting top 2 bits is + 8 to the pointer in gray code, effectively calculating wr_ptr == rd_ptr + 8
     assign tx_fifo_full = (tx_wr_ptr_gray == {~tx_rd_ptr_gray_sync2[fifo_ptr_width-1:fifo_ptr_width-2], tx_rd_ptr_gray_sync2[fifo_ptr_width-3:0]});
@@ -185,6 +184,7 @@ module spi_peripheral #(
         end else if (cs_in) begin
             tx_bit_counter <= '0;
             tx_shift_reg <= '0;
+            first_bit <= 1'b1;
         end else begin
             if (tx_bit_counter == 0) begin
                 if (!tx_fifo_empty) begin

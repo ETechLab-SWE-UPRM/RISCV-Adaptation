@@ -110,10 +110,23 @@
         return data;
     }
 
+    static inline float SPI_read_float(void) {
+        int temp = SPI_receive_reg;
+        float data;
+        memcpy(&data, &temp, sizeof(float));
+        return data;
+    }
+
     static inline void UART_send_float(float data) {
         int temp;
         memcpy(&temp, &data, sizeof(float));
         UART_transmit = temp;
+    }
+
+    static inline void SPI_send_float(float data) {
+        int temp;
+        memcpy(&temp, &data, sizeof(float));
+        SPI_send_reg = temp;
     }
 
     static inline void write_blocked_float(float data) {

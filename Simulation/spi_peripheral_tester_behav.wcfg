@@ -11,17 +11,21 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="12,573.084 ns"></ZoomStartTime>
-      <ZoomEndTime time="13,139.085 ns"></ZoomEndTime>
-      <Cursor1Time time="12,730.000 ns"></Cursor1Time>
+      <ZoomStartTime time="13,405.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="13,975.001 ns"></ZoomEndTime>
+      <Cursor1Time time="13,760.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="276"></NameColumnWidth>
-      <ValueColumnWidth column_width="120"></ValueColumnWidth>
+      <ValueColumnWidth column_width="112"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="25" />
    <wave_markers>
       <marker label="" time="12730000" />
+      <marker label="" time="34760000" />
+      <marker label="" time="21620000" />
+      <marker label="" time="19040000" />
+      <marker label="" time="13500000" />
    </wave_markers>
    <wvobject type="logic" fp_name="/spi_peripheral_tester/clk">
       <obj_property name="ElementShortName">clk</obj_property>
@@ -78,7 +82,7 @@
    <wvobject type="array" fp_name="/spi_peripheral_tester/dut/fifo_word">
       <obj_property name="ElementShortName">fifo_word[31:0]</obj_property>
       <obj_property name="ObjectShortName">fifo_word[31:0]</obj_property>
-      <obj_property name="Radix">BINARYRADIX</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/spi_peripheral_tester/tx_empty">
       <obj_property name="ElementShortName">tx_empty</obj_property>
