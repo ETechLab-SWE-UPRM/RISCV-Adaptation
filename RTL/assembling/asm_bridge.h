@@ -83,7 +83,7 @@
     }
 
     static inline int SPI_read_blocked(void) {
-        while ((SPI_read_status() & SPI_RX_FIFO_EMPTY_MASK) == 1) {
+        while ((SPI_read_status() & SPI_RX_FIFO_EMPTY_MASK) != 0) {
             // wait until spi not empty
         }
         return SPI_read();
@@ -97,7 +97,7 @@
     }
 
     static inline void SPI_write_blocked(int data) {
-        while ((SPI_read_status() & SPI_TX_FIFO_FULL_MASK) == 1) {
+        while ((SPI_read_status() & SPI_TX_FIFO_FULL_MASK) != 0) {
             // wait until spi not full
         }
         SPI_send(data);
