@@ -16,19 +16,10 @@ volatile int kernel_length = 11;
 volatile int output_length;
 
 int main() {
+    SPI_write_blocked(0x12345678);
+
     while (1) {
-        int data = SPI_read_blocked();
-
-        if (data != -1) {
-            continue; // wait for correct start signal (-1)
-        }
-
-        int value = SPI_read_blocked();
-
-        value += 1;
-
-        SPI_write_blocked(value);
-
+        SPI_read_blocked();
     }
 
     return 0;

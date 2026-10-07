@@ -1,147 +1,170 @@
 `timescale 1ns/1ps
 
 module PipelineTester;
+    logic clk = 0;
+    logic rst = 1;
+    logic rx = 1;
+    wire tx;
+    wire [3:0] an;
+    wire [6:0] seg;
+    wire led;
 
-    logic clk = 0; 
-    logic rst, rx, tx;
-    logic [3:0] an;
-    logic [6:0] seg;
-    logic led;
+    logic sclk = 0;
+    logic cs_in = 1;
+    logic mosi = 0;
+    wire miso;
 
-    localparam int CLKS_per_bit = 868;
-    localparam time BIT_TIME_NS = CLKS_per_bit * 10;
+    // Command names use the FPGA perspective: READ receives, WRITE transmits
+    localparam logic [7:0] CMD_READ  = 8'h01;
+    localparam logic [7:0] CMD_WRITE = 8'h02;
+    localparam logic [7:0] CMD_RDWR  = 8'h03;
 
-  task automatic uart_rx_send_byte(input byte b);
-    int i;
-    begin
-      // idle high before start
-      rx <= 1'b1;
-      #(BIT_TIME_NS);
+    localparam realtime SPI_HALF_NS = 15.625;
+    localparam integer PREP_CLOCKS = 8;
+    localparam time CS_DELAY = 1_000;
+    localparam time WORD_GAP = 1_000_000;
+    localparam time BOOT_WAIT = 100_000;
+    localparam integer MAX_POLLS = 20;
+    localparam integer QUIET_READS = 3;
 
-      // start bit
-      rx <= 1'b0;
-      #(BIT_TIME_NS);
-      // 8 data bits, LSB first
-      for (i = 0; i < 8; i++) begin
-        rx <= b[i];
-        #(BIT_TIME_NS);
-      end
-
-      // stop bit
-      rx <= 1'b1;
-      #(BIT_TIME_NS);
-
-      // inter-byte idle (optional but helps)
-      #(BIT_TIME_NS);
-      $display("[%0t] UART RX sent byte 0x%02h '%s'", $time, b,
-              (b >= 32 && b < 127) ? {b} : ".");
-    end
-  endtask
-
-  task automatic uart_rx_send_string(input string s);
-    int k;
-    begin
-      for (k = 0; k < s.len(); k++) begin
-        uart_rx_send_byte(s[k]);
-      end
-    end
-  endtask
-
-  task automatic uart_rx_send_word(input logic [31:0] w);
-    begin
-        // Send MSB first (matches struct.pack(">I", ...) in Python)
-        uart_rx_send_byte(w[31:24]);
-        uart_rx_send_byte(w[23:16]);
-        uart_rx_send_byte(w[15:8]);
-        uart_rx_send_byte(w[7:0]);
-    end
-  endtask
-
-    // -------------------------
-  // UART TX receiver (from DUT)
-  // -------------------------
-  task automatic uart_tx_print_byte;
-  int i;
-  byte b;
-  bit stop_bit;
-
-  begin
-    // Wait for idle-high then start bit
-    wait (tx === 1'b1);
-    wait (tx === 1'b0); // start bit detected
-
-    // Move to center of first data bit (1.5 bit times)
-    #(BIT_TIME_NS + (BIT_TIME_NS/2));
-
-    // Sample 8 data bits (LSB first)
-    b = 8'h00;
-    for (i = 0; i < 8; i++) begin
-      b[i] = tx;
-      #(BIT_TIME_NS);
-    end
-
-    // Sample stop bit
-    stop_bit = tx;
-
-    // Print result
-    if (stop_bit !== 1'b1) begin
-      $display("[%0t] TX RX framing error: byte=0x%02h stop=%b",
-               $time, b, stop_bit);
-    end else begin
-      $display("[%0t] TX RX byte: 0x%02h '%s'",
-               $time, b,
-               (b >= 32 && b < 127) ? {b} : ".");
-    end
-
-    // Small guard time before next frame
-    #(BIT_TIME_NS/2);
-  end
-endtask
+    integer transaction_count = 0;
 
     RISCV_WEARABLE processor (
-        .clk(clk),
-        .reset(rst),
-        .rx(rx),
-        .tx(tx),
-        .seg(seg),
-        .an(an),
-        .led(led)
+        .clk(clk), .reset(rst), .rx(rx), .tx(tx),
+        .seg(seg), .an(an), .led(led),
+        .sclk(sclk), .cs_in(cs_in), .mosi(mosi), .miso(miso)
     );
 
-    always #10 clk = ~clk; // Clock period of 10 time units
-    
+    always #10 clk = ~clk;
+
+    task automatic spi_prepare;
+        integer i;
+        begin
+            cs_in = 1;
+            sclk = 0;
+            mosi = 0;
+            #(CS_DELAY);
+            $display("[%0t] PREP: %0d clocks with CS high", $time, PREP_CLOCKS);
+            for (i = 0; i < PREP_CLOCKS; i = i + 1) begin
+                #(SPI_HALF_NS); sclk = 1;
+                #(SPI_HALF_NS); sclk = 0;
+            end
+            #(CS_DELAY);
+        end
+    endtask
+
+    task automatic spi_bit(input logic outgoing, output logic incoming);
+        begin
+            mosi = outgoing;
+            #(SPI_HALF_NS);
+            incoming = miso;
+            sclk = 1;
+            #(SPI_HALF_NS);
+            sclk = 0;
+        end
+    endtask
+
+    task automatic spi_exchange_word(
+        input logic [7:0] command,
+        input logic [31:0] outgoing,
+        output logic [31:0] incoming
+    );
+        integer b;
+        logic sampled;
+        logic [7:0] command_rx;
+        begin
+            incoming = '0;
+            command_rx = '0;
+            spi_prepare();
+            cs_in = 0;
+            mosi = command[7];
+            #(CS_DELAY);
+
+            for (b = 7; b >= 0; b = b - 1) begin
+                spi_bit(command[b], sampled);
+                command_rx[b] = sampled;
+            end
+
+            for (b = 31; b >= 0; b = b - 1) begin
+                spi_bit(outgoing[b], sampled);
+                incoming[b] = sampled;
+            end
+
+            #(CS_DELAY);
+            cs_in = 1;
+            mosi = 0;
+            transaction_count = transaction_count + 1;
+            $display("[%0t] TRANSFER %0d CMD=0x%02h MOSI=0x%08h MISO=0x%08h (command MISO=0x%02h ignored)",
+                     $time, transaction_count, command, outgoing,
+                     incoming, command_rx);
+
+            // FPGA READ-only MISO is not protocol data and is intentionally ignored.
+            if ((command == CMD_WRITE || command == CMD_RDWR) &&
+                $isunknown(incoming))
+                $fatal(1, "X/Z in response payload: check TX preload/reset/wiring.");
+        end
+    endtask
+
+    initial begin : test
+        logic [31:0] received;
+        integer poll;
+        integer quiet;
+        bit passed;
+
+        $timeformat(-6, 3, " us", 12);
+        $display("==========================================");
+        $display("CPU + command-aware SPI test: mode 0, 32 MHz");
+        $display("Each transaction: 8 command + 32 payload clocks");
+        $display("FPGA READ(-1), FPGA READ(32), FPGA WRITE until 33");
+        $display("Assumes empty TX returns zero and firmware emits only one response.");
+        $display("==========================================");
+
+        repeat (10) @(negedge clk);
+        rst = 0;
+        #(BOOT_WAIT);
+
+        $display("\n[%0t] FPGA READ start marker -1", $time);
+        spi_exchange_word(CMD_READ, 32'hFFFFFFFF, received);
+        #(WORD_GAP);
+
+        $display("\n[%0t] FPGA READ input 32", $time);
+        spi_exchange_word(CMD_READ, 32'd32, received);
+
+        passed = 0;
+        for (poll = 1; poll <= MAX_POLLS && !passed; poll = poll + 1) begin
+            #(WORD_GAP);
+            $display("\n[%0t] FPGA WRITE poll %0d", $time, poll);
+            spi_exchange_word(CMD_WRITE, 32'hA5A55A5A, received);
+            if (received === 32'd33) begin
+                passed = 1;
+                $display("PASS: received 33 after %0d poll(s)", poll);
+            end else if (received === 32'd0) begin
+                $display("  Empty response placeholder; keep polling.");
+            end else begin
+                $fatal(1, "Unexpected response 0x%08h: expected empty zero or 33.", received);
+            end
+        end
+
+        if (!passed)
+            $fatal(1, "Expected 33 after %0d polls; last response=0x%08h",
+                   MAX_POLLS, received);
+
+        for (quiet = 1; quiet <= QUIET_READS; quiet = quiet + 1) begin
+            #(WORD_GAP);
+            spi_exchange_word(CMD_WRITE, 32'hDEADBEEF, received);
+            if (received !== 32'd0)
+                $fatal(1, "Unexpected extra response after 33: 0x%08h", received);
+        end
+
+        $display("\nPASS: command/payload framing and CPU response sequence passed.");
+        $display("RX dummy suppression and FPGA READ TX-pointer preservation require internal FIFO assertions.");
+        $display("FULL DUPLEX is supported by the transfer task but not exercised by this firmware sequence.");
+        #(CS_DELAY);
+        $finish;
+    end
+
     initial begin
-    // Initialize
-    rx = 1'b1;   // idle high
-    rst = 1'b1;
-    #100;
-    rst = 1'b0;
-    // #1000;
-    // Send test string via UART
-    
-    uart_rx_send_word(32'hFFFFFFFF); // -1
-
-    // uart_rx_send_word(32'h3F800000); // 1.0
-    // uart_rx_send_word(32'h40000000); // 2.0
-    // uart_rx_send_word(32'h40400000); // 3.0
-    // uart_rx_send_word(32'h40800000); // 4.0
-    // uart_rx_send_word(32'h40A00000); // 5.0
-    // uart_rx_send_word(32'h40C00000); // 6.0
-    // uart_rx_send_word(32'h40E00000); // 7.0
-    // uart_rx_send_word(32'h41000000); // 8.0
-    // uart_rx_send_word(32'h41100000); // 9.0
-    // uart_rx_send_word(32'h41200000); // 10.0
-
-    // uart_rx_send_word(32'hBF800000); // terminator (-1.0)
-    
-    // uart_rx_send_word(32'h3F800000); // 1.0
-    // uart_rx_send_word(32'h3F800000); // 1.0
-    // uart_rx_send_word(32'h3F800000); // 1.0
-
-    // uart_rx_send_word(32'hBF800000); // terminator (-1.0)
-    
-    #8000000;
-
-    $finish;
-  end
+        #25_000_000;
+        $fatal(1, "Simulation watchdog expired.");
+    end
 endmodule
