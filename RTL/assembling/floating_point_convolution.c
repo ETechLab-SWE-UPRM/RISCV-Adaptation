@@ -16,27 +16,19 @@ volatile int kernel_length = 11;
 volatile int output_length;
 
 int main() {
-    output_length = data_length - kernel_length + 1;
-
     while (1) {
-        int data = read_blocked();
+        int data = SPI_read_blocked();
 
         if (data != -1) {
             continue; // wait for correct start signal (-1)
         }
 
-        int start = read_timer(); // Log time before convolution
+        int value = SPI_read_blocked();
 
-        vector_convolution(signal, kernel, result, data_length, kernel_length, output_length);
+        value += 1;
 
-        int end = read_timer(); // Log time after convolution
-        int elapsed = end - start; // Calculate elapsed time
+        SPI_write_blocked(value);
 
-        write_blocked(elapsed); // Send elapsed time back through UART
-
-        for (int i = 0; i < output_length; i++) {
-            write_blocked(result[i]);
-        }
     }
 
     return 0;

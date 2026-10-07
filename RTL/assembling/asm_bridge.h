@@ -12,14 +12,24 @@
     #define Conv_weights_reg (* (volatile int *) (UART_address + 0x14u))
     #define Conv_output_reg (* (volatile int *) (UART_address + 0x18u))
     #define timer_reg (* (volatile int *) (UART_address + 0x1Cu))
+    #define SPI_status_reg (* (volatile int *) (UART_address + 0x20u))
+    #define SPI_receive_reg (* (volatile int *) (UART_address + 0x24u))
+    #define SPI_send_reg (* (volatile int *) (UART_address + 0x28u))
 
     // UART masking
     #define UART_RX_MASK 0x1
     #define UART_TX_MASK 0x2
 
+    // SPI masking
+    #define SPI_TX_FIFO_EMPTY_MASK 0x1
+    #define SPI_TX_FIFO_FULL_MASK 0x2
+    #define SPI_RX_FIFO_EMPTY_MASK 0x4
+    #define SPI_RX_FIFO_FULL_MASK 0x8
+
     // CPU specs
     #define CPU_Hz 50000000u // 50 MHz
     #define UART_Baudrate 115200u
+    #define SPI_rate 32000000u // 32 MHz
     #define BITS_PER_WORD_ON_WIRE 40u // 1 start, 8 data, 1 stop (4 bytes)
     #define UART_Clocks_per_word (CPU_Hz / UART_Baudrate ) * 4 // 4 bytes -> 1 word
 
@@ -53,18 +63,44 @@
         return timer_reg;
     }
 
-    static inline int read_blocked(void) {
+    static inline int SPI_read_status(void) {
+        return SPI_status_reg;
+    }
+
+    static inline int SPI_read(void) {
+        return SPI_receive_reg;
+    }
+
+    static inline void SPI_send(int data) {
+        SPI_send_reg = data;
+    }
+
+    static inline int UART_read_blocked(void) {
         while ((UART_read_status() & UART_RX_MASK) == 0) {
             // wait
         }
         return UART_read();
     }
 
-    static inline void write_blocked(int data) {
+    static inline int SPI_read_blocked(void) {
+        while ((SPI_read_status() & SPI_RX_FIFO_EMPTY_MASK) != 0) {
+            // wait until spi not empty
+        }
+        return SPI_read();
+    }
+
+    static inline void UART_write_blocked(int data) {
         while ((UART_read_status() & UART_TX_MASK) == 0) {
             // wait
         }
         UART_send(data);
+    }
+
+    static inline void SPI_write_blocked(int data) {
+        while ((SPI_read_status() & SPI_TX_FIFO_FULL_MASK) != 0) {
+            // wait until spi not full
+        }
+        SPI_send(data);
     }
 
     static inline float UART_read_float(void) {
@@ -74,10 +110,23 @@
         return data;
     }
 
+    static inline float SPI_read_float(void) {
+        int temp = SPI_receive_reg;
+        float data;
+        memcpy(&data, &temp, sizeof(float));
+        return data;
+    }
+
     static inline void UART_send_float(float data) {
         int temp;
         memcpy(&temp, &data, sizeof(float));
         UART_transmit = temp;
+    }
+
+    static inline void SPI_send_float(float data) {
+        int temp;
+        memcpy(&temp, &data, sizeof(float));
+        SPI_send_reg = temp;
     }
 
     static inline void write_blocked_float(float data) {

@@ -68,10 +68,10 @@ set_property -dict {PACKAGE_PIN W4 IOSTANDARD LVCMOS33} [get_ports {an[3]}]
 
 
 ##Pmod Header JA
-#set_property -dict { PACKAGE_PIN J1   IOSTANDARD LVCMOS33 } [get_ports {JA[0]}];#Sch name = JA1
-#set_property -dict { PACKAGE_PIN L2   IOSTANDARD LVCMOS33 } [get_ports {JA[1]}];#Sch name = JA2
-#set_property -dict { PACKAGE_PIN J2   IOSTANDARD LVCMOS33 } [get_ports {JA[2]}];#Sch name = JA3
-#set_property -dict { PACKAGE_PIN G2   IOSTANDARD LVCMOS33 } [get_ports {JA[3]}];#Sch name = JA4
+# set_property -dict { PACKAGE_PIN J1   IOSTANDARD LVCMOS33 } [get_ports sclk]; #Sch name = sck_in
+set_property -dict { PACKAGE_PIN L2   IOSTANDARD LVCMOS33 } [get_ports mosi]; #Sch name = mosi_in
+set_property -dict { PACKAGE_PIN J2   IOSTANDARD LVCMOS33 } [get_ports miso]; #Sch name = miso_out
+set_property -dict { PACKAGE_PIN G2   IOSTANDARD LVCMOS33 } [get_ports cs_in]; #Sch name = cs_in
 #set_property -dict { PACKAGE_PIN H1   IOSTANDARD LVCMOS33 } [get_ports {JA[4]}];#Sch name = JA7
 #set_property -dict { PACKAGE_PIN K2   IOSTANDARD LVCMOS33 } [get_ports {JA[5]}];#Sch name = JA8
 #set_property -dict { PACKAGE_PIN H2   IOSTANDARD LVCMOS33 } [get_ports {JA[6]}];#Sch name = JA9
@@ -92,13 +92,49 @@ set_property -dict {PACKAGE_PIN W4 IOSTANDARD LVCMOS33} [get_ports {an[3]}]
 #set_property -dict { PACKAGE_PIN M18   IOSTANDARD LVCMOS33 } [get_ports {JC[1]}];#Sch name = JC2
 #set_property -dict { PACKAGE_PIN N17   IOSTANDARD LVCMOS33 } [get_ports {JC[2]}];#Sch name = JC3
 #set_property -dict { PACKAGE_PIN P18   IOSTANDARD LVCMOS33 } [get_ports {JC[3]}];#Sch name = JC4
-#set_property -dict { PACKAGE_PIN L17   IOSTANDARD LVCMOS33 } [get_ports {JC[4]}];#Sch name = JC7
+set_property -dict { PACKAGE_PIN L17 IOSTANDARD LVCMOS33 } [get_ports sclk] ;# Sch name = JC7
+create_clock -period 31.250 -name spi_clk [get_ports sclk]
+
+set_input_delay -clock spi_clk -max 5.000 [get_ports sclk]
+set_input_delay -clock spi_clk -min 1.000 [get_ports sclk]
+
+# --- Transmit ---
+# CPU -> SPI
+set tx_wr_src [get_cells -hier -filter {NAME =~ *tx_wr_ptr_gray_reg*}]
+set tx_wr_dst [get_cells -hier -filter {NAME =~ *tx_wr_ptr_gray_sync_reg*}]
+set_max_delay -datapath_only 20.000 -from $tx_wr_src -to $tx_wr_dst
+set_bus_skew -from $tx_wr_src -to $tx_wr_dst 5.000
+
+# SPI -> CPU
+set tx_rd_src [get_cells -hier -filter {NAME =~ *tx_rd_ptr_gray_reg*}]
+set tx_rd_dst [get_cells -hier -filter {NAME =~ *tx_rd_ptr_gray_sync_reg*}]
+set_max_delay -datapath_only 31.250 -from $tx_rd_src -to $tx_rd_dst
+set_bus_skew -from $tx_rd_src -to $tx_rd_dst 5.000
+
+# CPU FIFO -> TX shift register
+set tx_payload_src [get_cells -hier -filter {NAME =~ *tx_fifo_reg*}]
+set tx_payload_dst [get_cells -hier -filter {NAME =~ *tx_shift_reg_reg*}]
+set_max_delay -datapath_only 20.000 -from $tx_payload_src -to $tx_payload_dst
+
+# --- Receive ---
+# SPI -> CPU
+set rx_wr_src [get_cells -hier -filter {NAME =~ *rx_wr_ptr_gray_reg*}]
+set rx_wr_dst [get_cells -hier -filter {NAME =~ *rx_wr_ptr_gray_sync_reg*}]
+set_max_delay -datapath_only 31.250 -from $rx_wr_src -to $rx_wr_dst
+set_bus_skew -from $rx_wr_src -to $rx_wr_dst 5.000
+
+# CPU -> SPI
+set rx_rd_src [get_cells -hier -filter {NAME =~ *rx_rd_ptr_gray_reg*}]
+set rx_rd_dst [get_cells -hier -filter {NAME =~ *rx_rd_ptr_gray_sync_reg*}]
+set_max_delay -datapath_only 20.000 -from $rx_rd_src -to $rx_rd_dst
+set_bus_skew -from $rx_rd_src -to $rx_rd_dst 5.000
+
 #set_property -dict { PACKAGE_PIN M19   IOSTANDARD LVCMOS33 } [get_ports {JC[5]}];#Sch name = JC8
 #set_property -dict { PACKAGE_PIN P17   IOSTANDARD LVCMOS33 } [get_ports {JC[6]}];#Sch name = JC9
 #set_property -dict { PACKAGE_PIN R18   IOSTANDARD LVCMOS33 } [get_ports {JC[7]}];#Sch name = JC10
 
 ##Pmod Header JXADC
-#set_property -dict { PACKAGE_PIN J3   IOSTANDARD LVCMOS33 } [get_ports {JXADC[0]}];#Sch name = XA1_P
+# set_property -dict { PACKAGE_PIN J3   IOSTANDARD LVCMOS33 } [get_ports sclk];#Sch name = XA1_P
 #set_property -dict { PACKAGE_PIN L3   IOSTANDARD LVCMOS33 } [get_ports {JXADC[1]}];#Sch name = XA2_P
 #set_property -dict { PACKAGE_PIN M2   IOSTANDARD LVCMOS33 } [get_ports {JXADC[2]}];#Sch name = XA3_P
 #set_property -dict { PACKAGE_PIN N2   IOSTANDARD LVCMOS33 } [get_ports {JXADC[3]}];#Sch name = XA4_P
@@ -145,12 +181,12 @@ set_property -dict {PACKAGE_PIN A18 IOSTANDARD LVCMOS33} [get_ports tx]
 #set_property -dict { PACKAGE_PIN K19   IOSTANDARD LVCMOS33 } [get_ports QspiCSn]
 
 
-# ## Configuration options, can be used for all designs
-# set_property CONFIG_VOLTAGE 3.3 [current_design]
-# set_property CFGBVS VCCO [current_design]
+## Configuration options, can be used for all designs
+set_property CONFIG_VOLTAGE 3.3 [current_design]
+set_property CFGBVS VCCO [current_design]
 
-# ## SPI configuration mode options for QSPI boot, can be used for all designs
-# set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
-# set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]
-# set_property CONFIG_MODE SPIx4 [current_design]
-# set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets reset_IBUF]
+## SPI configuration mode options for QSPI boot, can be used for all designs
+set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
+set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]
+set_property CONFIG_MODE SPIx4 [current_design]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets reset_IBUF]

@@ -63,6 +63,11 @@ module RISCV_WEARABLE (
     input logic clk,
     input logic reset, 
     input logic rx, 
+    input logic sclk,
+    input logic cs_in,
+    input logic mosi,
+
+    output logic miso,
     output logic tx,
     output logic [6:0] seg, 
     output logic [3:0] an,
@@ -84,6 +89,9 @@ module RISCV_WEARABLE (
     localparam weights_length_addr = data_length_addr + 4;
     localparam output_length_addr = weights_length_addr + 4;
     localparam timer_addr = output_length_addr + 4;
+    localparam spi_status = timer_addr + 4;
+    localparam spi_receive = spi_status + 4;
+    localparam spi_send = spi_receive + 4;
 
     // UART Parameters
     localparam data_bits = 8;
@@ -1102,6 +1110,38 @@ module RISCV_WEARABLE (
         .read_data(uart_read_data)
     );
 
+    logic spi_rd_en, spi_wr_en, spi_status_read;
+    logic [31:0] spi_data_in, spi_data_out;
+    logic [31:0] spi_memory;
+    logic spi_rx_fifo_empty, spi_rx_fifo_full, spi_tx_fifo_empty, spi_tx_fifo_full;
+
+    assign spi_status_read = (memory_address[0] == spi_status) && ex_mem_memread;
+    assign spi_rd_en = (memory_address[0] == spi_receive) && ex_mem_memread;
+    assign spi_wr_en = (memory_address[0] == spi_send) && ex_mem_memwrite;
+    assign spi_data_in = write_data[0];
+
+    spi_peripheral #(
+        .data_width(32),
+        .spi_mode(0),
+        .fifo_depth(8) // words
+    ) spi (
+        .clk(clk),
+        .rst(reset),
+        .sclk(sclk),
+        .cs_in(cs_in),
+        .mosi(mosi),
+        .rd_en(spi_rd_en),
+        .wr_en(spi_wr_en),
+        .data_in(spi_data_in),
+
+        .miso(miso),
+        .rx_fifo_empty(spi_rx_fifo_empty),
+        .rx_fifo_full(spi_rx_fifo_full),
+        .tx_fifo_empty(spi_tx_fifo_empty),
+        .tx_fifo_full(spi_tx_fifo_full),
+        .data_out(spi_data_out)
+    );
+
     logic receive_send;
     logic status_read, receive_read;
     logic tx_ready;
@@ -1195,6 +1235,14 @@ module RISCV_WEARABLE (
         end
     end
 
+    always_comb begin : spi_memory_override
+        if (spi_status_read) begin
+            spi_memory = {28'b0, spi_rx_fifo_full, spi_rx_fifo_empty, spi_tx_fifo_full, spi_tx_fifo_empty};
+        end else if (spi_rd_en) begin
+            spi_memory = spi_data_out;
+        end
+    end
+
     always_comb begin : uart_memory_override
         for(int i = 0; i < vector_length; i++) begin
             uart_memory[i] = 32'b0;
@@ -1223,6 +1271,7 @@ module RISCV_WEARABLE (
         .ex_mem_memtoreg(ex_mem_memtoreg),
         .uart_instruction(status_read | receive_read | receive_send),
         .timer_instruction(timer_read),
+        .spi_instruction(spi_status_read | spi_rd_en | spi_wr_en),
         .ex_mem_regwrite(ex_mem_regwrite),
         .ex_mem_jal(ex_mem_jal),
         .ex_mem_jalr(ex_mem_jalr),
@@ -1230,6 +1279,7 @@ module RISCV_WEARABLE (
         .memory_data_read(memory_data_read),
         .uart_memory(uart_memory),
         .timer_value(timer_value),
+        .spi_memory(spi_memory),
         .ex_mem_rs1(ex_mem_rs1),
         .ex_mem_rs2(ex_mem_rs2),
         .ex_mem_reg_dest(ex_mem_reg_dest),
