@@ -4,7 +4,8 @@
 module spi_peripheral #(
     parameter data_width = 32,
     parameter spi_mode = 0, // sclk idle low, sample on rise and shift on fall
-    parameter fifo_depth = 8
+    parameter fifo_depth = 8,
+    parameter command_width = 8
 )(
     input logic clk,
     input logic rst,
@@ -25,6 +26,12 @@ module spi_peripheral #(
     localparam bit_count = $clog2(data_width);
     localparam fifo_addr_width = $clog2(fifo_depth);
     localparam fifo_ptr_width = fifo_addr_width + 1;
+    localparam read_cmd = 8'h1;
+    localparam write_cmd = 8'h2;
+    localparam rd_wr_cmd = 8'h3;
+
+    logic comm_done, rx_enable, tx_enable;
+    logic [7:0] comm_shift_reg;
 
     logic [data_width-1:0] rx_shift_reg;
     logic [bit_count-1:0] rx_bit_counter, tx_bit_counter;
@@ -84,6 +91,9 @@ module spi_peripheral #(
         end
     end
 
+    logic [command_width-1:0] command_word;
+    assign command_word = {comm_shift_reg[command_width-2:0], mosi };
+
     // SPI RX and FIFO write logic
     always_ff @(posedge sclk or posedge rst) begin
         if(rst) begin
@@ -91,9 +101,50 @@ module spi_peripheral #(
             rx_bit_counter <= '0;
             rx_wr_ptr_bin  <= '0;
             rx_wr_ptr_gray <= '0;
+            comm_shift_reg <= '0;
+            comm_done <= 'b0;
+            rx_enable <= '0;
+            tx_enable <= '0;
+            for (integer i = 0; i < fifo_depth; i = i + 1) begin
+                rx_fifo[i] <= '0;
+            end
         end else if(cs_in) begin // in case a word gets interrupted midway
             rx_shift_reg   <= '0;
             rx_bit_counter <= '0;
+            comm_shift_reg <= '0;
+            comm_done <= 'b0;
+            rx_enable <= '0;
+            tx_enable <= '0;
+        end else if(!comm_done) begin
+            comm_shift_reg <= command_word;
+
+            if(rx_bit_counter == command_width-1) begin
+                comm_done <= 'b1;
+                rx_bit_counter <= '0;
+                case (command_word)
+                    read_cmd: begin
+                        rx_enable <= 1'b1;
+                        tx_enable <= 1'b0;
+                    end
+
+                    write_cmd: begin
+                        rx_enable <= 1'b0;
+                        tx_enable <= 1'b1;
+                    end
+
+                    rd_wr_cmd: begin
+                        rx_enable <= 1'b1;
+                        tx_enable <= 1'b1;
+                    end
+
+                    default: begin
+                        rx_enable <= 1'b0;
+                        tx_enable <= 1'b0;
+                    end
+                endcase
+            end else begin
+                rx_bit_counter <= rx_bit_counter + 1'b1;
+            end
         end else begin
             rx_shift_reg <= {rx_shift_reg[data_width-2:0], mosi}; // slice bit 31 and concatenate with mosi bit
 
@@ -163,6 +214,9 @@ module spi_peripheral #(
         if (rst) begin
             tx_wr_ptr_bin <= '0;
             tx_wr_ptr_gray <= '0;
+            for (integer i = 0; i < fifo_depth; i = i + 1) begin
+                tx_fifo[i] <= '0;
+            end
         end else if(wr_en && !tx_fifo_full) begin
             tx_fifo[tx_wr_ptr_bin[fifo_addr_width-1:0]] <= data_in;
             tx_wr_ptr_bin <= tx_wr_ptr_bin_next;
