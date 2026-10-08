@@ -145,7 +145,7 @@ module spi_peripheral #(
             end else begin
                 rx_bit_counter <= rx_bit_counter + 1'b1;
             end
-        end else begin
+        end else if(rx_enable) begin
             rx_shift_reg <= {rx_shift_reg[data_width-2:0], mosi}; // slice bit 31 and concatenate with mosi bit
 
             if(rx_bit_counter == data_width-1) begin
@@ -225,7 +225,7 @@ module spi_peripheral #(
     end
 
     assign fifo_word = tx_fifo[tx_rd_ptr_bin[fifo_addr_width-1:0]];
-    assign miso = first_bit ? fifo_word[data_width-1] : tx_shift_reg[data_width-1]; // miso = MSB of tx_shift_reg
+    assign miso = tx_shift_reg[data_width-1]; // miso = MSB of tx_shift_reg
 
     // SPI TX and FIFO read logic
     always_ff @(negedge sclk or posedge rst) begin
@@ -238,15 +238,13 @@ module spi_peripheral #(
         end else if (cs_in) begin
             tx_bit_counter <= '0;
             tx_shift_reg <= '0;
-            first_bit <= 1'b1;
-        end else begin
+        end else if(tx_enable) begin
             if (tx_bit_counter == 0) begin
                 if (!tx_fifo_empty) begin
-                    tx_shift_reg <= {fifo_word[data_width-2:0], 1'b0};
+                    tx_shift_reg <= fifo_word;
                     tx_rd_ptr_bin <= tx_rd_ptr_bin_next;
                     tx_rd_ptr_gray <= tx_rd_ptr_bin_next ^ (tx_rd_ptr_bin_next >> 1);
                     tx_bit_counter <= tx_bit_counter + 1'b1;
-                    first_bit <= '0;
                 end
             end else begin
                 tx_shift_reg <= {tx_shift_reg[data_width-2:0], 1'b0};

@@ -115,7 +115,7 @@ module PipelineTester;
         $display("==========================================");
         $display("CPU + command-aware SPI test: mode 0, 32 MHz");
         $display("Each transaction: 8 command + 32 payload clocks");
-        $display("FPGA READ(-1), FPGA READ(32), FPGA WRITE until 33");
+        $display("FPGA READ(0x80000000), FPGA WRITE until 0x80000001");
         $display("Assumes empty TX returns zero and firmware emits only one response.");
         $display("==========================================");
 
@@ -123,37 +123,33 @@ module PipelineTester;
         rst = 0;
         #(BOOT_WAIT);
 
-        $display("\n[%0t] FPGA READ start marker -1", $time);
-        spi_exchange_word(CMD_READ, 32'hFFFFFFFF, received);
-        #(WORD_GAP);
-
-        $display("\n[%0t] FPGA READ input 32", $time);
-        spi_exchange_word(CMD_READ, 32'd32, received);
+        $display("\n[%0t] FPGA READ input 0x80000000", $time);
+        spi_exchange_word(CMD_READ, 32'h80000000, received);
 
         passed = 0;
         for (poll = 1; poll <= MAX_POLLS && !passed; poll = poll + 1) begin
             #(WORD_GAP);
             $display("\n[%0t] FPGA WRITE poll %0d", $time, poll);
-            spi_exchange_word(CMD_WRITE, 32'hA5A55A5A, received);
-            if (received === 32'd33) begin
+            spi_exchange_word(CMD_WRITE, 32'h00000000, received);
+            if (received === 32'h80000001) begin
                 passed = 1;
-                $display("PASS: received 33 after %0d poll(s)", poll);
+                $display("PASS: received 0x80000001 after %0d poll(s)", poll);
             end else if (received === 32'd0) begin
                 $display("  Empty response placeholder; keep polling.");
             end else begin
-                $fatal(1, "Unexpected response 0x%08h: expected empty zero or 33.", received);
+                $fatal(1, "Unexpected response 0x%08h: expected empty zero or 0x80000001.", received);
             end
         end
 
         if (!passed)
-            $fatal(1, "Expected 33 after %0d polls; last response=0x%08h",
+            $fatal(1, "Expected 0x80000001 after %0d polls; last response=0x%08h",
                    MAX_POLLS, received);
 
         for (quiet = 1; quiet <= QUIET_READS; quiet = quiet + 1) begin
             #(WORD_GAP);
             spi_exchange_word(CMD_WRITE, 32'hDEADBEEF, received);
             if (received !== 32'd0)
-                $fatal(1, "Unexpected extra response after 33: 0x%08h", received);
+                $fatal(1, "Unexpected extra response after 0x80000001: 0x%08h", received);
         end
 
         $display("\nPASS: command/payload framing and CPU response sequence passed.");
