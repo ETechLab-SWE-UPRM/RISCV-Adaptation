@@ -61,8 +61,8 @@ module fp_control (
                 fp_instruction = 1'b1;
                 fp_op          = 2'b10;
 
-                if (funct7 == 7'b1010000) begin
-                    rd_is_int = 1'b1; // FLE, FLT, FEQ
+                if ((funct7 == 7'b1010000) || (funct7 == 7'b1110000)) begin
+                    rd_is_int = 1'b1; // FLE, FLT, FEQ, FMVXW
                 end else begin
                     fp_reg_write = 1'b1; // Anything else
                 end

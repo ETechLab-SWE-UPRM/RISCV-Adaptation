@@ -44,6 +44,7 @@ package fp_alu_pkg;
         FLT,
         FLE,
         FMVWX,
+        FMVXW,
         FCVTSW,
         FMEM, // Load or store 
         FNONE
@@ -1203,7 +1204,7 @@ module RISCV_WEARABLE (
                     send_byte <= 1'b1;
                     uart_send_data <= 32'b0;
                 end
-                2'd4: begin
+                2'd0: begin
                     ready_to_send <= 1'b0;
                     word_in_progress <= 1'b0;
                 end

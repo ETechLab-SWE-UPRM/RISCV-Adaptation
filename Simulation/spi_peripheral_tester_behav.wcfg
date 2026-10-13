@@ -13,15 +13,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1,108,941.902 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,110,490.495 ns"></ZoomEndTime>
-      <Cursor1Time time="1,109,200.000 ns"></Cursor1Time>
+      <ZoomStartTime time="5,405,333.667 ns"></ZoomStartTime>
+      <ZoomEndTime time="5,405,911.668 ns"></ZoomEndTime>
+      <Cursor1Time time="5,405,430.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="276"></NameColumnWidth>
-      <ValueColumnWidth column_width="100"></ValueColumnWidth>
+      <ValueColumnWidth column_width="96"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="15" />
+   <WVObjectSize size="20" />
    <wave_markers>
       <marker label="" time="12730000" />
       <marker label="" time="34760000" />
@@ -53,6 +53,10 @@
    <wvobject type="logic" fp_name="/PipelineTester/processor/spi/miso">
       <obj_property name="ElementShortName">miso</obj_property>
       <obj_property name="ObjectShortName">miso</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/spi/data_in">
+      <obj_property name="ElementShortName">data_in[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_in[31:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/PipelineTester/processor/spi/data_out">
       <obj_property name="ElementShortName">data_out[31:0]</obj_property>
@@ -90,5 +94,21 @@
    <wvobject type="logic" fp_name="/PipelineTester/processor/spi/tx_enable">
       <obj_property name="ElementShortName">tx_enable</obj_property>
       <obj_property name="ObjectShortName">tx_enable</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/regs">
+      <obj_property name="ElementShortName">regs[31:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">regs[31:0][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/fp_regs">
+      <obj_property name="ElementShortName">fp_regs[0:31][31:0]</obj_property>
+      <obj_property name="ObjectShortName">fp_regs[0:31][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/data_mem/address">
+      <obj_property name="ElementShortName">address[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">address[0:1][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/data_mem/write_data">
+      <obj_property name="ElementShortName">write_data[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">write_data[0:1][31:0]</obj_property>
    </wvobject>
 </wave_config>

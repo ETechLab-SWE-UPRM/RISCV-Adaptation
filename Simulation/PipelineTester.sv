@@ -14,28 +14,66 @@ module PipelineTester;
     logic mosi = 0;
     wire miso;
 
-    // Command names use the FPGA perspective: READ receives, WRITE transmits
+    // Directions are from the FPGA's perspective.
     localparam logic [7:0] CMD_READ  = 8'h01;
     localparam logic [7:0] CMD_WRITE = 8'h02;
     localparam logic [7:0] CMD_RDWR  = 8'h03;
-
+    localparam logic [31:0] END_MARKER = 32'hBF800000;
+    localparam integer SAMPLE_COUNT = 1024;
+    localparam integer MAX_RESULTS = 2048;
     localparam realtime SPI_HALF_NS = 15.625;
     localparam integer PREP_CLOCKS = 8;
     localparam time CS_DELAY = 1_000;
-    localparam time WORD_GAP = 1_000_000;
     localparam time BOOT_WAIT = 100_000;
-    localparam integer MAX_POLLS = 20;
-    localparam integer QUIET_READS = 3;
+    localparam time CONVOLUTION_WAIT = 2_000_000; // 2 ms
+    // After the computation wait, read results without inter-word gaps.
+    localparam time WORD_GAP = 0;
+    localparam time RESPONSE_TIMEOUT = 100_000_000; // 100 ms simulation budget
+    localparam bit VERBOSE_TRANSFERS = 0;
+    // Set only when the exact expected count is known. Zero disables checking.
+    localparam integer EXPECTED_RESULTS = 0;
 
     integer transaction_count = 0;
+    logic [31:0] results [0:MAX_RESULTS-1];
 
     RISCV_WEARABLE processor (
         .clk(clk), .reset(rst), .rx(rx), .tx(tx),
         .seg(seg), .an(an), .led(led),
         .sclk(sclk), .cs_in(cs_in), .mosi(mosi), .miso(miso)
     );
-
     always #10 clk = ~clk;
+
+    function automatic logic [31:0] sample_bits(input integer value);
+        integer exponent;
+        integer temporary;
+        logic [31:0] normalized;
+        logic [7:0] biased_exponent;
+        begin
+            exponent = 0;
+            temporary = value;
+            while (temporary > 1) begin
+                temporary = temporary >> 1;
+                exponent = exponent + 1;
+            end
+            normalized = value << (23 - exponent);
+            biased_exponent = 127 + exponent;
+            sample_bits = {1'b0, biased_exponent, normalized[22:0]};
+        end
+    endfunction
+
+    function automatic real fp32_to_real(input logic [31:0] bits);
+        integer exponent;
+        real magnitude;
+        begin
+            exponent = bits[30:23];
+            if (exponent == 0)
+                magnitude = ($itor(bits[22:0]) / 8388608.0) * (2.0 ** (-126));
+            else
+                magnitude = (1.0 + $itor(bits[22:0]) / 8388608.0)
+                            * (2.0 ** (exponent - 127));
+            fp32_to_real = bits[31] ? -magnitude : magnitude;
+        end
+    endfunction
 
     task automatic spi_prepare;
         integer i;
@@ -44,7 +82,6 @@ module PipelineTester;
             sclk = 0;
             mosi = 0;
             #(CS_DELAY);
-            $display("[%0t] PREP: %0d clocks with CS high", $time, PREP_CLOCKS);
             for (i = 0; i < PREP_CLOCKS; i = i + 1) begin
                 #(SPI_HALF_NS); sclk = 1;
                 #(SPI_HALF_NS); sclk = 0;
@@ -71,96 +108,137 @@ module PipelineTester;
     );
         integer b;
         logic sampled;
-        logic [7:0] command_rx;
         begin
             incoming = '0;
-            command_rx = '0;
             spi_prepare();
             cs_in = 0;
             mosi = command[7];
             #(CS_DELAY);
-
-            for (b = 7; b >= 0; b = b - 1) begin
+            for (b = 7; b >= 0; b = b - 1)
                 spi_bit(command[b], sampled);
-                command_rx[b] = sampled;
-            end
-
             for (b = 31; b >= 0; b = b - 1) begin
                 spi_bit(outgoing[b], sampled);
                 incoming[b] = sampled;
             end
-
             #(CS_DELAY);
             cs_in = 1;
             mosi = 0;
             transaction_count = transaction_count + 1;
-            $display("[%0t] TRANSFER %0d CMD=0x%02h MOSI=0x%08h MISO=0x%08h (command MISO=0x%02h ignored)",
-                     $time, transaction_count, command, outgoing,
-                     incoming, command_rx);
-
-            // FPGA READ-only MISO is not protocol data and is intentionally ignored.
+            if (VERBOSE_TRANSFERS)
+                $display("[%0t] TRANSFER %0d CMD=%02h TX=%08h RX=%08h",
+                         $time, transaction_count, command, outgoing, incoming);
             if ((command == CMD_WRITE || command == CMD_RDWR) &&
                 $isunknown(incoming))
                 $fatal(1, "X/Z in response payload: check TX preload/reset/wiring.");
         end
     endtask
 
+    task automatic spi_send_inputs(output realtime payload_duration);
+        integer i, b;
+        logic sampled;
+        logic [31:0] outgoing;
+        realtime payload_start;
+        begin
+            spi_prepare();
+            cs_in = 0;
+            mosi = CMD_READ[7];
+            #(CS_DELAY);
+            for (b = 7; b >= 0; b = b - 1)
+                spi_bit(CMD_READ[b], sampled);
+            payload_start = $realtime;
+            for (i = 1; i <= SAMPLE_COUNT; i = i + 1) begin
+                outgoing = sample_bits(i);
+                for (b = 31; b >= 0; b = b - 1)
+                    spi_bit(outgoing[b], sampled);
+            end
+            payload_duration = $realtime - payload_start;
+            for (b = 31; b >= 0; b = b - 1)
+                spi_bit(END_MARKER[b], sampled);
+            #(CS_DELAY);
+            cs_in = 1;
+            mosi = 0;
+            transaction_count = transaction_count + 1;
+            $display("[%0t] SENT end marker 0xBF800000; input burst finished", $time);
+        end
+    endtask
+
     initial begin : test
         logic [31:0] received;
-        integer poll;
-        integer quiet;
-        bit passed;
+        integer count, polls, zeros, i;
+        bit finished;
+        realtime started, sent, receive_started, ended, payload_duration;
 
         $timeformat(-6, 3, " us", 12);
         $display("==========================================");
-        $display("CPU + command-aware SPI test: mode 0, 32 MHz");
-        $display("Each transaction: 8 command + 32 payload clocks");
-        $display("FPGA READ(0x80000000), FPGA WRITE until 0x80000001");
-        $display("Assumes empty TX returns zero and firmware emits only one response.");
+        $display("CPU + SPI full float-input transaction, mode 0, 32 MHz");
+        $display("ONE READ command + floats 1.0..1024.0 + raw 0xBF800000");
+        $display("WRITE polls receive raw 32-bit results until 0xBF800000");
+        $display("Zeros are retained, including indistinguishable empty-FIFO placeholders.");
         $display("==========================================");
 
         repeat (10) @(negedge clk);
         rst = 0;
         #(BOOT_WAIT);
+        started = $realtime;
+        spi_send_inputs(payload_duration);
+        sent = $realtime;
 
-        $display("\n[%0t] FPGA READ input 0x80000000", $time);
-        spi_exchange_word(CMD_READ, 32'h80000000, received);
+        $display("1024-word payload time: %0.3f us", payload_duration / 1000.0);
+        $display("Complete send time:    %0.3f us (includes command, marker, preparation and CS delays)",
+                 (sent - started) / 1000.0);
 
-        passed = 0;
-        for (poll = 1; poll <= MAX_POLLS && !passed; poll = poll + 1) begin
-            #(WORD_GAP);
-            $display("\n[%0t] FPGA WRITE poll %0d", $time, poll);
+        $display("[%0t] Waiting 2 ms for FPGA computation", $time);
+        #(CONVOLUTION_WAIT);
+        receive_started = $realtime;
+        $display("[%0t] 2 ms wait finished; reading results", $time);
+
+        count = 0;
+        polls = 0;
+        zeros = 0;
+        finished = 0;
+        while (!finished) begin
+            if (($realtime - receive_started) >= RESPONSE_TIMEOUT)
+                $fatal(1, "Response timeout: %0d words captured, %0d polls", count, polls);
+            if (WORD_GAP != 0) #(WORD_GAP);
             spi_exchange_word(CMD_WRITE, 32'h00000000, received);
-            if (received === 32'h80000001) begin
-                passed = 1;
-                $display("PASS: received 0x80000001 after %0d poll(s)", poll);
-            end else if (received === 32'd0) begin
-                $display("  Empty response placeholder; keep polling.");
+            polls = polls + 1;
+            if (received == END_MARKER) begin
+                finished = 1;
             end else begin
-                $fatal(1, "Unexpected response 0x%08h: expected empty zero or 0x80000001.", received);
+                if (count >= MAX_RESULTS)
+                    $fatal(1, "Capture buffer full before END: %0d words, %0d zeros. Check readiness, RX overflow and firmware.", count, zeros);
+                results[count] = received;
+                count = count + 1;
+                if (received == 0) zeros = zeros + 1;
             end
         end
+        ended = $realtime;
 
-        if (!passed)
-            $fatal(1, "Expected 0x80000001 after %0d polls; last response=0x%08h",
-                   MAX_POLLS, received);
-
-        for (quiet = 1; quiet <= QUIET_READS; quiet = quiet + 1) begin
-            #(WORD_GAP);
-            spi_exchange_word(CMD_WRITE, 32'hDEADBEEF, received);
-            if (received !== 32'd0)
-                $fatal(1, "Unexpected extra response after 0x80000001: 0x%08h", received);
+        $display("\nEND marker received: captured=%0d, zeros=%0d, polls=%0d",
+                 count, zeros, polls);
+        $display("Send time:      %0.3f us", (sent - started) / 1000.0);
+        $display("Fixed compute wait: %0.3f us", (receive_started - sent) / 1000.0);
+        $display("Receive time:       %0.3f us", (ended - receive_started) / 1000.0);
+        $display("Wait + receive:     %0.3f us", (ended - sent) / 1000.0);
+        $display("Total time:     %0.3f us", (ended - started) / 1000.0);
+        for (i = 0; i < count; i = i + 1) begin
+            if (results[i][30:23] == 8'hFF)
+                $display("RESULT[%0d] bits=0x%08h (NaN/Infinity)", i, results[i]);
+            else
+                $display("RESULT[%0d] bits=0x%08h float=%0.9g",
+                         i, results[i], fp32_to_real(results[i]));
         end
-
-        $display("\nPASS: command/payload framing and CPU response sequence passed.");
-        $display("RX dummy suppression and FPGA READ TX-pointer preservation require internal FIFO assertions.");
-        $display("FULL DUPLEX is supported by the transfer task but not exercised by this firmware sequence.");
+        if (EXPECTED_RESULTS != 0 && count != EXPECTED_RESULTS)
+            $fatal(1, "Expected %0d results, captured %0d (including placeholders)",
+                   EXPECTED_RESULTS, count);
+        $display("TRANSACTION COMPLETE: end marker observed; numerical convolution correctness not checked.");
+        $display("Kernel/output specification and internal FIFO signals are needed for numerical/overflow assertions.");
         #(CS_DELAY);
         $finish;
     end
 
     initial begin
-        #25_000_000;
+        #(BOOT_WAIT + CONVOLUTION_WAIT + RESPONSE_TIMEOUT + 10_000_000);
         $fatal(1, "Simulation watchdog expired.");
     end
 endmodule

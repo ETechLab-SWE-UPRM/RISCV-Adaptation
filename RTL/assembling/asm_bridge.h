@@ -106,41 +106,55 @@
     static inline float UART_read_float(void) {
         int temp = UART_receive;
         float data;
-        memcpy(&data, &temp, sizeof(float));
+        __asm__ ("fmv.w.x %0, %1": "=f" (data): "r"  (temp));
         return data;
     }
 
     static inline float SPI_read_float(void) {
         int temp = SPI_receive_reg;
         float data;
-        memcpy(&data, &temp, sizeof(float));
+        __asm__ ("fmv.w.x %0, %1": "=f" (data): "r"  (temp));
         return data;
     }
 
     static inline void UART_send_float(float data) {
         int temp;
-        memcpy(&temp, &data, sizeof(float));
+        __asm__ ("fmv.x.w %0, %1": "=r" (temp): "f"  (data));
         UART_transmit = temp;
     }
 
     static inline void SPI_send_float(float data) {
         int temp;
-        memcpy(&temp, &data, sizeof(float));
+        __asm__ ("fmv.x.w %0, %1": "=r" (temp): "f"  (data));
         SPI_send_reg = temp;
     }
 
-    static inline void write_blocked_float(float data) {
+    static inline void UART_write_blocked_float(float data) {
         while ((UART_read_status() & UART_TX_MASK) == 0) {
             // wait
         }
         UART_send_float(data);
     }
 
-    static inline float read_blocked_float(void) {
+    static inline void SPI_write_blocked_float(float data) {
+        while ((SPI_read_status() & SPI_TX_FIFO_FULL_MASK) != 0) {
+            // wait until spi not full
+        }
+        SPI_send_float(data);
+    }
+
+    static inline float UART_read_blocked_float(void) {
         while ((UART_read_status() & UART_RX_MASK) == 0) {
             // wait
         }
         return UART_read_float();    
+    }
+
+    static inline float SPI_read_blocked_float(void) {
+        while ((SPI_read_status() & SPI_RX_FIFO_EMPTY_MASK) != 0){
+            // wait until spi not empty
+        }
+        return SPI_read_float();
     }
 
     /*

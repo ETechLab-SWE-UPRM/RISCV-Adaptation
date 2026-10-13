@@ -32,6 +32,9 @@ module fp_alu_control (
                             default: ; 
                         endcase
                     end 
+                    7'b1110000: begin
+                        fp_alu_op = FMVXW;
+                    end
                     7'b1111000: begin
                         fp_alu_op = FMVWX; 
                     end

@@ -68,7 +68,7 @@ module fp_alu (
                 comp_op = 8'd2;
             end
 
-            FMVWX : begin
+            FMVWX, FMVXW : begin
                 result = a;
             end
 
