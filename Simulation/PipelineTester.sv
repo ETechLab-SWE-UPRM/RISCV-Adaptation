@@ -20,6 +20,7 @@ module PipelineTester;
     localparam logic [7:0] CMD_RDWR  = 8'h03;
     localparam logic [31:0] END_MARKER = 32'hBF800000;
     localparam integer SAMPLE_COUNT = 1024;
+    localparam integer TEST_RUNS = 2;
     localparam integer MAX_RESULTS = 2048;
     localparam realtime SPI_HALF_NS = 15.625;
     localparam integer PREP_CLOCKS = 8;
@@ -29,9 +30,8 @@ module PipelineTester;
     // After the computation wait, read results without inter-word gaps.
     localparam time WORD_GAP = 0;
     localparam time RESPONSE_TIMEOUT = 100_000_000; // 100 ms simulation budget
-    localparam bit VERBOSE_TRANSFERS = 0;
     // Set only when the exact expected count is known. Zero disables checking.
-    localparam integer EXPECTED_RESULTS = 0;
+    localparam integer EXPECTED_RESULTS = 1014;
 
     integer transaction_count = 0;
     logic [31:0] results [0:MAX_RESULTS-1];
@@ -124,9 +124,7 @@ module PipelineTester;
             cs_in = 1;
             mosi = 0;
             transaction_count = transaction_count + 1;
-            if (VERBOSE_TRANSFERS)
-                $display("[%0t] TRANSFER %0d CMD=%02h TX=%08h RX=%08h",
-                         $time, transaction_count, command, outgoing, incoming);
+            $display("[%0t] TRANSFER %0d CMD=%02h TX=%08h RX=%08h", $time, transaction_count, command, outgoing, incoming);
             if ((command == CMD_WRITE || command == CMD_RDWR) &&
                 $isunknown(incoming))
                 $fatal(1, "X/Z in response payload: check TX preload/reset/wiring.");
@@ -150,6 +148,7 @@ module PipelineTester;
                 outgoing = sample_bits(i);
                 for (b = 31; b >= 0; b = b - 1)
                     spi_bit(outgoing[b], sampled);
+                $display("[%0t] SENT word TX=%08h; input burst finished", $time, outgoing);
             end
             payload_duration = $realtime - payload_start;
             for (b = 31; b >= 0; b = b - 1)
@@ -164,7 +163,7 @@ module PipelineTester;
 
     initial begin : test
         logic [31:0] received;
-        integer count, polls, zeros, i;
+        integer count, polls, zeros, i, run;
         bit finished;
         realtime started, sent, receive_started, ended, payload_duration;
 
@@ -179,66 +178,115 @@ module PipelineTester;
         repeat (10) @(negedge clk);
         rst = 0;
         #(BOOT_WAIT);
-        started = $realtime;
-        spi_send_inputs(payload_duration);
-        sent = $realtime;
+        for (run = 0; run < TEST_RUNS; run = run + 1) begin
+            $display("\n========== CONVOLUTION RUN %0d OF %0d ==========", run + 1, TEST_RUNS);
+            started = $realtime;
+            spi_send_inputs(payload_duration);
+            sent = $realtime;
 
-        $display("1024-word payload time: %0.3f us", payload_duration / 1000.0);
-        $display("Complete send time:    %0.3f us (includes command, marker, preparation and CS delays)",
-                 (sent - started) / 1000.0);
+            $display("1024-word payload time: %0.3f us", payload_duration / 1000.0);
+            $display("Complete send time:    %0.3f us (includes command, marker, preparation and CS delays)",
+                     (sent - started) / 1000.0);
+            // FPGA firmware executes convolution after receiving the input.
+            // This is a fixed allowance, not a measurement of CPU completion.
+            $display("[%0t] Waiting 2 ms for FPGA computation", $time);
+            #(CONVOLUTION_WAIT);
+            receive_started = $realtime;
+            $display("[%0t] 2 ms wait finished; reading results", $time);
 
-        $display("[%0t] Waiting 2 ms for FPGA computation", $time);
-        #(CONVOLUTION_WAIT);
-        receive_started = $realtime;
-        $display("[%0t] 2 ms wait finished; reading results", $time);
+                        count = 0;
+            polls = 0;
+            zeros = 0;
+            finished = 0;
 
-        count = 0;
-        polls = 0;
-        zeros = 0;
-        finished = 0;
-        while (!finished) begin
-            if (($realtime - receive_started) >= RESPONSE_TIMEOUT)
-                $fatal(1, "Response timeout: %0d words captured, %0d polls", count, polls);
-            if (WORD_GAP != 0) #(WORD_GAP);
-            spi_exchange_word(CMD_WRITE, 32'h00000000, received);
-            polls = polls + 1;
-            if (received == END_MARKER) begin
-                finished = 1;
-            end else begin
-                if (count >= MAX_RESULTS)
-                    $fatal(1, "Capture buffer full before END: %0d words, %0d zeros. Check readiness, RX overflow and firmware.", count, zeros);
-                results[count] = received;
-                count = count + 1;
-                if (received == 0) zeros = zeros + 1;
+            // One CMD_WRITE for the entire FPGA -> master payload.
+            // Keep CS low until the end marker is received.
+            begin : receive_burst
+                integer b;
+                logic sampled;
+
+                spi_prepare();
+                cs_in = 0;
+                mosi = CMD_WRITE[7];
+                #(CS_DELAY);
+
+                for (b = 7; b >= 0; b = b - 1)
+                    spi_bit(CMD_WRITE[b], sampled);
+
+                while (!finished) begin
+                    if (($realtime - receive_started) >= RESPONSE_TIMEOUT)
+                        $fatal(1,
+                            "Response timeout: %0d words captured, %0d polls",
+                            count, polls);
+
+                    // Clock one complete word without another command
+                    // or a CS transition between words.
+                    for (b = 31; b >= 0; b = b - 1) begin
+                        spi_bit(1'b0, sampled);
+                        received[b] = sampled;
+                    end
+
+                    polls = polls + 1;
+
+                    if ($isunknown(received))
+                        $fatal(1,
+                            "X/Z in response payload: check TX preload/reset/wiring.");
+
+                    if (VERBOSE_TRANSFERS)
+                        $display("[%0t] BURST word %0d RX=%08h",
+                                 $time, polls, received);
+
+                    if (received == END_MARKER) begin
+                        finished = 1;
+                    end else begin
+                        if (count >= MAX_RESULTS)
+                            $fatal(1,
+                                "Capture buffer full before END: %0d words, %0d zeros",
+                                count, zeros);
+
+                        results[count] = received;
+                        count = count + 1;
+
+                        if (received == 0)
+                            zeros = zeros + 1;
+                    end
+                end
+
+                #(CS_DELAY);
+                cs_in = 1;
+                mosi = 0;
+                transaction_count = transaction_count + 1;
             end
-        end
-        ended = $realtime;
 
-        $display("\nEND marker received: captured=%0d, zeros=%0d, polls=%0d",
-                 count, zeros, polls);
-        $display("Send time:      %0.3f us", (sent - started) / 1000.0);
-        $display("Fixed compute wait: %0.3f us", (receive_started - sent) / 1000.0);
-        $display("Receive time:       %0.3f us", (ended - receive_started) / 1000.0);
-        $display("Wait + receive:     %0.3f us", (ended - sent) / 1000.0);
-        $display("Total time:     %0.3f us", (ended - started) / 1000.0);
-        for (i = 0; i < count; i = i + 1) begin
-            if (results[i][30:23] == 8'hFF)
-                $display("RESULT[%0d] bits=0x%08h (NaN/Infinity)", i, results[i]);
-            else
-                $display("RESULT[%0d] bits=0x%08h float=%0.9g",
-                         i, results[i], fp32_to_real(results[i]));
+            ended = $realtime;
+
+            $display("\nEND marker received: captured=%0d, zeros=%0d, polls=%0d",
+                     count, zeros, polls);
+            $display("Send time:      %0.3f us", (sent - started) / 1000.0);
+            $display("Fixed compute wait: %0.3f us", (receive_started - sent) / 1000.0);
+            $display("Receive time:       %0.3f us", (ended - receive_started) / 1000.0);
+            $display("Wait + receive:     %0.3f us", (ended - sent) / 1000.0);
+            $display("Total time:     %0.3f us", (ended - started) / 1000.0);
+            for (i = 0; i < count; i = i + 1) begin
+                if (results[i][30:23] == 8'hFF)
+                    $display("RESULT[%0d] bits=0x%08h (NaN/Infinity)", i, results[i]);
+                else
+                    $display("RESULT[%0d] bits=0x%08h float=%0.9g",
+                             i, results[i], fp32_to_real(results[i]));
+            end
+            if (EXPECTED_RESULTS != 0 && count != EXPECTED_RESULTS)
+                $fatal(1, "Expected %0d results, captured %0d (including placeholders)",
+                       EXPECTED_RESULTS, count);
+            $display("TRANSACTION COMPLETE: end marker observed; numerical convolution correctness not checked.");
+            $display("Kernel/output specification and internal FIFO signals are needed for numerical/overflow assertions.");
+            #(CS_DELAY);
         end
-        if (EXPECTED_RESULTS != 0 && count != EXPECTED_RESULTS)
-            $fatal(1, "Expected %0d results, captured %0d (including placeholders)",
-                   EXPECTED_RESULTS, count);
-        $display("TRANSACTION COMPLETE: end marker observed; numerical convolution correctness not checked.");
-        $display("Kernel/output specification and internal FIFO signals are needed for numerical/overflow assertions.");
-        #(CS_DELAY);
+        $display("Completed %0d convolution runs", TEST_RUNS);
         $finish;
     end
 
     initial begin
-        #(BOOT_WAIT + CONVOLUTION_WAIT + RESPONSE_TIMEOUT + 10_000_000);
+        #(BOOT_WAIT + TEST_RUNS * (CONVOLUTION_WAIT + RESPONSE_TIMEOUT + 10_000_000));
         $fatal(1, "Simulation watchdog expired.");
     end
 endmodule

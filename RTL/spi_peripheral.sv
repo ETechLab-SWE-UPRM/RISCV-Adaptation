@@ -242,14 +242,14 @@ module spi_peripheral #(
             if (tx_bit_counter == 0) begin
                 if (!tx_fifo_empty) begin
                     tx_shift_reg <= fifo_word;
-                    tx_rd_ptr_bin <= tx_rd_ptr_bin_next;
-                    tx_rd_ptr_gray <= tx_rd_ptr_bin_next ^ (tx_rd_ptr_bin_next >> 1);
                     tx_bit_counter <= tx_bit_counter + 1'b1;
                 end
             end else begin
                 tx_shift_reg <= {tx_shift_reg[data_width-2:0], 1'b0};
-                
+
                 if (tx_bit_counter == data_width - 1) begin
+                    tx_rd_ptr_bin <= tx_rd_ptr_bin_next;
+                    tx_rd_ptr_gray <= tx_rd_ptr_bin_next ^ (tx_rd_ptr_bin_next >> 1);
                     tx_bit_counter <= '0;
                     first_bit <= 1'b1;
                 end else begin
