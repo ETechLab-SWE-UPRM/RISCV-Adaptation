@@ -93,6 +93,7 @@ module RISCV_WEARABLE (
     localparam spi_status = timer_addr + 4;
     localparam spi_receive = spi_status + 4;
     localparam spi_send = spi_receive + 4;
+    localparam weights_channels_addr = spi_send + 4;
 
     // UART Parameters
     localparam data_bits = 8;
@@ -182,12 +183,12 @@ module RISCV_WEARABLE (
     logic [4:0] ex_mem_rs1, ex_mem_rs2, ex_mem_reg_dest;
     logic [2:0] ex_mem_funct3;
     logic [31:0] ex_mem_link_address_reg;
-    logic [31:0] ex_mem_data_counter, ex_mem_weights_counter;
+    logic [31:0] ex_mem_weights_channels_counter, ex_mem_weights_counter;
     logic [4:0] fp_mac_result_reg_dest;
     logic [31:0] memory_data_read [0:vector_length-1];
 
     // Convolution registers for memory mapping
-    logic [31:0] conv_data_length, conv_weights_length, conv_output_length;
+    logic [31:0] conv_weights_length, conv_weights_channels_length;
 
     // Duplicate the 5-bit RD bus with max 16-sink clusters
     (* DONT_TOUCH = "true" *) wire [4:0] ex_mem_rd_dup = ex_mem_reg_dest;
@@ -951,10 +952,10 @@ module RISCV_WEARABLE (
         .reg_dest_id_ex(reg_dest_id_ex),
         .ex_link_address(link_addr_ex1),
         .funct3(funct3_id_ex),
-        .conv_data_length(conv_data_length),
+        .conv_weights_channels_length(conv_weights_channels_length),
         .conv_weights_length(conv_weights_length),
-        .data_counter(ex_mem_data_counter),
         .weights_counter(ex_mem_weights_counter),
+        .weights_channels_counter(ex_mem_weights_channels_counter),
 
         .ex_mem_vec_op(ex_mem_vec_op),
         .ex_mem_fp_instruction(ex_mem_fp_instruction),
@@ -981,7 +982,7 @@ module RISCV_WEARABLE (
         .ex_mem_reg_dest(ex_mem_reg_dest),
         .ex_mem_link_address_reg(ex_mem_link_address_reg),
         .ex_mem_funct3(ex_mem_funct3),
-        .ex_mem_data_counter(ex_mem_data_counter),
+        .ex_mem_weights_channels_counter(ex_mem_weights_channels_counter),
         .ex_mem_weights_counter(ex_mem_weights_counter)
     );
 
@@ -1038,23 +1039,19 @@ module RISCV_WEARABLE (
         end
     end
 
-    logic data_length_store, weights_length_store, output_length_store;
-    assign data_length_store = (memory_address[0] == data_length_addr) && ex_mem_memwrite;
+    logic weights_length_store, weights_channels_store;
     assign weights_length_store = (memory_address[0] == weights_length_addr) && ex_mem_memwrite;
-    assign output_length_store = (memory_address[0] == output_length_addr) && ex_mem_memwrite;
+    assign weights_channels_store = (memory_address[0] == weights_channels_addr) && ex_mem_memwrite;
 
     always_ff @(posedge clk) begin
         if (reset) begin
-            conv_data_length <= '0;
             conv_weights_length <= '0;
-            conv_output_length <= '0;
+            conv_weights_channels_length <= '0;
         end else begin
-            if(data_length_store) begin
-                conv_data_length <= write_data[0];
-            end else if(weights_length_store) begin
+            if(weights_length_store) begin
                 conv_weights_length <= write_data[0] - 32'd1; // adjust for zero indexing due to preload
-            end else if(output_length_store) begin
-                conv_output_length <= write_data[0];
+            end else if(weights_channels_store) begin
+                conv_weights_channels_length <= write_data[0];
             end
         end
     end

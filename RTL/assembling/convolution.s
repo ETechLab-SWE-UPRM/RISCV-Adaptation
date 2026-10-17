@@ -1,41 +1,34 @@
 
 .section .text
-.globl Convolution
-.type Convolution, @function
+.globl flat_convolution
+.type flat_convolution, @function
 
-# void Convolution(int *data, int *weights, int *output,
-#                  int data_length, int weights_length, int output_length);
+# int flat_convolution(int *data, int *weights, int *output,
+#                  int data_length, int weights_length, int output_length,
+#                  int weights_depth, int weights_channels);
 #
 # RISC-V (RV32) ABI:
-#   a0 = data
-#   a1 = weights
-#   a2 = output
-#   a3 = data_length
-#   a4 = weights_length
-#   a5 = output_length
+#   a0 = data : input array
+#   a1 = weights : kernel array
+#   a2 = output : result array
+#   a3 = weights_length : kernel lwngth * width
+#   a4 = output_length
+#   a5 = weigths_channels: output channels
+#   a6 = bias
 
-#addresses where the lengths are stored
-.set uart_status, 0x100082A4
-.set uart_receive, 0x100082A8
-.set uart_send, 0x100082AC
-.set data_addr, 0x100082B0
+# addresses where the lengths, channels, and bias are stored
 .set weights_addr, 0x100082B4
-.set output_addr, 0x100082B8
+.set weights_channels, 0x100082CC
 
-Convolution:
-    # Input length store
-    lui t1, %hi(data_addr)
-    sw a3, %lo(data_addr)(t1)
-
+flat_convolution:
     li t1, 0 # i = 0
 
     # Weight length store
     lui t2, %hi(weights_addr)
-    sw a4, %lo(weights_addr)(t2)
+    sw a3, %lo(weights_addr)(t2)
 
-    # Output length store
-    lui t2, %hi(output_addr)
-    sw a5, %lo(output_addr)(t2)
+    lui t2, %hi(weights_channels)
+    sw a5, %lo(weights_channels)(t2)
 
     flw f0, 0(a0) # preload first data
     flw f1, 0(a1) # preload first weight
@@ -43,8 +36,12 @@ Convolution:
     # Add branch to add_stride here if you want to do so
 
 outer_loop:
+    li t0, 0
+
+channel_loop:
     li t2, 0 # j = 0
-    fmv.w.x f2, x0 # sum = 0 
+
+    fmv.w.x f2, a6 # bias should be the bits of the floating point value (ex: 16 -> 0x41800000)
 
 inner_loop:
     # f2 used as accumulator, dual issue will use the registers specified on the instruction
@@ -52,14 +49,17 @@ inner_loop:
     fmadd.s f2, f0, f1, f2 # sum += data[i + j] * weights[j]
 
     addi t2, t2, 1
-    blt t2, a4, inner_loop
+    blt t2, a3, inner_loop
 
 inner_loop_finished:
     # Store the result
     fsw f2, 0(a2)
     addi a2, a2, 4 # output address increment
-    addi t1, t1, 1
-    blt t1, a5, outer_loop # change branch to add_stride if you wish to do so
+    addi t0, t0, 1 # Finished an output channel
+    blt t0, a5, channel_loop
+
+    addi t1, t1, 1 # Advance output-position counter
+    blt t1, a4, outer_loop # change branch to add_stride if you wish to do so
 
     li a0, 0
     ret

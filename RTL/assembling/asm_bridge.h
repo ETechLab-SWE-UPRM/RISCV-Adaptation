@@ -41,12 +41,13 @@
     #define START 0x53545254
     #define DONE 0x444F4E45
 
-    int Convolution(float *data, float *weights, float *output,
-                      int data_length, int weights_length, int output_length);
-
     int vector_convolution_main(int *data, int *weights, int *output,
                       int data_length, int weights_length, int output_length);
-    
+
+    int flat_convolution(float *data, float *weights, float *output,
+                        int weights_length, int output_length,
+                        int output_channels, int bias);
+
     static inline int UART_read_status(void) {
         return UART_status;
     }
@@ -158,20 +159,6 @@
     }
 
     /*
-        Floating Point convolution function with inline assembly implementation.
-
-        @param data pointer to the input data array
-        @param weights pointer to the weights array
-        @param output pointer to the output array
-        @param data_length length of the input data array
-        @param weights_length length of the weights array
-        @param output_length length of the output array
-    */
-    static inline int convolution1D(float *data, float *weights, float *output, int data_length, int weights_length, int output_length) {
-        return Convolution(data, weights, output, data_length, weights_length, output_length);
-    }
-
-    /*
         Vector Integer convolution function with inline assembly implementation.
 
         @param data pointer to the input data array
@@ -184,4 +171,22 @@
     static inline int vector_convolution(int* data, int *weights, int *output, int data_length, int weights_length, int output_length) {
         return vector_convolution_main(data, weights, output, data_length, weights_length, output_length);
     }
+
+    /*
+        Floating Point convolution function with inline assembly implementation.
+        This supports multi-channel 1D convolutions.
+
+        @param data pointer to the input data array
+        @param weights pointer to the weights array
+        @param output pointer to the output array
+        @param data_length length of the input data array -> length * depth 
+        @param weights_length length of the weights array
+        @param output_length length of the output array
+        @param output_channels number of output channels
+    */
+    static inline int convolution1D(float *data, float *weights, float *output, int weights_length, int output_length,
+                                                int output_channels, int bias) {
+        return flat_convolution(data, weights, output, weights_length, output_length, output_channels, bias);
+    }
+
 #endif

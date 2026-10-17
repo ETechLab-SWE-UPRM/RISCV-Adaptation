@@ -32,9 +32,9 @@ module EX_MEM_reg #(
     input logic [31:0] ex_link_address,
     input logic [2:0] funct3,
     input logic [31:0] conv_weights_length,
-    input logic [31:0] conv_data_length,
+    input logic [31:0] conv_weights_channels_length,
     input logic [31:0] weights_counter,
-    input logic [31:0] data_counter,
+    input logic [31:0] weights_channels_counter,
 
     output logic ex_mem_vec_op,
     output logic ex_mem_fp_instruction,
@@ -61,7 +61,7 @@ module EX_MEM_reg #(
     output logic [4:0] ex_mem_reg_dest,
     output logic [31:0] ex_mem_link_address_reg,
     output logic [2:0] ex_mem_funct3,
-    output logic [31:0] ex_mem_data_counter,
+    output logic [31:0] ex_mem_weights_channels_counter,
     output logic [31:0] ex_mem_weights_counter
 );
 
@@ -93,7 +93,7 @@ module EX_MEM_reg #(
             ex_mem_link_address_reg <= 32'b0;
             ex_mem_funct3 <= 3'b0; 
             ex_mem_weights_counter <= '0;
-            ex_mem_data_counter <= '0;
+            ex_mem_weights_channels_counter <= '0;
 
         end else if (!stall) begin
             ex_mem_vec_op <= vec_op; 
@@ -121,15 +121,23 @@ module EX_MEM_reg #(
             ex_mem_funct3 <= funct3; 
 
             if (id_ex_fmat_type == FMADD) begin
-                if (weights_counter == conv_weights_length) begin
-                    ex_mem_conv_data_read <= ((conv_data_read_id_ex - (conv_weights_length << 2)) + 32'd4);
-                    ex_mem_weights_data_read <= weights_data_read_id_ex - (conv_weights_length << 2);
-                    ex_mem_weights_counter <= 32'b0;
+                if (weights_counter == conv_weights_length) begin  // The kernel length + depth
+                    if(weights_channels_counter == (conv_weights_channels_length - 32'd1)) begin
+                        ex_mem_weights_counter <= 32'b0;
+                        ex_mem_conv_data_read <= ((conv_data_read_id_ex - (conv_weights_length << 2)) + 32'd24); // 6 floats
+                        ex_mem_weights_data_read <= weights_data_read_id_ex - ((((conv_weights_length + 32'd1)* conv_weights_channels_length) - 32'd1) << 2);
+                        ex_mem_weights_channels_counter <= '0;
+                    end else begin
+                        ex_mem_conv_data_read <= ((conv_data_read_id_ex - (conv_weights_length << 2)));
+                        ex_mem_weights_data_read <= weights_data_read_id_ex + 4;
+                        ex_mem_weights_counter <= 32'b0;
+                        ex_mem_weights_channels_counter <= weights_channels_counter + 1;
+                    end
                 end else begin
                     ex_mem_conv_data_read <= conv_data_read_id_ex + 4;
                     ex_mem_weights_data_read <= weights_data_read_id_ex + 4;
                     ex_mem_weights_counter <= weights_counter + 1;
-                    ex_mem_data_counter <= data_counter + 1;
+                    ex_mem_weights_channels_counter <= weights_channels_counter;
                 end
             end else begin
                 ex_mem_conv_data_read <= conv_data_read_id_ex;

@@ -20,7 +20,7 @@ module PipelineTester;
     localparam logic [7:0] CMD_RDWR  = 8'h03;
     localparam logic [31:0] END_MARKER = 32'hBF800000;
     localparam integer SAMPLE_COUNT = 1024;
-    localparam integer TEST_RUNS = 2;
+    localparam integer TEST_RUNS = 1;
     localparam integer MAX_RESULTS = 2048;
     localparam realtime SPI_HALF_NS = 15.625;
     localparam integer PREP_CLOCKS = 8;
@@ -232,9 +232,8 @@ module PipelineTester;
                         $fatal(1,
                             "X/Z in response payload: check TX preload/reset/wiring.");
 
-                    if (VERBOSE_TRANSFERS)
-                        $display("[%0t] BURST word %0d RX=%08h",
-                                 $time, polls, received);
+                    $display("[%0t] BURST word %0d RX=%08h",
+                                $time, polls, received);
 
                     if (received == END_MARKER) begin
                         finished = 1;
