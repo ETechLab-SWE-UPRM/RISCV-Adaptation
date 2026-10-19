@@ -49,17 +49,17 @@ inner_loop:
     fmadd.s f2, f0, f1, f2 # sum += data[i + j] * weights[j]
 
     addi t2, t2, 1
-    blt t2, a3, inner_loop
+    blt t2, a3, inner_loop # finished kernel? 
 
 inner_loop_finished:
     # Store the result
     fsw f2, 0(a2)
     addi a2, a2, 4 # output address increment
     addi t0, t0, 1 # Finished an output channel
-    blt t0, a5, channel_loop
+    blt t0, a5, channel_loop # finish channel? 
 
     addi t1, t1, 1 # Advance output-position counter
-    blt t1, a4, outer_loop # change branch to add_stride if you wish to do so
+    blt t1, a4, outer_loop # finished outputs? change branch to add_stride if you wish to do so
 
     li a0, 0
     ret

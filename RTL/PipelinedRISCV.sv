@@ -336,7 +336,7 @@ module RISCV_WEARABLE (
         .conv_data_write(memory_data_read),
         .fp_mac_finished(ex_mem_mac_result_valid),
         .fp_mac_reg_dest(fp_mac_result_reg_dest),
-        .fp_mac_data(ex_mem_mac_result),
+        .fp_mac_data(ReLU_result),
 
         .read_data1(fp_data_read1),
         .read_data2(fp_data_read2),
@@ -1013,6 +1013,10 @@ module RISCV_WEARABLE (
         .m_axis_result_tdata(ex_mem_mac_result),
         .m_axis_result_tvalid(ex_mem_mac_result_valid)
     );
+
+    // ReLU operation
+    logic [31:0] ReLU_result;
+    assign ReLU_result = ex_mem_mac_result > 0 ? ex_mem_mac_result : '0;
 
     // ------MEMORY STAGE------
     logic inside_data_mem;
