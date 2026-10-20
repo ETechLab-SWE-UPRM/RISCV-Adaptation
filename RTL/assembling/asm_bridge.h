@@ -8,13 +8,14 @@
     #define UART_status (* (volatile int *) (UART_address + 0x04u))
     #define UART_receive (* (volatile int *) (UART_address + 0x08u))
     #define UART_transmit (* (volatile int *) (UART_address + 0x0Cu))
-    #define Conv_data_reg (* (volatile int *) (UART_address + 0x10u))
+    #define Conv_offset_reg (* (volatile int *) (UART_address + 0x10u))
     #define Conv_weights_reg (* (volatile int *) (UART_address + 0x14u))
     #define Conv_output_reg (* (volatile int *) (UART_address + 0x18u))
     #define timer_reg (* (volatile int *) (UART_address + 0x1Cu))
     #define SPI_status_reg (* (volatile int *) (UART_address + 0x20u))
     #define SPI_receive_reg (* (volatile int *) (UART_address + 0x24u))
     #define SPI_send_reg (* (volatile int *) (UART_address + 0x28u))
+    #define Conv_weights_channels_reg (* (volatile int *) (SPI_send_reg + 0x04u))
 
     // UART masking
     #define UART_RX_MASK 0x1
@@ -41,12 +42,17 @@
     #define START 0x53545254
     #define DONE 0x444F4E45
 
+    // Offsets for next address calculation at end of channel
+    #define JUMP6 0x18
+    #define JUMP32 0x80
+    #define NOJUMP 0x4
+
     int vector_convolution_main(int *data, int *weights, int *output,
                       int data_length, int weights_length, int output_length);
 
     int flat_convolution(float *data, float *weights, float *output,
                         int weights_length, int output_length,
-                        int output_channels, int bias);
+                        int output_channels, int bias, int stride);
 
     static inline int UART_read_status(void) {
         return UART_status;
@@ -185,8 +191,8 @@
         @param output_channels number of output channels
     */
     static inline int convolution1D(float *data, float *weights, float *output, int weights_length, int output_length,
-                                                int output_channels, int bias) {
-        return flat_convolution(data, weights, output, weights_length, output_length, output_channels, bias);
+                                                int output_channels, int bias, int stride) {
+        return flat_convolution(data, weights, output, weights_length, output_length, output_channels, bias, stride);
     }
 
 #endif

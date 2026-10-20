@@ -86,8 +86,8 @@ module RISCV_WEARABLE (
     localparam uart_status = data_base + data_word_space + 4; // Max + 1 in memory
     localparam uart_receive = uart_status + 4;
     localparam uart_send = uart_receive + 4;
-    localparam data_length_addr = uart_send + 4;
-    localparam weights_length_addr = data_length_addr + 4;
+    localparam offset_addr = uart_send + 4;
+    localparam weights_length_addr = offset_addr + 4;
     localparam output_length_addr = weights_length_addr + 4;
     localparam timer_addr = output_length_addr + 4;
     localparam spi_status = timer_addr + 4;
@@ -188,7 +188,7 @@ module RISCV_WEARABLE (
     logic [31:0] memory_data_read [0:vector_length-1];
 
     // Convolution registers for memory mapping
-    logic [31:0] conv_weights_length, conv_weights_channels_length;
+    logic [31:0] offset_addr_reg, conv_weights_length, conv_weights_channels_length;
 
     // Duplicate the 5-bit RD bus with max 16-sink clusters
     (* DONT_TOUCH = "true" *) wire [4:0] ex_mem_rd_dup = ex_mem_reg_dest;
@@ -952,6 +952,7 @@ module RISCV_WEARABLE (
         .reg_dest_id_ex(reg_dest_id_ex),
         .ex_link_address(link_addr_ex1),
         .funct3(funct3_id_ex),
+        .offset_addr_reg(offset_addr_reg),
         .conv_weights_channels_length(conv_weights_channels_length),
         .conv_weights_length(conv_weights_length),
         .weights_counter(ex_mem_weights_counter),
@@ -1043,7 +1044,8 @@ module RISCV_WEARABLE (
         end
     end
 
-    logic weights_length_store, weights_channels_store;
+    logic offset_addr_store, weights_length_store, weights_channels_store;
+    assign offset_addr_store = (memory_address[0] == offset_addr) && ex_mem_memwrite;
     assign weights_length_store = (memory_address[0] == weights_length_addr) && ex_mem_memwrite;
     assign weights_channels_store = (memory_address[0] == weights_channels_addr) && ex_mem_memwrite;
 
@@ -1056,6 +1058,8 @@ module RISCV_WEARABLE (
                 conv_weights_length <= write_data[0] - 32'd1; // adjust for zero indexing due to preload
             end else if(weights_channels_store) begin
                 conv_weights_channels_length <= write_data[0];
+            end else if(offset_addr_store) begin
+                offset_addr_reg <= write_data[0];
             end
         end
     end

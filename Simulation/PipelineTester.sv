@@ -19,7 +19,9 @@ module PipelineTester;
     localparam logic [7:0] CMD_WRITE = 8'h02;
     localparam logic [7:0] CMD_RDWR  = 8'h03;
     localparam logic [31:0] END_MARKER = 32'hBF800000;
-    localparam integer SAMPLE_COUNT = 1024;
+    localparam integer DATA_COUNT = 50 * 6;
+    localparam integer SAMPLE_COUNT = 6;
+    localparam integer FIRST_SAMPLE = DATA_COUNT - SAMPLE_COUNT + 1;
     localparam integer TEST_RUNS = 1;
     localparam integer MAX_RESULTS = 2048;
     localparam realtime SPI_HALF_NS = 15.625;
@@ -31,7 +33,7 @@ module PipelineTester;
     localparam time WORD_GAP = 0;
     localparam time RESPONSE_TIMEOUT = 100_000_000; // 100 ms simulation budget
     // Set only when the exact expected count is known. Zero disables checking.
-    localparam integer EXPECTED_RESULTS = 1014;
+    localparam integer EXPECTED_RESULTS = (50 - 3 + 1) * 16; // 768 floats
 
     integer transaction_count = 0;
     logic [31:0] results [0:MAX_RESULTS-1];
@@ -144,20 +146,19 @@ module PipelineTester;
             for (b = 7; b >= 0; b = b - 1)
                 spi_bit(CMD_READ[b], sampled);
             payload_start = $realtime;
-            for (i = 1; i <= SAMPLE_COUNT; i = i + 1) begin
-                outgoing = sample_bits(i);
+            for (i = 0; i < SAMPLE_COUNT; i = i + 1) begin
+                outgoing = sample_bits(FIRST_SAMPLE + i);
                 for (b = 31; b >= 0; b = b - 1)
                     spi_bit(outgoing[b], sampled);
-                $display("[%0t] SENT word TX=%08h; input burst finished", $time, outgoing);
+                $display("[%0t] SENT data_flat[%0d]=%0d.0 TX=%08h",
+                         $time, DATA_COUNT - SAMPLE_COUNT + i, FIRST_SAMPLE + i, outgoing);
             end
             payload_duration = $realtime - payload_start;
-            for (b = 31; b >= 0; b = b - 1)
-                spi_bit(END_MARKER[b], sampled);
             #(CS_DELAY);
             cs_in = 1;
             mosi = 0;
             transaction_count = transaction_count + 1;
-            $display("[%0t] SENT end marker 0xBF800000; input burst finished", $time);
+            $display("[%0t] SENT exactly six floats; input burst finished (no end marker)", $time);
         end
     endtask
 
@@ -169,9 +170,9 @@ module PipelineTester;
 
         $timeformat(-6, 3, " us", 12);
         $display("==========================================");
-        $display("CPU + SPI full float-input transaction, mode 0, 32 MHz");
-        $display("ONE READ command + floats 1.0..1024.0 + raw 0xBF800000");
-        $display("WRITE polls receive raw 32-bit results until 0xBF800000");
+        $display("CPU + SPI last-six-floats transaction, mode 0, 32 MHz");
+        $display("ONE READ command + exactly six floats 295.0..300.0; no input end marker");
+        $display("ONE WRITE command: continuous output burst until 0xBF800000");
         $display("Zeros are retained, including indistinguishable empty-FIFO placeholders.");
         $display("==========================================");
 
@@ -184,8 +185,8 @@ module PipelineTester;
             spi_send_inputs(payload_duration);
             sent = $realtime;
 
-            $display("1024-word payload time: %0.3f us", payload_duration / 1000.0);
-            $display("Complete send time:    %0.3f us (includes command, marker, preparation and CS delays)",
+            $display("%0d-word payload time: %0.3f us", SAMPLE_COUNT, payload_duration / 1000.0);
+            $display("Complete send time:    %0.3f us (includes command, preparation and CS delays)",
                      (sent - started) / 1000.0);
             // FPGA firmware executes convolution after receiving the input.
             // This is a fixed allowance, not a measurement of CPU completion.
@@ -194,7 +195,7 @@ module PipelineTester;
             receive_started = $realtime;
             $display("[%0t] 2 ms wait finished; reading results", $time);
 
-                        count = 0;
+            count = 0;
             polls = 0;
             zeros = 0;
             finished = 0;
@@ -277,7 +278,7 @@ module PipelineTester;
                 $fatal(1, "Expected %0d results, captured %0d (including placeholders)",
                        EXPECTED_RESULTS, count);
             $display("TRANSACTION COMPLETE: end marker observed; numerical convolution correctness not checked.");
-            $display("Kernel/output specification and internal FIFO signals are needed for numerical/overflow assertions.");
+            $display("Output count checked against 48 x 16; values and internal FIFO overflow are not checked.");
             #(CS_DELAY);
         end
         $display("Completed %0d convolution runs", TEST_RUNS);

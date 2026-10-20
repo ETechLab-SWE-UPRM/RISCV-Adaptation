@@ -11,12 +11,14 @@
 #   a0 = data : input array
 #   a1 = weights : kernel array
 #   a2 = output : result array
-#   a3 = weights_length : kernel lwngth * width
+#   a3 = weights_length : kernel length * width
 #   a4 = output_length
 #   a5 = weigths_channels: output channels
 #   a6 = bias
+#   a7 = stride: For address calculation
 
-# addresses where the lengths, channels, and bias are stored
+# addresses where the lengths, channels, and offset are stored
+.set offset_addr, 0x100082B0
 .set weights_addr, 0x100082B4
 .set weights_channels, 0x100082CC
 
@@ -29,6 +31,9 @@ flat_convolution:
 
     lui t2, %hi(weights_channels)
     sw a5, %lo(weights_channels)(t2)
+
+    lui t2, %hi(offset_addr)
+    sw a7, %lo(offset_addr)(t2)
 
     flw f0, 0(a0) # preload first data
     flw f1, 0(a1) # preload first weight
@@ -56,7 +61,7 @@ inner_loop_finished:
     fsw f2, 0(a2)
     addi a2, a2, 4 # output address increment
     addi t0, t0, 1 # Finished an output channel
-    blt t0, a5, channel_loop # finish channel? 
+    blt t0, a5, channel_loop # finished channel? 
 
     addi t1, t1, 1 # Advance output-position counter
     blt t1, a4, outer_loop # finished outputs? change branch to add_stride if you wish to do so

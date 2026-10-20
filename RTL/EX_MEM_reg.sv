@@ -31,6 +31,7 @@ module EX_MEM_reg #(
     input logic [4:0] reg_dest_id_ex,
     input logic [31:0] ex_link_address,
     input logic [2:0] funct3,
+    input logic [31:0] offset_addr_reg,
     input logic [31:0] conv_weights_length,
     input logic [31:0] conv_weights_channels_length,
     input logic [31:0] weights_counter,
@@ -124,7 +125,7 @@ module EX_MEM_reg #(
                 if (weights_counter == conv_weights_length) begin  // The kernel length + depth
                     if(weights_channels_counter == (conv_weights_channels_length - 32'd1)) begin
                         ex_mem_weights_counter <= 32'b0;
-                        ex_mem_conv_data_read <= ((conv_data_read_id_ex - (conv_weights_length << 2)) + 32'd24); // 6 floats
+                        ex_mem_conv_data_read <= ((conv_data_read_id_ex - (conv_weights_length << 2)) + offset_addr_reg); // 6 floats
                         ex_mem_weights_data_read <= weights_data_read_id_ex - ((((conv_weights_length + 32'd1)* conv_weights_channels_length) - 32'd1) << 2);
                         ex_mem_weights_channels_counter <= '0;
                     end else begin
