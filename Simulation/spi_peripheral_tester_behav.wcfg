@@ -13,18 +13,23 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="2,163,943.750 ns"></ZoomStartTime>
-      <ZoomEndTime time="2,164,251.251 ns"></ZoomEndTime>
-      <Cursor1Time time="2,164,200.000 ns"></Cursor1Time>
+      <ZoomStartTime time="109,510.334 ns"></ZoomStartTime>
+      <ZoomEndTime time="109,823.835 ns"></ZoomEndTime>
+      <Cursor1Time time="109,690.100 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="276"></NameColumnWidth>
-      <ValueColumnWidth column_width="68"></ValueColumnWidth>
+      <NameColumnWidth column_width="272"></NameColumnWidth>
+      <ValueColumnWidth column_width="60"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="24" />
+   <WVObjectSize size="76" />
    <wave_markers>
-      <marker label="" time="1910350000" />
-      <marker label="" time="110630000" />
+      <marker label="" time="10657590000" />
+      <marker label="" time="1910450000" />
+      <marker label="" time="1911430000" />
+      <marker label="" time="110730000" />
+      <marker label="" time="11112950000" />
+      <marker label="" time="12588200000" />
+      <marker label="" time="1250000" />
    </wave_markers>
    <wvobject type="logic" fp_name="/PipelineTester/processor/mac_mult/aclk">
       <obj_property name="ElementShortName">aclk</obj_property>
@@ -121,5 +126,213 @@
    <wvobject type="array" fp_name="/PipelineTester/processor/spi/command_word">
       <obj_property name="ElementShortName">command_word[7:0]</obj_property>
       <obj_property name="ObjectShortName">command_word[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/regs/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/regs/reset">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/fp_mac">
+      <obj_property name="ElementShortName">fp_mac[1:0]</obj_property>
+      <obj_property name="ObjectShortName">fp_mac[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/read_reg1">
+      <obj_property name="ElementShortName">read_reg1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">read_reg1[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/read_reg2">
+      <obj_property name="ElementShortName">read_reg2[4:0]</obj_property>
+      <obj_property name="ObjectShortName">read_reg2[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/read_reg3">
+      <obj_property name="ElementShortName">read_reg3[4:0]</obj_property>
+      <obj_property name="ObjectShortName">read_reg3[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/write_reg">
+      <obj_property name="ElementShortName">write_reg[4:0]</obj_property>
+      <obj_property name="ObjectShortName">write_reg[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/write_data">
+      <obj_property name="ElementShortName">write_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">write_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/regs/conv_write_enable">
+      <obj_property name="ElementShortName">conv_write_enable</obj_property>
+      <obj_property name="ObjectShortName">conv_write_enable</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/conv_data_write">
+      <obj_property name="ElementShortName">conv_data_write[31:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_data_write[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/conv_weights_write">
+      <obj_property name="ElementShortName">conv_weights_write[31:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_weights_write[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/regs/reg_write_enable">
+      <obj_property name="ElementShortName">reg_write_enable</obj_property>
+      <obj_property name="ObjectShortName">reg_write_enable</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/read_data1">
+      <obj_property name="ElementShortName">read_data1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data1[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/read_data2">
+      <obj_property name="ElementShortName">read_data2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data2[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/read_data3">
+      <obj_property name="ElementShortName">read_data3[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data3[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/conv_data_read">
+      <obj_property name="ElementShortName">conv_data_read[31:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_data_read[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/conv_weights_read">
+      <obj_property name="ElementShortName">conv_weights_read[31:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_weights_read[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/regs">
+      <obj_property name="ElementShortName">regs[31:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">regs[31:0][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/a0">
+      <obj_property name="ElementShortName">a0[4:0]</obj_property>
+      <obj_property name="ObjectShortName">a0[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/regs/a1">
+      <obj_property name="ElementShortName">a1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">a1[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/fp_regs/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/fp_regs/reset">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/read_reg1">
+      <obj_property name="ElementShortName">read_reg1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">read_reg1[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/read_reg2">
+      <obj_property name="ElementShortName">read_reg2[4:0]</obj_property>
+      <obj_property name="ObjectShortName">read_reg2[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/read_reg3">
+      <obj_property name="ElementShortName">read_reg3[4:0]</obj_property>
+      <obj_property name="ObjectShortName">read_reg3[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/read_regdest">
+      <obj_property name="ElementShortName">read_regdest[4:0]</obj_property>
+      <obj_property name="ObjectShortName">read_regdest[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/conv_write_reg_rs1">
+      <obj_property name="ElementShortName">conv_write_reg_rs1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_write_reg_rs1[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/conv_write_reg_rs2">
+      <obj_property name="ElementShortName">conv_write_reg_rs2[4:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_write_reg_rs2[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/write_reg">
+      <obj_property name="ElementShortName">write_reg[4:0]</obj_property>
+      <obj_property name="ObjectShortName">write_reg[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/write_data">
+      <obj_property name="ElementShortName">write_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">write_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/fp_regs/reg_write_enable">
+      <obj_property name="ElementShortName">reg_write_enable</obj_property>
+      <obj_property name="ObjectShortName">reg_write_enable</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/fp_regs/conv_write_enable">
+      <obj_property name="ElementShortName">conv_write_enable</obj_property>
+      <obj_property name="ObjectShortName">conv_write_enable</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/conv_data_write">
+      <obj_property name="ElementShortName">conv_data_write[0:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_data_write[0:1][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/fp_regs/fp_mac_finished">
+      <obj_property name="ElementShortName">fp_mac_finished</obj_property>
+      <obj_property name="ObjectShortName">fp_mac_finished</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/fp_mac_reg_dest">
+      <obj_property name="ElementShortName">fp_mac_reg_dest[4:0]</obj_property>
+      <obj_property name="ObjectShortName">fp_mac_reg_dest[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/fp_mac_data">
+      <obj_property name="ElementShortName">fp_mac_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fp_mac_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/read_data1">
+      <obj_property name="ElementShortName">read_data1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data1[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/read_data2">
+      <obj_property name="ElementShortName">read_data2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data2[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/read_data3">
+      <obj_property name="ElementShortName">read_data3[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data3[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/read_data4">
+      <obj_property name="ElementShortName">read_data4[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data4[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/fp_regs">
+      <obj_property name="ElementShortName">fp_regs[0:31][31:0]</obj_property>
+      <obj_property name="ObjectShortName">fp_regs[0:31][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/data_width">
+      <obj_property name="ElementShortName">data_width[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_width[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/fp_regs/vec_length">
+      <obj_property name="ElementShortName">vec_length[31:0]</obj_property>
+      <obj_property name="ObjectShortName">vec_length[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/if_id_reg/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/if_id_reg/reset">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/if_id_reg/flush">
+      <obj_property name="ElementShortName">flush</obj_property>
+      <obj_property name="ObjectShortName">flush</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/if_id_reg/if_id_write">
+      <obj_property name="ElementShortName">if_id_write</obj_property>
+      <obj_property name="ObjectShortName">if_id_write</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/if_id_reg/instruction">
+      <obj_property name="ElementShortName">instruction[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/if_id_reg/pc">
+      <obj_property name="ElementShortName">pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pc[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/if_id_reg/pc_if_id">
+      <obj_property name="ElementShortName">pc_if_id[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_if_id[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/PipelineTester/processor/if_id_reg/instruction_if_id">
+      <obj_property name="ElementShortName">instruction_if_id[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction_if_id[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/PipelineTester/processor/if_id_reg/double_flush">
+      <obj_property name="ElementShortName">double_flush</obj_property>
+      <obj_property name="ObjectShortName">double_flush</obj_property>
    </wvobject>
 </wave_config>

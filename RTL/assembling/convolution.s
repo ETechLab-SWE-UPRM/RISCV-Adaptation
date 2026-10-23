@@ -18,9 +18,9 @@
 #   a7 = stride: For address calculation
 
 # addresses where the lengths, channels, and offset are stored
-.set offset_addr, 0x100082B0
-.set weights_addr, 0x100082B4
-.set weights_channels, 0x100082CC
+.set offset_addr, 0x1000BB90
+.set weights_addr, 0x1000BB94
+.set weights_channels, 0x1000BBAC
 
 flat_convolution:
     li t1, 0 # i = 0

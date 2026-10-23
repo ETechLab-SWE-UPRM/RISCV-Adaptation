@@ -3,18 +3,20 @@
 #include <stdint.h>
 #include <string.h>
 
+    #define BRAMSIZE (12000*4)
+
     // MM addresses
-    #define UART_address 0x100082A0u
+    #define UART_address 0x10000000u + BRAMSIZE
     #define UART_status (* (volatile int *) (UART_address + 0x04u))
-    #define UART_receive (* (volatile int *) (UART_address + 0x08u))
-    #define UART_transmit (* (volatile int *) (UART_address + 0x0Cu))
-    #define Conv_offset_reg (* (volatile int *) (UART_address + 0x10u))
-    #define Conv_weights_reg (* (volatile int *) (UART_address + 0x14u))
-    #define Conv_output_reg (* (volatile int *) (UART_address + 0x18u))
-    #define timer_reg (* (volatile int *) (UART_address + 0x1Cu))
-    #define SPI_status_reg (* (volatile int *) (UART_address + 0x20u))
-    #define SPI_receive_reg (* (volatile int *) (UART_address + 0x24u))
-    #define SPI_send_reg (* (volatile int *) (UART_address + 0x28u))
+    #define UART_receive (* (volatile int *) (UART_status + 0x04u))
+    #define UART_transmit (* (volatile int *) (UART_receive + 0x04u))
+    #define Conv_offset_reg (* (volatile int *) (UART_transmit + 0x04u))
+    #define Conv_weights_reg (* (volatile int *) (Conv_offset_reg + 0x04u))
+    #define Conv_output_reg (* (volatile int *) (Conv_weights_reg + 0x04u))
+    #define timer_reg (* (volatile int *) (Conv_output_reg + 0x04u))
+    #define SPI_status_reg (* (volatile int *) (timer_reg + 0x04u))
+    #define SPI_receive_reg (* (volatile int *) (SPI_status_reg + 0x04u))
+    #define SPI_send_reg (* (volatile int *) (SPI_receive_reg + 0x04u))
     #define Conv_weights_channels_reg (* (volatile int *) (SPI_send_reg + 0x04u))
 
     // UART masking
@@ -44,6 +46,7 @@
 
     // Offsets for next address calculation at end of channel
     #define JUMP6 0x18
+    #define JUMP16 0x40
     #define JUMP32 0x80
     #define NOJUMP 0x4
 

@@ -4,7 +4,7 @@ ENTRY(_start)
 MEMORY
 {
   ROM (rx) : ORIGIN = 0x00000000, LENGTH = 16384 /* 16KB ROM for instructions */
-  RAM (rwx): ORIGIN = 0x10000000, LENGTH = 33440 /* 33KB RAM for data */
+  RAM (rwx): ORIGIN = 0x10000000, LENGTH = 48000 /* 48KB RAM for data */
 }
 
 __stack_top = ORIGIN(RAM) + LENGTH(RAM);

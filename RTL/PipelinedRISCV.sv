@@ -82,7 +82,7 @@ module RISCV_WEARABLE (
 
     // Memory Mapping
     localparam data_base = 32'h1000_0000;
-    localparam data_word_space = 8360 * 4; // 33,440 bytes, change this if data size changes
+    localparam data_word_space = 12000 * 4; // 48k bytes, change this if data size changes
     localparam uart_status = data_base + data_word_space + 4; // Max + 1 in memory
     localparam uart_receive = uart_status + 4;
     localparam uart_send = uart_receive + 4;

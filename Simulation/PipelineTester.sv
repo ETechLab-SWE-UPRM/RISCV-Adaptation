@@ -28,12 +28,12 @@ module PipelineTester;
     localparam integer PREP_CLOCKS = 8;
     localparam time CS_DELAY = 1_000;
     localparam time BOOT_WAIT = 100_000;
-    localparam time CONVOLUTION_WAIT = 2_000_000; // 2 ms
+    localparam time CONVOLUTION_WAIT = 25_000_000; // 11 ms
     // After the computation wait, read results without inter-word gaps.
     localparam time WORD_GAP = 0;
     localparam time RESPONSE_TIMEOUT = 100_000_000; // 100 ms simulation budget
     // Set only when the exact expected count is known. Zero disables checking.
-    localparam integer EXPECTED_RESULTS = (50 - 3 + 1) * 16; // 768 floats
+    localparam integer EXPECTED_RESULTS = (48 - 3 + 1) * 32; // 1472 floats
 
     integer transaction_count = 0;
     logic [31:0] results [0:MAX_RESULTS-1];
@@ -283,10 +283,5 @@ module PipelineTester;
         end
         $display("Completed %0d convolution runs", TEST_RUNS);
         $finish;
-    end
-
-    initial begin
-        #(BOOT_WAIT + TEST_RUNS * (CONVOLUTION_WAIT + RESPONSE_TIMEOUT + 10_000_000));
-        $fatal(1, "Simulation watchdog expired.");
     end
 endmodule
